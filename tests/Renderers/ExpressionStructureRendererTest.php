@@ -2,7 +2,6 @@
 
 namespace CrazyCodeGen\Tests\Renderers;
 
-use CrazyCodeGen\Definitions\Values\IntValue;
 use CrazyCodeGen\Definitions\Values\Variable;
 use CrazyCodeGen\Expressions\Operators\Arithmetics\Adds;
 use CrazyCodeGen\Expressions\Structures\Wraps;
@@ -20,13 +19,17 @@ class ExpressionStructureRendererTest extends TestCase
         $context = new RenderContext();
 
         $variable = new Variable('foo');
-        $value = new IntValue(1);
-        $adds = new Adds($variable, $value);
 
-        $target = new Wraps($adds);
-
+        $target = new Wraps(new Adds($variable, 1));
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('($foo + 1)', $resultingCode);
+
+        $target = new Wraps('hello');
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('(\'hello\')', $resultingCode);
+
+        $target = new Wraps(true);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('(true)', $resultingCode);
     }
 }

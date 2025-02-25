@@ -23,9 +23,7 @@ class LogicalOperatorsRendererTest extends TestCase
         $variable = new Variable('foo');
 
         $target = new Nots($variable);
-
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('!$foo', $resultingCode);
     }
 
@@ -38,9 +36,7 @@ class LogicalOperatorsRendererTest extends TestCase
         $variable = new Variable('foo');
 
         $target = new Nots($variable, doubled: true);
-
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('!!$foo', $resultingCode);
     }
 
@@ -52,11 +48,13 @@ class LogicalOperatorsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new Ands($variable, $variable);
-
+        $target = new Ands($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo && 1', $resultingCode);
 
-        $this->assertEquals('$foo && $foo', $resultingCode);
+        $target = new Ands(2, $variable);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 && $foo', $resultingCode);
     }
 
     public function testTextBasedAndsRendersTextAndKeywordAndTokensWithSpacesAround(): void
@@ -67,11 +65,13 @@ class LogicalOperatorsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new Ands($variable, $variable, textBased: true);
-
+        $target = new Ands($variable, 1, textBased: true);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo and 1', $resultingCode);
 
-        $this->assertEquals('$foo and $foo', $resultingCode);
+        $target = new Ands(2, $variable, textBased: true);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 and $foo', $resultingCode);
     }
 
     public function testOrsRendersDoubleAmpersandsAndTokensWithSpacesAround(): void
@@ -82,11 +82,13 @@ class LogicalOperatorsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new Ors($variable, $variable);
-
+        $target = new Ors($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo || 1', $resultingCode);
 
-        $this->assertEquals('$foo || $foo', $resultingCode);
+        $target = new Ors(2, $variable);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 || $foo', $resultingCode);
     }
 
     public function testTextBasedOrsRendersTextAndKeywordAndTokensWithSpacesAround(): void
@@ -97,11 +99,13 @@ class LogicalOperatorsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new Ors($variable, $variable, textBased: true);
-
+        $target = new Ors($variable, 1, textBased: true);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo or 1', $resultingCode);
 
-        $this->assertEquals('$foo or $foo', $resultingCode);
+        $target = new Ors(2, $variable, textBased: true);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 or $foo', $resultingCode);
     }
 
     public function testXorsRendersTextXorKeywordAndTokensWithSpacesAround(): void
@@ -112,10 +116,12 @@ class LogicalOperatorsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new Xors($variable, $variable);
-
+        $target = new Xors($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo xor 1', $resultingCode);
 
-        $this->assertEquals('$foo xor $foo', $resultingCode);
+        $target = new Xors(2, $variable);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 xor $foo', $resultingCode);
     }
 }

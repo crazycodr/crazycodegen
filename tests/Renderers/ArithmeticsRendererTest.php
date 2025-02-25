@@ -2,13 +2,13 @@
 
 namespace CrazyCodeGen\Tests\Renderers;
 
-use CrazyCodeGen\Definitions\Values\IntValue;
 use CrazyCodeGen\Definitions\Values\Variable;
 use CrazyCodeGen\Expressions\Operators\Arithmetics\Adds;
 use CrazyCodeGen\Expressions\Operators\Arithmetics\Divs;
 use CrazyCodeGen\Expressions\Operators\Arithmetics\Exps;
 use CrazyCodeGen\Expressions\Operators\Arithmetics\Mods;
 use CrazyCodeGen\Expressions\Operators\Arithmetics\Mults;
+use CrazyCodeGen\Expressions\Operators\Arithmetics\Subs;
 use CrazyCodeGen\Renderers\RenderContext;
 use CrazyCodeGen\Renderers\Renderer;
 use CrazyCodeGen\Renderers\RenderingRules;
@@ -23,13 +23,14 @@ class ArithmeticsRendererTest extends TestCase
         $context = new RenderContext();
 
         $variable = new Variable('foo');
-        $value = new IntValue(1);
 
-        $target = new Adds($variable, $value);
-
+        $target = new Adds($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('$foo + 1', $resultingCode);
+
+        $target = new Adds(1, 2);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('1 + 2', $resultingCode);
     }
 
     public function testSubsRendersMinusAndSpacesAroundToken(): void
@@ -39,13 +40,14 @@ class ArithmeticsRendererTest extends TestCase
         $context = new RenderContext();
 
         $variable = new Variable('foo');
-        $value = new IntValue(1);
 
-        $target = new Adds($variable, $value);
-
+        $target = new Subs($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo - 1', $resultingCode);
 
-        $this->assertEquals('$foo + 1', $resultingCode);
+        $target = new Subs(2, 1);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 - 1', $resultingCode);
     }
 
     public function testMultsRendersAsteriskAndSpacesAroundToken(): void
@@ -55,13 +57,14 @@ class ArithmeticsRendererTest extends TestCase
         $context = new RenderContext();
 
         $variable = new Variable('foo');
-        $value = new IntValue(1);
 
-        $target = new Mults($variable, $value);
-
+        $target = new Mults($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('$foo * 1', $resultingCode);
+
+        $target = new Mults(3, 1);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('3 * 1', $resultingCode);
     }
 
     public function testDivsRendersSlashAndSpacesAroundToken(): void
@@ -71,13 +74,14 @@ class ArithmeticsRendererTest extends TestCase
         $context = new RenderContext();
 
         $variable = new Variable('foo');
-        $value = new IntValue(1);
 
-        $target = new Divs($variable, $value);
-
+        $target = new Divs($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('$foo / 1', $resultingCode);
+
+        $target = new Divs(4, 1);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('4 / 1', $resultingCode);
     }
 
     public function testModsRendersPercentAndSpacesAroundToken(): void
@@ -87,13 +91,14 @@ class ArithmeticsRendererTest extends TestCase
         $context = new RenderContext();
 
         $variable = new Variable('foo');
-        $value = new IntValue(1);
 
-        $target = new Mods($variable, $value);
-
+        $target = new Mods($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('$foo % 1', $resultingCode);
+
+        $target = new Mods(2, 1);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 % 1', $resultingCode);
     }
 
     public function testExpsRendersDoubleAsterisksAndSpacesAroundToken(): void
@@ -103,12 +108,13 @@ class ArithmeticsRendererTest extends TestCase
         $context = new RenderContext();
 
         $variable = new Variable('foo');
-        $value = new IntValue(1);
 
-        $target = new Exps($variable, $value);
-
+        $target = new Exps($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('$foo ** 1', $resultingCode);
+
+        $target = new Exps(10, 2);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('10 ** 2', $resultingCode);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace CrazyCodeGen\Tests\Renderers;
 
-use CrazyCodeGen\Definitions\Values\IntValue;
 use CrazyCodeGen\Definitions\Values\Variable;
 use CrazyCodeGen\Expressions\Operators\Strings\ConcatAssigns;
 use CrazyCodeGen\Expressions\Operators\Strings\Concats;
@@ -21,11 +20,17 @@ class StringsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new Concats($variable, $variable);
-
+        $target = new Concats($variable, 'hello');
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo . \'hello\'', $resultingCode);
 
-        $this->assertEquals('$foo . $foo', $resultingCode);
+        $target = new Concats('hello', $variable);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('\'hello\' . $foo', $resultingCode);
+
+        $target = new Concats('hello', 'hello');
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('\'hello\' . \'hello\'', $resultingCode);
     }
 
     public function testConcatAssignsRendersPeriodEqualsAndSpacesAroundToken(): void
@@ -35,12 +40,9 @@ class StringsRendererTest extends TestCase
         $context = new RenderContext();
 
         $variable = new Variable('foo');
-        $value = new IntValue(1);
 
-        $target = new ConcatAssigns($variable, $value);
-
+        $target = new ConcatAssigns($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('$foo .= 1', $resultingCode);
     }
 }

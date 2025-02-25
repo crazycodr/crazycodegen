@@ -9,7 +9,8 @@ class Variable implements CanBeAssigned, CanBeComputed
 {
     public function __construct(
         public string $name,
-    ) {
+    )
+    {
     }
 
     public function getTokens(): array

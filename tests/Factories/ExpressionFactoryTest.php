@@ -240,6 +240,10 @@ class ExpressionFactoryTest extends TestCase
         $target = $factory->adds($foo, $bar);
         $this->assertSame($foo, $target->left);
         $this->assertSame($bar, $target->right);
+
+        $target = $factory->adds(1, 'string');
+        $this->assertEquals(1, $target->left);
+        $this->assertEquals('string', $target->right);
     }
 
     public function testSubsReturnsExpectedObject()

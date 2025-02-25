@@ -2,9 +2,6 @@
 
 namespace CrazyCodeGen\Tests\Scenarios;
 
-use CrazyCodeGen\Definitions\Values\FloatValue;
-use CrazyCodeGen\Definitions\Values\IntValue;
-use CrazyCodeGen\Definitions\Values\StringValue;
 use CrazyCodeGen\Definitions\Values\Variable;
 use CrazyCodeGen\Factories\ExpressionFactory;
 use CrazyCodeGen\Renderers\RenderContext;
@@ -25,16 +22,16 @@ class ScenarioTest extends TestCase
         $exp = $ef->assigns(
             new Variable('foo'),
             $ef->concats(
-                new StringValue('hello'),
+                'hello',
                 $ef->wraps(
                     $ef->mults(
                         $ef->wraps(
                             $ef->adds(
                                 new Variable('bar'),
-                                new IntValue(1),
+                                1,
                             ),
                         ),
-                        new FloatValue(3.1416),
+                        3.1416,
                     ),
                 ),
             ),
