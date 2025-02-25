@@ -21,9 +21,7 @@ class ValuesRendererTest extends TestCase
         $context = new RenderContext();
 
         $target = new Variable('foo');
-
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('$foo', $resultingCode);
     }
 

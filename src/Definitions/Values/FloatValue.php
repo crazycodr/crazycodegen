@@ -8,7 +8,8 @@ class FloatValue implements CanBeComputed
 {
     public function __construct(
         public float $value,
-    ) {
+    )
+    {
     }
 
     public function getTokens(): array

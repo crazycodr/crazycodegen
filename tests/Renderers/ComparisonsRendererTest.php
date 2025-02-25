@@ -2,14 +2,12 @@
 
 namespace CrazyCodeGen\Tests\Renderers;
 
-use CrazyCodeGen\Definitions\Values\IntValue;
 use CrazyCodeGen\Definitions\Values\Variable;
-use CrazyCodeGen\Expressions\Operators\Assigns\Assigns;
 use CrazyCodeGen\Expressions\Operators\Comparisons\Equals;
-use CrazyCodeGen\Expressions\Operators\Comparisons\IsLessThan;
-use CrazyCodeGen\Expressions\Operators\Comparisons\IsLessThanOrEqualTo;
 use CrazyCodeGen\Expressions\Operators\Comparisons\IsGreaterThan;
 use CrazyCodeGen\Expressions\Operators\Comparisons\IsGreaterThanOrEqualTo;
+use CrazyCodeGen\Expressions\Operators\Comparisons\IsLessThan;
+use CrazyCodeGen\Expressions\Operators\Comparisons\IsLessThanOrEqualTo;
 use CrazyCodeGen\Expressions\Operators\Comparisons\NotEquals;
 use CrazyCodeGen\Renderers\RenderContext;
 use CrazyCodeGen\Renderers\Renderer;
@@ -26,11 +24,13 @@ class ComparisonsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new Equals($variable, $variable);
-
+        $target = new Equals($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo === 1', $resultingCode);
 
-        $this->assertEquals('$foo === $foo', $resultingCode);
+        $target = new Equals(2, $variable);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 === $foo', $resultingCode);
     }
 
     public function testSoftEqualsRendersDoubleEqualsAndSpacesAroundToken(): void
@@ -41,11 +41,13 @@ class ComparisonsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new Equals($variable, $variable, soft: true);
-
+        $target = new Equals($variable, 1, soft: true);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo == 1', $resultingCode);
 
-        $this->assertEquals('$foo == $foo', $resultingCode);
+        $target = new Equals(2, $variable, soft: true);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 == $foo', $resultingCode);
     }
 
     public function testHardNotEqualsRendersTripleEqualsAndSpacesAroundToken(): void
@@ -56,11 +58,13 @@ class ComparisonsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new NotEquals($variable, $variable);
-
+        $target = new NotEquals($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo !== 1', $resultingCode);
 
-        $this->assertEquals('$foo !== $foo', $resultingCode);
+        $target = new NotEquals(2, $variable);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 !== $foo', $resultingCode);
     }
 
     public function testSoftNotEqualsRendersDoubleEqualsAndSpacesAroundToken(): void
@@ -71,11 +75,13 @@ class ComparisonsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new NotEquals($variable, $variable, soft: true);
-
+        $target = new NotEquals($variable, 1, soft: true);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo != 1', $resultingCode);
 
-        $this->assertEquals('$foo != $foo', $resultingCode);
+        $target = new NotEquals(2, $variable, soft: true);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 != $foo', $resultingCode);
     }
 
     public function testLtGtNotEqualsRendersLtAndGtAndSpacesAroundToken(): void
@@ -86,11 +92,13 @@ class ComparisonsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new NotEquals($variable, $variable, useLtGt: true);
-
+        $target = new NotEquals($variable, 1, useLtGt: true);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo <> 1', $resultingCode);
 
-        $this->assertEquals('$foo <> $foo', $resultingCode);
+        $target = new NotEquals(2, $variable, useLtGt: true);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 <> $foo', $resultingCode);
     }
 
     public function testIsLessThanRendersLtAndSpacesAroundToken(): void
@@ -101,11 +109,13 @@ class ComparisonsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new IsLessThan($variable, $variable);
-
+        $target = new IsLessThan($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo < 1', $resultingCode);
 
-        $this->assertEquals('$foo < $foo', $resultingCode);
+        $target = new IsLessThan(2, $variable);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 < $foo', $resultingCode);
     }
 
     public function testIsLessThanOrEqualsRendersLtEqualsAndSpacesAroundToken(): void
@@ -116,11 +126,13 @@ class ComparisonsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new IsLessThanOrEqualTo($variable, $variable);
-
+        $target = new IsLessThanOrEqualTo($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo <= 1', $resultingCode);
 
-        $this->assertEquals('$foo <= $foo', $resultingCode);
+        $target = new IsLessThanOrEqualTo(2, $variable);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 <= $foo', $resultingCode);
     }
 
     public function testIsMoreThanRendersLtAndSpacesAroundToken(): void
@@ -131,11 +143,13 @@ class ComparisonsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new IsGreaterThan($variable, $variable);
-
+        $target = new IsGreaterThan($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo > 1', $resultingCode);
 
-        $this->assertEquals('$foo > $foo', $resultingCode);
+        $target = new IsGreaterThan(2, $variable);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 > $foo', $resultingCode);
     }
 
     public function testIsMoreThanOrEqualsRendersLtEqualsAndSpacesAroundToken(): void
@@ -146,10 +160,12 @@ class ComparisonsRendererTest extends TestCase
 
         $variable = new Variable('foo');
 
-        $target = new IsGreaterThanOrEqualTo($variable, $variable);
-
+        $target = new IsGreaterThanOrEqualTo($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('$foo >= 1', $resultingCode);
 
-        $this->assertEquals('$foo >= $foo', $resultingCode);
+        $target = new IsGreaterThanOrEqualTo(2, 1);
+        $resultingCode = $renderer->render($target, $rules, $context);
+        $this->assertEquals('2 >= 1', $resultingCode);
     }
 }

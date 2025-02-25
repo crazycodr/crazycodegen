@@ -2,7 +2,6 @@
 
 namespace CrazyCodeGen\Tests\Renderers;
 
-use CrazyCodeGen\Definitions\Values\IntValue;
 use CrazyCodeGen\Definitions\Values\Variable;
 use CrazyCodeGen\Expressions\Operators\Assigns\Assigns;
 use CrazyCodeGen\Expressions\Operators\Assigns\Decrements;
@@ -21,12 +20,9 @@ class AssignsRendererTest extends TestCase
         $context = new RenderContext();
 
         $variable = new Variable('foo');
-        $value = new IntValue(1);
 
-        $target = new Assigns($variable, $value);
-
+        $target = new Assigns($variable, 1);
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('$foo = 1', $resultingCode);
     }
 
@@ -39,9 +35,7 @@ class AssignsRendererTest extends TestCase
         $variable = new Variable('foo');
 
         $target = new Increments($variable);
-
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('$foo++', $resultingCode);
     }
 
@@ -54,9 +48,7 @@ class AssignsRendererTest extends TestCase
         $variable = new Variable('foo');
 
         $target = new Increments($variable, pre: true);
-
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('++$foo', $resultingCode);
     }
 
@@ -69,9 +61,7 @@ class AssignsRendererTest extends TestCase
         $variable = new Variable('foo');
 
         $target = new Decrements($variable);
-
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('$foo--', $resultingCode);
     }
 
@@ -84,9 +74,7 @@ class AssignsRendererTest extends TestCase
         $variable = new Variable('foo');
 
         $target = new Decrements($variable, pre: true);
-
         $resultingCode = $renderer->render($target, $rules, $context);
-
         $this->assertEquals('--$foo', $resultingCode);
     }
 }

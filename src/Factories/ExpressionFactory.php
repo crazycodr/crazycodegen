@@ -29,7 +29,7 @@ use CrazyCodeGen\Expressions\Structures\Wraps;
 
 class ExpressionFactory
 {
-    public function assigns(CanBeAssigned $left, CanBeComputed $right): Assigns
+    public function assigns(CanBeAssigned $left, CanBeComputed|int|float|string|bool $right): Assigns
     {
         return new Assigns(left: $left, right: $right);
     }
@@ -44,97 +44,97 @@ class ExpressionFactory
         return new Increments(operand: $operand, pre: $preIncrement);
     }
 
-    public function equals(CanBeComputed $left, CanBeComputed $right, bool $softEquals = false): Equals
+    public function equals(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right, bool $softEquals = false): Equals
     {
         return new Equals(left: $left, right: $right, soft: $softEquals);
     }
 
-    public function notEquals(CanBeComputed $left, CanBeComputed $right, bool $softEquals = false, bool $useLtGt = false): NotEquals
+    public function notEquals(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right, bool $softEquals = false, bool $useLtGt = false): NotEquals
     {
         return new NotEquals(left: $left, right: $right, soft: $softEquals, useLtGt: $useLtGt);
     }
 
-    public function ands(CanBeComputed $left, CanBeComputed $right, bool $textVersion = false): Ands
+    public function ands(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right, bool $textVersion = false): Ands
     {
         return new Ands(left: $left, right: $right, textBased: $textVersion);
     }
 
-    public function ors(CanBeComputed $left, CanBeComputed $right, bool $textVersion = false): Ors
+    public function ors(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right, bool $textVersion = false): Ors
     {
         return new Ors(left: $left, right: $right, textBased: $textVersion);
     }
 
-    public function xors(CanBeComputed $left, CanBeComputed $right): Xors
+    public function xors(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): Xors
     {
         return new Xors(left: $left, right: $right);
     }
 
-    public function nots(CanBeComputed $operand, bool $doubled = false): Nots
+    public function nots(CanBeComputed|int|float|string|bool $operand, bool $doubled = false): Nots
     {
         return new Nots(operand: $operand, doubled: $doubled);
     }
 
-    public function concats(CanBeComputed $left, CanBeComputed $right): Concats
+    public function concats(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): Concats
     {
         return new Concats(left: $left, right: $right);
     }
 
-    public function concatAssigns(CanBeAssigned $left, CanBeComputed $right): ConcatAssigns
+    public function concatAssigns(CanBeAssigned $left, CanBeComputed|int|float|string|bool $right): ConcatAssigns
     {
         return new ConcatAssigns(left: $left, right: $right);
     }
 
-    public function gt(CanBeComputed $left, CanBeComputed $right): IsGreaterThan
+    public function gt(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): IsGreaterThan
     {
         return new IsGreaterThan(left: $left, right: $right);
     }
 
-    public function gte(CanBeComputed $left, CanBeComputed $right): IsGreaterThanOrEqualTo
+    public function gte(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): IsGreaterThanOrEqualTo
     {
         return new IsGreaterThanOrEqualTo(left: $left, right: $right);
     }
 
-    public function lt(CanBeComputed $left, CanBeComputed $right): IsLessThan
+    public function lt(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): IsLessThan
     {
         return new IsLessThan(left: $left, right: $right);
     }
 
-    public function lte(CanBeComputed $left, CanBeComputed $right): IsLessThanOrEqualTo
+    public function lte(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): IsLessThanOrEqualTo
     {
         return new IsLessThanOrEqualTo(left: $left, right: $right);
     }
 
-    public function adds(CanBeComputed $left, CanBeComputed $right): Adds
+    public function adds(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): Adds
     {
         return new Adds(left: $left, right: $right);
     }
 
-    public function divs(CanBeComputed $left, CanBeComputed $right): Divs
+    public function divs(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): Divs
     {
         return new Divs(left: $left, right: $right);
     }
 
-    public function exps(CanBeComputed $left, CanBeComputed $right): Exps
+    public function exps(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): Exps
     {
         return new Exps(left: $left, right: $right);
     }
 
-    public function mods(CanBeComputed $left, CanBeComputed $right): Mods
+    public function mods(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): Mods
     {
         return new Mods(left: $left, right: $right);
     }
 
-    public function mults(CanBeComputed $left, CanBeComputed $right): Mults
+    public function mults(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): Mults
     {
         return new Mults(left: $left, right: $right);
     }
 
-    public function subs(CanBeComputed $left, CanBeComputed $right): Subs
+    public function subs(CanBeComputed|int|float|string|bool $left, CanBeComputed|int|float|string|bool $right): Subs
     {
         return new Subs(left: $left, right: $right);
     }
 
-    public function wraps(CanBeComputed $wrappedOperand): Wraps
+    public function wraps(CanBeComputed|int|float|string|bool $wrappedOperand): Wraps
     {
         return new Wraps(wrappedOperand: $wrappedOperand);
     }
