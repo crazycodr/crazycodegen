@@ -1,26 +1,8 @@
-The system converts any literal to its appropriate type without having to expressly do so. The following are equivalent:
-
-```php
-$one = $df->intVal(1);
-$one = 1;
-```
-
-You can use `$one` anywhere, and it will still resolve to the constant `1` in the code. The only moment where you 
-really want to use type inference like that is when you have special cases such as:
-
-```php
-$true = $df->boolVal('true');
-$stringTrue = 'true';
-```
-
-Now, both are not the same.
-
 To create classes or methods you can use multipart constructions like so:
 
 ```php
 $df = new DefinitionsFactory();
 $xf = new ExpressionsFactory();
-$df->override('classDef', CrazyCodrGen\ClassDef::class);
 $class = $df->classDef(name: 'MyClass');
 $class->addProperty($bar = $df->property(name: 'bar', type: $df->mixed(), default: 'bar'));
 $class->addMethod($method = $df->getMethodDef(
@@ -68,63 +50,6 @@ $xf->assign($target, $bar->of($instance));
 
 // Will generate
 $target = $instance->bar; 
-```
-
-To generate expressions, you can use the expression builder which allows easier chaining of constructions while still
-allowing for multipart constructed expressions:
-
-```php
-// The following
-$target = $df->variable(name: 'target');
-$instance = $df->variable(name: 'instance');
-$one = $df->intVal(1);
-$two = $df->intVal(2);
-$addition = $xf->add($one, $bar->of($instance));
-$wrappedAddition = $xf->wrap($addition);
-$multiplication = $dx->mul($wrappedAddition, $two);
-$assign = $xf->assign($target, $multiplication);
-
-// Can be condensed to
-$target = $df->variable(name: 'target');
-$instance = $df->variable(name: 'instance');
-$assign = $xf->assign(
-    $target, 
-    $dx->mul(
-        $xf->wraps(
-            xf->adds(
-                $df->intVal(1), 
-                $bar->of($instance)
-            )
-        ), 
-        $df->intVal(2)
-    )
-);
-
-// But is also the same as
-$target = $df->variable(name: 'target');
-$instance = $df->variable(name: 'instance');
-$assign = $xf->assign($target, $xf->build('(', 1, '+', $bar->of($instance), ')'));
-```
-
-The last version with `build` actually considers all operators such as `()+-*/%?:=` to be tokens that must be 
-converted to their operator equivalents as if you specified them in a multipart construction. The build takes
-order of operators into account to match the different left, right and third operators for you.
-
-```php
-$xf->wraps(...) // Needs to find a corresponding start and end parenthesis
-$xf->equals(...) // Needs a left and right operand
-$xf->adds(...) // Needs a left and right operand
-$xf->subs(...) // Needs a left and right operand
-```
-Therefore, in such a scenario, based on the rules of PHP, the following build patterns yield the following exploded 
-multipart code builds:
-
-```php
-$xf->build('(', 1, '+', 2, '*', 3, ')')
-$xf->wraps($xf->adds($df->intVal(1), $xf->mults($df->intVal(2), $df->intVal(3))));
-
-$xf->build('(', 1, '+', 2, ')', '*', 3)
-$xf->mults($xf->wraps($xf->adds($df->intVal(1), $df->intVal(2))), $df->intVal(3));
 ```
 
 There are 3 types of operators:
