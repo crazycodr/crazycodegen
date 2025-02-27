@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Factories;
 
+use CrazyCodeGen\Definitions\Structures\FuncDef;
 use CrazyCodeGen\Definitions\Values\BoolValue;
 use CrazyCodeGen\Definitions\Values\FloatValue;
 use CrazyCodeGen\Definitions\Values\IntValue;
@@ -33,5 +34,10 @@ class DefinitionFactory
     public function var(string $name): Variable
     {
         return new Variable($name);
+    }
+
+    public function funcDef(string $name, array $arguments = [], null|string $returnType = null, null|string $namespace = null, array $body = []): FuncDef
+    {
+        return new FuncDef(name: $name, arguments: $arguments, returnType: $returnType, namespace: $namespace, body: $body);
     }
 }

@@ -20,16 +20,15 @@ class ComparisonsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Equals($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo === 1', $resultingCode);
 
         $target = new Equals(2, $variable);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 === $foo', $resultingCode);
     }
 
@@ -37,16 +36,15 @@ class ComparisonsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Equals($variable, 1, soft: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo == 1', $resultingCode);
 
         $target = new Equals(2, $variable, soft: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 == $foo', $resultingCode);
     }
 
@@ -54,16 +52,15 @@ class ComparisonsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new NotEquals($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo !== 1', $resultingCode);
 
         $target = new NotEquals(2, $variable);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 !== $foo', $resultingCode);
     }
 
@@ -71,16 +68,15 @@ class ComparisonsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new NotEquals($variable, 1, soft: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo != 1', $resultingCode);
 
         $target = new NotEquals(2, $variable, soft: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 != $foo', $resultingCode);
     }
 
@@ -88,16 +84,15 @@ class ComparisonsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new NotEquals($variable, 1, useLtGt: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo <> 1', $resultingCode);
 
         $target = new NotEquals(2, $variable, useLtGt: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 <> $foo', $resultingCode);
     }
 
@@ -105,16 +100,15 @@ class ComparisonsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new IsLessThan($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo < 1', $resultingCode);
 
         $target = new IsLessThan(2, $variable);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 < $foo', $resultingCode);
     }
 
@@ -122,16 +116,15 @@ class ComparisonsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new IsLessThanOrEqualTo($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo <= 1', $resultingCode);
 
         $target = new IsLessThanOrEqualTo(2, $variable);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 <= $foo', $resultingCode);
     }
 
@@ -139,16 +132,15 @@ class ComparisonsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new IsGreaterThan($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo > 1', $resultingCode);
 
         $target = new IsGreaterThan(2, $variable);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 > $foo', $resultingCode);
     }
 
@@ -156,16 +148,15 @@ class ComparisonsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new IsGreaterThanOrEqualTo($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo >= 1', $resultingCode);
 
         $target = new IsGreaterThanOrEqualTo(2, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 >= 1', $resultingCode);
     }
 }

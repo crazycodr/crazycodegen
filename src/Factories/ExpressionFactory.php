@@ -3,7 +3,9 @@
 namespace CrazyCodeGen\Factories;
 
 use CrazyCodeGen\Base\CanBeAssigned;
+use CrazyCodeGen\Base\CanBeCalled;
 use CrazyCodeGen\Base\CanBeComputed;
+use CrazyCodeGen\Expressions\Operations\Calls;
 use CrazyCodeGen\Expressions\Operators\Arithmetics\Adds;
 use CrazyCodeGen\Expressions\Operators\Arithmetics\Divs;
 use CrazyCodeGen\Expressions\Operators\Arithmetics\Exps;
@@ -29,6 +31,11 @@ use CrazyCodeGen\Expressions\Structures\Wraps;
 
 class ExpressionFactory
 {
+    public function calls(CanBeCalled|string $target, array $arguments = []): Calls
+    {
+        return new Calls(target: $target, arguments: $arguments);
+    }
+
     public function assigns(CanBeAssigned $left, CanBeComputed|int|float|string|bool $right): Assigns
     {
         return new Assigns(left: $left, right: $right);

@@ -16,20 +16,19 @@ class StringsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Concats($variable, 'hello');
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo . \'hello\'', $resultingCode);
 
         $target = new Concats('hello', $variable);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('\'hello\' . $foo', $resultingCode);
 
         $target = new Concats('hello', 'hello');
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('\'hello\' . \'hello\'', $resultingCode);
     }
 
@@ -37,12 +36,11 @@ class StringsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new ConcatAssigns($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo .= 1', $resultingCode);
     }
 }

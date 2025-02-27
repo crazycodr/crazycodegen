@@ -18,12 +18,11 @@ class LogicalOperatorsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Nots($variable);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('!$foo', $resultingCode);
     }
 
@@ -31,12 +30,11 @@ class LogicalOperatorsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Nots($variable, doubled: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('!!$foo', $resultingCode);
     }
 
@@ -44,16 +42,15 @@ class LogicalOperatorsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Ands($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo && 1', $resultingCode);
 
         $target = new Ands(2, $variable);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 && $foo', $resultingCode);
     }
 
@@ -61,16 +58,15 @@ class LogicalOperatorsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Ands($variable, 1, textBased: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo and 1', $resultingCode);
 
         $target = new Ands(2, $variable, textBased: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 and $foo', $resultingCode);
     }
 
@@ -78,16 +74,15 @@ class LogicalOperatorsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Ors($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo || 1', $resultingCode);
 
         $target = new Ors(2, $variable);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 || $foo', $resultingCode);
     }
 
@@ -95,16 +90,15 @@ class LogicalOperatorsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Ors($variable, 1, textBased: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo or 1', $resultingCode);
 
         $target = new Ors(2, $variable, textBased: true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 or $foo', $resultingCode);
     }
 
@@ -112,16 +106,15 @@ class LogicalOperatorsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Xors($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo xor 1', $resultingCode);
 
         $target = new Xors(2, $variable);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 xor $foo', $resultingCode);
     }
 }

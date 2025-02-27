@@ -16,20 +16,19 @@ class ExpressionStructureRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Wraps(new Adds($variable, 1));
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('($foo + 1)', $resultingCode);
 
         $target = new Wraps('hello');
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('(\'hello\')', $resultingCode);
 
         $target = new Wraps(true);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('(true)', $resultingCode);
     }
 }

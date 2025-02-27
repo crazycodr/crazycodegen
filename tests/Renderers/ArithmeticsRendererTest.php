@@ -13,6 +13,7 @@ use CrazyCodeGen\Renderers\RenderContext;
 use CrazyCodeGen\Renderers\Renderer;
 use CrazyCodeGen\Renderers\RenderingRules;
 use PHPUnit\Framework\TestCase;
+use SebastianBergmann\RecursionContext\Context;
 
 class ArithmeticsRendererTest extends TestCase
 {
@@ -20,16 +21,15 @@ class ArithmeticsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Adds($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo + 1', $resultingCode);
 
         $target = new Adds(1, 2);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('1 + 2', $resultingCode);
     }
 
@@ -37,16 +37,15 @@ class ArithmeticsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Subs($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo - 1', $resultingCode);
 
         $target = new Subs(2, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 - 1', $resultingCode);
     }
 
@@ -54,16 +53,15 @@ class ArithmeticsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Mults($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo * 1', $resultingCode);
 
         $target = new Mults(3, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('3 * 1', $resultingCode);
     }
 
@@ -71,16 +69,15 @@ class ArithmeticsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Divs($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo / 1', $resultingCode);
 
         $target = new Divs(4, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('4 / 1', $resultingCode);
     }
 
@@ -88,16 +85,15 @@ class ArithmeticsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Mods($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo % 1', $resultingCode);
 
         $target = new Mods(2, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('2 % 1', $resultingCode);
     }
 
@@ -105,16 +101,15 @@ class ArithmeticsRendererTest extends TestCase
     {
         $renderer = new Renderer();
         $rules = new RenderingRules();
-        $context = new RenderContext();
 
         $variable = new Variable('foo');
 
         $target = new Exps($variable, 1);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('$foo ** 1', $resultingCode);
 
         $target = new Exps(10, 2);
-        $resultingCode = $renderer->render($target, $rules, $context);
+        $resultingCode = $renderer->render($target, $rules, new RenderContext());
         $this->assertEquals('10 ** 2', $resultingCode);
     }
 }
