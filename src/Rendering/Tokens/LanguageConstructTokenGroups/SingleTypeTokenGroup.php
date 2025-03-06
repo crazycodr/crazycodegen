@@ -3,8 +3,7 @@
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 
@@ -39,16 +38,6 @@ class SingleTypeTokenGroup extends AbstractTypeTokenGroup
             $tokens[] = new IdentifierToken($this->type);
         }
         return $tokens;
-    }
-
-    /**
-     * @return ContextTypeEnum[]
-     */
-    public function getContexts(): array
-    {
-        return array_merge([
-            ContextTypeEnum::type,
-        ], parent::getContexts());
     }
 
     public function getShortName(): string

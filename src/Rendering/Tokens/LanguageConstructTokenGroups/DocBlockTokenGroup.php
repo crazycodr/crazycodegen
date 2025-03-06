@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;

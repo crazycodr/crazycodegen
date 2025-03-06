@@ -4,8 +4,7 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\DollarToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -38,15 +37,5 @@ class VariableTokenGroup extends TokenGroup
         }
         $tokens[] = new SpacesToken($context->argumentDefinitionIdentifierPaddingSize);
         return $this->flatten($tokens);
-    }
-
-    /**
-     * @return ContextTypeEnum[]
-     */
-    public function getContexts(): array
-    {
-        return array_merge([
-            ContextTypeEnum::identifier,
-        ], parent::getContexts());
     }
 }

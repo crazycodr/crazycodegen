@@ -4,8 +4,7 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
@@ -35,16 +34,6 @@ class ArgumentListDeclarationTokenGroup extends TokenGroup
     public function render(RenderContext $context, RenderingRules $rules): array
     {
         return $this->renderInlineScenario($context, $rules);
-    }
-
-    /**
-     * @return ContextTypeEnum[]
-     */
-    public function getContexts(): array
-    {
-        return array_merge([
-            ContextTypeEnum::argumentList,
-        ], parent::getContexts());
     }
 
     /**

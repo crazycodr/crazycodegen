@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use PHPUnit\Framework\TestCase;

@@ -4,8 +4,8 @@ namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\ClassDefinitionRules;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\ClassDefinitionRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImplementsTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;

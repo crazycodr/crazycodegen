@@ -6,9 +6,8 @@ use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ColonToken;
@@ -110,16 +109,6 @@ class MethodDefinitionTokenGroup extends TokenGroup
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
         $tokens = $this->addChopDownBraceTokens($rules, $tokens);
         return $this->flatten($tokens);
-    }
-
-    /**
-     * @return ContextTypeEnum[]
-     */
-    public function getContexts(): array
-    {
-        return array_merge([
-            ContextTypeEnum::function,
-        ], parent::getContexts());
     }
 
     /**

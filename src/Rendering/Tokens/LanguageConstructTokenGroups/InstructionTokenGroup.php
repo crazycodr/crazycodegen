@@ -4,8 +4,7 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
@@ -44,10 +43,5 @@ class InstructionTokenGroup extends TokenGroup
         }
         $tokens[] = new SemiColonToken();
         return $this->flatten($tokens);
-    }
-
-    public function getContexts(): array
-    {
-        return [ContextTypeEnum::instruction];
     }
 }

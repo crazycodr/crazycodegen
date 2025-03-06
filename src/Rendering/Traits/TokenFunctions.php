@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Rendering\Traits;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;

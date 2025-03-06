@@ -5,9 +5,8 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
@@ -168,16 +167,6 @@ class ClassDefinitionTokenGroup extends TokenGroup
     }
 
     /**
-     * @return ContextTypeEnum[]
-     */
-    public function getContexts(): array
-    {
-        return array_merge([
-            ContextTypeEnum::function,
-        ], parent::getContexts());
-    }
-
-    /**
      * @return Token[]
      */
     private function getDeclarationTokens(): array
@@ -285,27 +274,6 @@ class ClassDefinitionTokenGroup extends TokenGroup
             $scenario[] = $this->insertIndentationTokens($context, $chopDownImplementsTokens);
             $rules->unindent($context);
         }
-        return $this->flatten($scenario);
-    }
-
-    /**
-     * @param Token[] $declarationTokens
-     * @param Token[] $extendsTokens
-     * @param Token[] $inlineImplementsTokens
-     * @return Token[]
-     */
-    public function getInlineExtendsImplementsNextLineDeclaration(
-        array $declarationTokens,
-        array $extendsTokens,
-        array $inlineImplementsTokens
-    ): array
-    {
-        $scenario = [];
-        $scenario[] = $declarationTokens;
-        $scenario[] = new SpacesToken();
-        $scenario[] = $extendsTokens;
-        $scenario[] = new SpacesToken();
-        $scenario[] = $inlineImplementsTokens;
         return $this->flatten($scenario);
     }
 

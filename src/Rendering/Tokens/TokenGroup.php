@@ -3,8 +3,7 @@
 namespace CrazyCodeGen\Rendering\Tokens;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 
 abstract class TokenGroup
 {
@@ -14,12 +13,4 @@ abstract class TokenGroup
      * @return Token[]
      */
     abstract public function render(RenderContext $context, RenderingRules $rules): array;
-
-    /**
-     * @return ContextTypeEnum[]
-     */
-    public function getContexts(): array
-    {
-        return [];
-    }
 }

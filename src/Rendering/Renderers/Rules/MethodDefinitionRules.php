@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Renderers\RenderingRules;
+namespace CrazyCodeGen\Rendering\Renderers\Rules;
 
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;

@@ -5,8 +5,7 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
@@ -98,10 +97,5 @@ class ConditionTokenGroup extends TokenGroup
         }
 
         return $this->flatten($tokens);
-    }
-
-    public function getContexts(): array
-    {
-        return [ContextTypeEnum::instruction];
     }
 }

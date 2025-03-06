@@ -4,8 +4,7 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
@@ -38,15 +37,5 @@ class NamespaceTokenGroup extends TokenGroup
         $tokens[] = new SemiColonToken();
         $tokens[] = new NewLineTokens($rules->namespaces->linesAfterNamespaceDeclaration);
         return $this->flatten($tokens);
-    }
-
-    /**
-     * @return ContextTypeEnum[]
-     */
-    public function getContexts(): array
-    {
-        return array_merge([
-            ContextTypeEnum::namespace,
-        ], parent::getContexts());
     }
 }

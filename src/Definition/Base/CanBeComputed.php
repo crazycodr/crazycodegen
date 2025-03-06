@@ -2,6 +2,6 @@
 
 namespace CrazyCodeGen\Definition\Base;
 
-interface CanBeComputed extends CanBeRendered
+interface CanBeComputed
 {
 }
