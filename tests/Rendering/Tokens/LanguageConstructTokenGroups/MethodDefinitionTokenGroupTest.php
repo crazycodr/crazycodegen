@@ -9,6 +9,7 @@ use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListDeclarationTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodDefinitionTokenGroup;
 use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
 use PHPUnit\Framework\TestCase;
@@ -629,6 +630,33 @@ class MethodDefinitionTokenGroupTest extends TestCase
                 int  \$bar,
                 bool \$baz = true,
             ) {
+            }
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testDocBlockIsProperlyRendered()
+    {
+        $token = new MethodDefinitionTokenGroup(
+            name: 'myFunction',
+            docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the function declaration.']),
+        );
+
+        $rules = $this->getBaseTestingRules();
+        $rules->docBlocks->lineLength = 40;
+        $rules->methods->linesAfterDocBlock = 3;
+
+        $this->assertEquals(<<<EOS
+            /**
+             * This is a docblock that should be
+             * wrapped and displayed before the
+             * function declaration.
+             */
+            
+            
+            public function myFunction()
+            {
             }
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))

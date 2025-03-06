@@ -16,6 +16,7 @@ class ClassDefinitionRules
         public BracePositionEnum $classOpeningBrace = BracePositionEnum::NEXT_LINE,
         public BracePositionEnum $classClosingBrace = BracePositionEnum::NEXT_LINE,
         public int               $spacesBeforeOpeningBraceIfSameLine = 1,
+        public int               $linesAfterDocBlock = 1,
         public int               $newLinesBetweenImports = 1,
         public int               $newLinesAfterAllImports = 2,
         public int               $newLinesBetweenProperties = 1,

@@ -30,6 +30,7 @@ class ClassDefinitionTokenGroup extends TokenGroup
         public readonly null|NamespaceTokenGroup           $namespace = null,
         /** @var string[]|ImportTokenGroup[] $imports */
         public readonly array                              $imports = [],
+        public readonly null|string|DocBlockTokenGroup     $docBlock = null,
         public readonly bool                               $abstract = false,
         public readonly null|string|AbstractTypeTokenGroup $extends = null,
         /** @var string[]|AbstractTypeTokenGroup[] $implements */
@@ -73,6 +74,11 @@ class ClassDefinitionTokenGroup extends TokenGroup
         }
         if (!empty($this->imports)) {
             $tokens[] = new NewLineTokens($rules->classes->newLinesAfterAllImports);
+        }
+
+        if ($this->docBlock) {
+            $tokens[] = $this->docBlock->render($context, $rules);
+            $tokens[] = new NewLineTokens($rules->classes->linesAfterDocBlock);
         }
 
         $scenarios = [];

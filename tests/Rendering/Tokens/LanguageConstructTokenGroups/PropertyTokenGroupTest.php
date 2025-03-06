@@ -5,6 +5,7 @@ namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
@@ -175,6 +176,30 @@ class PropertyTokenGroupTest extends TestCase
             protected static int \$foo = 'Hello world';
             EOS,
             $this->renderTokensToString($token->render($context, $rules))
+        );
+    }
+
+    public function testDocBlockIsProperlyRendered()
+    {
+        $token = new PropertyTokenGroup(
+            name: 'prop1',
+            docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the prop.']),
+        );
+
+        $rules = $this->getTestRules();
+        $rules->docBlocks->lineLength = 40;
+        $rules->properties->linesAfterDocBlock = 3;
+
+        $this->assertEquals(<<<EOS
+            /**
+             * This is a docblock that should be
+             * wrapped and displayed before the prop.
+             */
+            
+            
+            public \$prop1;
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
     }
 

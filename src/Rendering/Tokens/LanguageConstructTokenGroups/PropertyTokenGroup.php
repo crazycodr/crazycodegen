@@ -8,6 +8,7 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
@@ -25,6 +26,7 @@ class PropertyTokenGroup extends TokenGroup
 
     public function __construct(
         public readonly string|IdentifierToken             $name,
+        public readonly null|string|DocBlockTokenGroup     $docBlock = null,
         public readonly null|string|AbstractTypeTokenGroup $type = null,
         public readonly VisibilityEnum                     $visibility = VisibilityEnum::PUBLIC,
         public readonly bool                               $static = false,
@@ -42,6 +44,12 @@ class PropertyTokenGroup extends TokenGroup
     public function render(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
+
+        if ($this->docBlock) {
+            $tokens[] = $this->docBlock->render($context, $rules);
+            $tokens[] = new NewLineTokens($rules->properties->linesAfterDocBlock);
+        }
+
         $tokens[] = $this->renderVisibility($context, $rules);
         $tokens[] = $this->renderModifiers($context, $rules);
         $tokens[] = $this->renderType($context, $rules);

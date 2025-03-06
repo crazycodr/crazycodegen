@@ -9,6 +9,7 @@ class RenderingRules
     public function __construct(
         public int                          $lineLength = 120,
         public string                       $indentation = '    ',
+        public DocBlockRules                $docBlocks = new DocBlockRules(),
         public NamespaceDeclarationRules    $namespaces = new NameSpaceDeclarationRules(),
         public ImportRules                  $imports = new ImportRules(),
         public ArgumentListDeclarationRules $argumentLists = new ArgumentListDeclarationRules(),

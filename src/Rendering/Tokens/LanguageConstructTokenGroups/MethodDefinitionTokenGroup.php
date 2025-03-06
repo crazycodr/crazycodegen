@@ -30,6 +30,7 @@ class MethodDefinitionTokenGroup extends TokenGroup
 
     public function __construct(
         public readonly string|IdentifierToken                 $name,
+        public readonly null|string|DocBlockTokenGroup         $docBlock = null,
         public readonly null|ArgumentListDeclarationTokenGroup $arguments = null,
         public readonly null|string|AbstractTypeTokenGroup     $returnType = null,
         public readonly bool                                   $abstract = false,
@@ -69,6 +70,12 @@ class MethodDefinitionTokenGroup extends TokenGroup
     public function renderInlineScenario(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
+
+        if ($this->docBlock) {
+            $tokens[] = $this->docBlock->render($context, $rules);
+            $tokens[] = new NewLineTokens($rules->methods->linesAfterDocBlock);
+        }
+
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
         if ($this->arguments) {
             $tokens[] = $this->arguments->render($context, $rules);
@@ -88,6 +95,12 @@ class MethodDefinitionTokenGroup extends TokenGroup
     public function renderChopDownScenario(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
+
+        if ($this->docBlock) {
+            $tokens[] = $this->docBlock->render($context, $rules);
+            $tokens[] = new NewLineTokens($rules->methods->linesAfterDocBlock);
+        }
+
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
         if ($this->arguments) {
             $tokens[] = $this->arguments->renderChopDownScenario($context, $rules);

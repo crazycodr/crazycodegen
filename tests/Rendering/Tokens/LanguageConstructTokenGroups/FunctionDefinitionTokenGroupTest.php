@@ -5,11 +5,10 @@ namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\ArgumentListDeclarationRules;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\FunctionDefinitionRules;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListDeclarationTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionDefinitionTokenGroup;
 use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
 use PHPUnit\Framework\TestCase;
@@ -24,17 +23,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
+        $rules = $this->getTestRules();
 
-        $this->assertEquals(
-            'function myFunction() {}',
+        $this->assertEquals(<<<EOS
+            function myFunction()
+            {
+            }
+            EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
     }
@@ -45,17 +40,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
+        $rules = $this->getTestRules();
 
-        $this->assertEquals(
-            'function myFunction() {}',
+        $this->assertEquals(<<<EOS
+            function myFunction()
+            {
+            }
+            EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
     }
@@ -66,17 +57,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
+        $rules = $this->getTestRules();
 
-        $this->assertEquals(
-            'function myFunction() {}',
+        $this->assertEquals(<<<EOS
+            function myFunction()
+            {
+            }
+            EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
     }
@@ -87,17 +74,14 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
+        $rules = $this->getTestRules();
         $rules->functions->spacesBetweenIdentifierAndArgumentList = 1;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
-        $this->assertEquals(
-            'function myFunction () {}',
+        $this->assertEquals(<<<EOS
+            function myFunction ()
+            {
+            }
+            EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
     }
@@ -115,22 +99,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             )
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
+        $rules = $this->getTestRules();
 
-        $this->assertEquals(
-            'function myFunction($foo, int $bar, bool $baz = true) {}',
+        $this->assertEquals(<<<EOS
+            function myFunction(\$foo, int \$bar, bool \$baz = true)
+            {
+            }
+            EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
     }
@@ -142,22 +117,14 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             returnType: 'string',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
+        $rules = $this->getTestRules();
         $rules->functions->spacesBetweenArgumentListAndReturnColon = 1;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
-        $this->assertEquals(
-            'function myFunction() : string {}',
+        $this->assertEquals(<<<EOS
+            function myFunction() : string
+            {
+            }
+            EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
     }
@@ -169,22 +136,14 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             returnType: 'string',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
+        $rules = $this->getTestRules();
         $rules->functions->spacesBetweenReturnColonAndType = 2;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
-        $this->assertEquals(
-            'function myFunction():  string {}',
+        $this->assertEquals(<<<EOS
+            function myFunction():  string
+            {
+            }
+            EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
     }
@@ -196,22 +155,14 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             returnType: 'string',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
+        $rules = $this->getTestRules();
         $rules->functions->spacesBeforeOpeningBraceIfSameLine = 2;
+        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
 
-        $this->assertEquals(
-            'function myFunction(): string  {}',
+        $this->assertEquals(<<<EOS
+            function myFunction(): string  {
+            }
+            EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
     }
@@ -222,22 +173,15 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
+        $rules = $this->getTestRules();
         $rules->functions->spacesBeforeOpeningBraceIfSameLine = 2;
+        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
+        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
 
-        $this->assertEquals(
-            'function myFunction()  {}',
+        $this->assertEquals(<<<EOS
+            function myFunction()  {
+            }
+            EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
     }
@@ -248,22 +192,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
+        $rules = $this->getTestRules();
         $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
         $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
-        $this->assertEquals(
-            'function myFunction() {}',
+        $this->assertEquals(<<<EOS
+            function myFunction() {}
+            EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
     }
@@ -274,19 +209,9 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
+        $rules = $this->getTestRules();
         $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
         $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(
             <<<EOS
@@ -303,19 +228,9 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
+        $rules = $this->getTestRules();
         $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(
             <<<EOS
@@ -332,19 +247,9 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
+        $rules = $this->getTestRules();
         $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(
             <<<EOS
@@ -362,14 +267,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
+        $rules = $this->getTestRules();
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -386,14 +284,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
+        $rules = $this->getTestRules();
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -410,14 +301,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
+        $rules = $this->getTestRules();
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -434,14 +318,8 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
+        $rules = $this->getTestRules();
         $rules->functions->spacesBetweenIdentifierAndArgumentList = 1;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction (
@@ -465,25 +343,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             )
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
+        $rules = $this->getTestRules();
 
         $this->assertEquals(<<<EOS
             function myFunction(
                 \$foo,
                 int \$bar,
-                bool \$baz = true
+                bool \$baz = true,
             ) {
             }
             EOS,
@@ -498,19 +364,8 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             returnType: 'string',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
+        $rules = $this->getTestRules();
         $rules->functions->spacesBetweenArgumentListAndReturnColon = 1;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -528,19 +383,8 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             returnType: 'string',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
+        $rules = $this->getTestRules();
         $rules->functions->spacesBetweenReturnColonAndType = 2;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -558,18 +402,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             returnType: 'string',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
+        $rules = $this->getTestRules();
         $rules->functions->spacesBeforeOpeningBraceIfSameLine = 2;
 
         $this->assertEquals(<<<EOS
@@ -587,18 +420,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
+        $rules = $this->getTestRules();
         $rules->functions->spacesBeforeOpeningBraceIfSameLine = 2;
 
         $this->assertEquals(<<<EOS
@@ -616,19 +438,9 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             name: 'myFunction',
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
+        $rules = $this->getTestRules();
         $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -652,20 +464,9 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             )
         );
 
-        $rules = new RenderingRules();
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
+        $rules = $this->getTestRules();
+        $rules->lineLength = 40;
         $rules->functions->argumentsOnDifferentLines = WrappingDecision::NEVER;
-        $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction(\$foo, int \$bar, bool \$baz = true)
@@ -689,21 +490,8 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             )
         );
 
-        $rules = new RenderingRules();
-        $rules->lineLength = 120;
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
+        $rules = $this->getTestRules();
         $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
-        $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction(\$foo, int \$bar, bool \$baz = true)
@@ -727,27 +515,15 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             )
         );
 
-        $rules = new RenderingRules();
-        $rules->lineLength = 30;
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
+        $rules = $this->getTestRules();
+        $rules->lineLength = 40;
         $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
-        $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction(
                 \$foo,
                 int \$bar,
-                bool \$baz = true
+                bool \$baz = true,
             ) {
             }
             EOS,
@@ -768,31 +544,65 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             )
         );
 
-        $rules = new RenderingRules();
-        $rules->lineLength = 120;
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->functions = new FunctionDefinitionRules();
+        $rules = $this->getTestRules();
         $rules->functions->argumentsOnDifferentLines = WrappingDecision::ALWAYS;
-        $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction(
                 \$foo,
                 int \$bar,
-                bool \$baz = true
+                bool \$baz = true,
             ) {
             }
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
+    }
+
+    public function testDocBlockIsProperlyRendered()
+    {
+        $token = new FunctionDefinitionTokenGroup(
+            name: 'myFunction',
+            docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the function declaration.']),
+        );
+
+        $rules = $this->getTestRules();
+        $rules->docBlocks->lineLength = 40;
+        $rules->functions->linesAfterDocBlock = 3;
+
+        $this->assertEquals(<<<EOS
+            /**
+             * This is a docblock that should be
+             * wrapped and displayed before the
+             * function declaration.
+             */
+            
+            
+            function myFunction()
+            {
+            }
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    private function getTestRules(): RenderingRules
+    {
+        $rules = new RenderingRules();
+        $rules->lineLength = 120;
+        $rules->docBlocks->lineLength = 80;
+        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
+        $rules->argumentLists->padIdentifiers = false;
+        $rules->argumentLists->padTypeNames = false;
+        $rules->argumentLists->spacesAfterArgumentComma = 1;
+        $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
+        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->linesAfterDocBlock = 1;
+        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
+        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
+        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
+        $rules->functions->spacesBetweenReturnColonAndType = 1;
+        return $rules;
     }
 }

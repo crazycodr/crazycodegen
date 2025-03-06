@@ -5,8 +5,8 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
@@ -27,6 +27,7 @@ class FunctionDefinitionTokenGroup extends TokenGroup
     public function __construct(
         public readonly string|IdentifierToken                 $name,
         public readonly null|NamespaceTokenGroup               $namespace = null,
+        public readonly null|string|DocBlockTokenGroup         $docBlock = null,
         public readonly null|ArgumentListDeclarationTokenGroup $arguments = null,
         public readonly null|string|AbstractTypeTokenGroup     $returnType = null,
         public readonly null|array                             $bodyInstructions = null,
@@ -66,6 +67,12 @@ class FunctionDefinitionTokenGroup extends TokenGroup
         if ($this->namespace) {
             $tokens[] = $this->namespace->render($context, $rules);
         }
+        
+        if ($this->docBlock) {
+            $tokens[] = $this->docBlock->render($context, $rules);
+            $tokens[] = new NewLineTokens($rules->functions->linesAfterDocBlock);
+        }
+
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
         if ($this->arguments) {
             $tokens[] = $this->arguments->render($context, $rules);
@@ -88,6 +95,12 @@ class FunctionDefinitionTokenGroup extends TokenGroup
         if ($this->namespace) {
             $tokens[] = $this->namespace->render($context, $rules);
         }
+
+        if ($this->docBlock) {
+            $tokens[] = $this->docBlock->render($context, $rules);
+            $tokens[] = new NewLineTokens($rules->functions->linesAfterDocBlock);
+        }
+
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
         if ($this->arguments) {
             $tokens[] = $this->arguments->renderChopDownScenario($context, $rules);

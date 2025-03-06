@@ -9,6 +9,7 @@ use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListDeclarationTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassDefinitionTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodDefinitionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
@@ -172,6 +173,33 @@ class ClassDefinitionTokenGroupTest extends TestCase
                 public function method1(Test2 \$arg1): Test1
                 {
                 }
+            }
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testDocBlockIsProperlyRendered()
+    {
+        $token = new ClassDefinitionTokenGroup(
+            name: 'myClass',
+            docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the class declaration.']),
+        );
+
+        $rules = $this->getBaseTestingRules();
+        $rules->docBlocks->lineLength = 40;
+        $rules->classes->linesAfterDocBlock = 3;
+
+        $this->assertEquals(<<<EOS
+            /**
+             * This is a docblock that should be
+             * wrapped and displayed before the class
+             * declaration.
+             */
+            
+            
+            class myClass
+            {
             }
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -744,6 +772,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
     {
         $newRules = new RenderingRules();
         $newRules->lineLength = 120;
+        $newRules->docBlocks->lineLength = 80;
         $newRules->argumentLists->spacesAfterArgumentComma = 1;
         $newRules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
         $newRules->argumentLists->padTypeNames = true;
@@ -756,6 +785,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
         $newRules->classes->classOpeningBrace = BracePositionEnum::NEXT_LINE;
         $newRules->classes->classClosingBrace = BracePositionEnum::NEXT_LINE;
         $newRules->classes->spacesBeforeOpeningBraceIfSameLine = 1;
+        $newRules->classes->linesAfterDocBlock = 1;
         $newRules->classes->newLinesBetweenImports = 1;
         $newRules->classes->newLinesAfterAllImports = 2;
         $newRules->classes->newLinesBetweenProperties = 1;
