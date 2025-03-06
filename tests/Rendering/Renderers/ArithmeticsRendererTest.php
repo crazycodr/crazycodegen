@@ -9,7 +9,7 @@ use CrazyCodeGen\Definition\Expressions\Operators\Arithmetics\Exps;
 use CrazyCodeGen\Definition\Expressions\Operators\Arithmetics\Mods;
 use CrazyCodeGen\Definition\Expressions\Operators\Arithmetics\Mults;
 use CrazyCodeGen\Definition\Expressions\Operators\Arithmetics\Subs;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Renderer;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use PHPUnit\Framework\TestCase;

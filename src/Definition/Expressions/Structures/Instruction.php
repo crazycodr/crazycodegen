@@ -2,12 +2,12 @@
 
 namespace CrazyCodeGen\Definition\Expressions\Structures;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\CanBeComputed;
 use CrazyCodeGen\Definition\Renderers\ContextShift;
 use CrazyCodeGen\Definition\Renderers\ContextTypeEnum;
 use CrazyCodeGen\Definition\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Definition\Traits\ComputableTrait;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
 
 class Instruction implements CanBeComputed
 {

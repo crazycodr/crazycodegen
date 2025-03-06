@@ -2,11 +2,11 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\CanBeCalled;
 use CrazyCodeGen\Definition\Base\CanBeComputed;
 use CrazyCodeGen\Definition\Tokens\LanguageConstructTokenGroups\FunctionDeclarationTokenGroup;
 use CrazyCodeGen\Definition\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
 
 class FuncDef implements CanBeComputed, CanBeCalled
 {

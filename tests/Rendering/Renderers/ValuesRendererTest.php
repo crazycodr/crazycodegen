@@ -7,7 +7,7 @@ use CrazyCodeGen\Definition\Definitions\Values\FloatValue;
 use CrazyCodeGen\Definition\Definitions\Values\IntValue;
 use CrazyCodeGen\Definition\Definitions\Values\StringValue;
 use CrazyCodeGen\Definition\Definitions\Values\Variable;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Renderer;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use PHPUnit\Framework\TestCase;

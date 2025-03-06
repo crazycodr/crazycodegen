@@ -2,13 +2,13 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\ChopDownRenderContext;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownRenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
-use CrazyCodeGen\Rendering\Renderers\RenderTokensToStringTrait;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
+use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
 use PHPUnit\Framework\TestCase;
 
 class ArgumentDeclarationTokenGroupTest extends TestCase

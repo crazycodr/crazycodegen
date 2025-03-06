@@ -2,8 +2,9 @@
 
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
@@ -14,7 +15,6 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\NamespacePathToken;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
 
 class NamespaceTokenGroup extends TokenGroup
 {

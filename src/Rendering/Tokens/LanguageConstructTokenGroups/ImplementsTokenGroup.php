@@ -2,12 +2,12 @@
 
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\ChopWrapDecisionEnum;
-use CrazyCodeGen\Rendering\Renderers\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\ChopWrapDecisionEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
-use CrazyCodeGen\Rendering\Renderers\RenderTokensToStringTrait;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ColonToken;
@@ -19,7 +19,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ImplementsToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
+use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
 
 class ImplementsTokenGroup extends TokenGroup
 {

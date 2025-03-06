@@ -9,7 +9,7 @@ use CrazyCodeGen\Definition\Expressions\Operators\Comparisons\IsGreaterThanOrEqu
 use CrazyCodeGen\Definition\Expressions\Operators\Comparisons\IsLessThan;
 use CrazyCodeGen\Definition\Expressions\Operators\Comparisons\IsLessThanOrEqualTo;
 use CrazyCodeGen\Definition\Expressions\Operators\Comparisons\NotEquals;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Renderer;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use PHPUnit\Framework\TestCase;

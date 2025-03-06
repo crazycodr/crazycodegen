@@ -2,11 +2,11 @@
 
 namespace CrazyCodeGen\Definition\Expressions\Operations;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\CanBeCalled;
 use CrazyCodeGen\Definition\Base\CanBeComputed;
 use CrazyCodeGen\Definition\Traits\CallableTrait;
 use CrazyCodeGen\Definition\Traits\ComputableTrait;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
 
 class Calls implements CanBeComputed
 {

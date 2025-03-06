@@ -2,15 +2,14 @@
 
 namespace CrazyCodeGen\Rendering\Renderers;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Definition\Traits\ComputableTrait;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
 
 class Renderer
 {
     use FlattenFunction;
-    use ComputableTrait;
 
     public function render(TokenGroup $tokenGroup, RenderContext $context, RenderingRules $rules): string
     {

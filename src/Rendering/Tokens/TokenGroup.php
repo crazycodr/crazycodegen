@@ -2,8 +2,8 @@
 
 namespace CrazyCodeGen\Rendering\Tokens;
 
-use CrazyCodeGen\Rendering\Renderers\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 
 abstract class TokenGroup

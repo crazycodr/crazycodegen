@@ -2,23 +2,21 @@
 
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Definition\Traits\ComputableTrait;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
 
 class InstructionTokenGroup extends TokenGroup
 {
     use FlattenFunction;
-    use ComputableTrait;
 
     public function __construct(
-        /** @var int|float|bool|string|Token[]|Token|TokenGroup */
-        public readonly int|float|bool|string|array|Token|TokenGroup $instructions,
+        /** @var Token[]|Token|TokenGroup */
+        public readonly array|Token|TokenGroup $instructions,
     )
     {
     }
@@ -33,16 +31,10 @@ class InstructionTokenGroup extends TokenGroup
         $tokens = [];
         if ($this->instructions instanceof TokenGroup) {
             $tokens[] = $this->instructions->render($context, $rules);
-        } elseif (is_array($this->instructions)) {
-            foreach ($this->instructions as $token) {
-                if ($token instanceof TokenGroup) {
-                    $tokens[] = $token->render($context, $rules);
-                } else {
-                    $tokens[] = $token;
-                }
-            }
+        } elseif ($this->instructions instanceof Token) {
+            $tokens[] = $this->instructions;
         } else {
-            $tokens[] = $this->makeComputed($this->instructions)->getTokens();
+            $tokens = array_merge($tokens, $this->instructions);
         }
         $tokens[] = new SemiColonToken();
         return $this->flatten($tokens);

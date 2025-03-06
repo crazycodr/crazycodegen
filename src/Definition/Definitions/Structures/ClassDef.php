@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\CanBeCalled;
 use CrazyCodeGen\Definition\Base\CanBeComputed;
 use CrazyCodeGen\Definition\Renderers\ContextShift;
@@ -19,7 +20,6 @@ use CrazyCodeGen\Definition\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Definition\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
 use CrazyCodeGen\Definition\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Definition\Tokens\UserLandTokens\NamespacePathToken;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
 
 class ClassDef implements CanBeComputed, CanBeCalled
 {

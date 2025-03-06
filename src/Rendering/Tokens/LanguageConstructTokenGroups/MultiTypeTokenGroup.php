@@ -2,8 +2,9 @@
 
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\AmpersandToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
@@ -11,7 +12,6 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\PipeToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
 
 class MultiTypeTokenGroup extends AbstractTypeTokenGroup
 {

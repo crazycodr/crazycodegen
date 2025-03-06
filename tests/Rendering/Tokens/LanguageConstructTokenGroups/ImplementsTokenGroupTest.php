@@ -2,13 +2,13 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\ChopWrapDecisionEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Enums\ChopWrapDecisionEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\ClassDefinitionRenderingRules;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
-use CrazyCodeGen\Rendering\Renderers\RenderTokensToStringTrait;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImplementsTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
+use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
 use PHPUnit\Framework\TestCase;
 
 class ImplementsTokenGroupTest extends TestCase

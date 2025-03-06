@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Tests\Rendering\Renderers;
 use CrazyCodeGen\Definition\Definitions\Values\Variable;
 use CrazyCodeGen\Definition\Expressions\Operators\Strings\ConcatAssigns;
 use CrazyCodeGen\Definition\Expressions\Operators\Strings\Concats;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Renderer;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use PHPUnit\Framework\TestCase;

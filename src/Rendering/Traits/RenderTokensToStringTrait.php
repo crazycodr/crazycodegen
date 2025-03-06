@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Renderers;
+namespace CrazyCodeGen\Rendering\Traits;
 
 use CrazyCodeGen\Rendering\Tokens\Token;
 

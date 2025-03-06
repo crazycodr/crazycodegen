@@ -2,8 +2,8 @@
 
 namespace CrazyCodeGen\Rendering\Renderers\RenderingRules;
 
-use CrazyCodeGen\Rendering\Renderers\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\ChopWrapDecisionEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\ChopWrapDecisionEnum;
 
 class ClassDefinitionRenderingRules
 {

@@ -2,8 +2,6 @@
 
 namespace CrazyCodeGen\Rendering\Renderers\RenderingRules;
 
-use CrazyCodeGen\Rendering\Renderers\ChopWrapDecisionEnum;
-
 class ArgumentListDefinitionRenderingRules
 {
     public function __construct(

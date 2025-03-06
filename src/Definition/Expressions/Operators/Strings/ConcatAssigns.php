@@ -2,10 +2,10 @@
 
 namespace CrazyCodeGen\Definition\Expressions\Operators\Strings;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\CanBeAssigned;
 use CrazyCodeGen\Definition\Base\CanBeComputed;
 use CrazyCodeGen\Definition\Traits\ComputableTrait;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
 
 class ConcatAssigns implements CanBeComputed
 {

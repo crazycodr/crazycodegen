@@ -2,12 +2,11 @@
 
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\ChopDownRenderContext;
-use CrazyCodeGen\Rendering\Renderers\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownRenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
-use CrazyCodeGen\Rendering\Renderers\RenderTokensToStringTrait;
-use CrazyCodeGen\Rendering\Tokens\CanRenderMultipleScenarios;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
@@ -15,9 +14,9 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
+use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
 
-class ArgumentListDeclarationTokenGroup extends TokenGroup implements CanRenderMultipleScenarios
+class ArgumentListDeclarationTokenGroup extends TokenGroup
 {
     use FlattenFunction;
     use RenderTokensToStringTrait;

@@ -7,7 +7,7 @@ use CrazyCodeGen\Definition\Expressions\Operators\LogicalOperators\Ands;
 use CrazyCodeGen\Definition\Expressions\Operators\LogicalOperators\Nots;
 use CrazyCodeGen\Definition\Expressions\Operators\LogicalOperators\Ors;
 use CrazyCodeGen\Definition\Expressions\Operators\LogicalOperators\Xors;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Renderer;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use PHPUnit\Framework\TestCase;

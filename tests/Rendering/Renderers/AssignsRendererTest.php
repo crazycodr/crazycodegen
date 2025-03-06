@@ -6,7 +6,7 @@ use CrazyCodeGen\Definition\Definitions\Values\Variable;
 use CrazyCodeGen\Definition\Expressions\Operators\Assigns\Assigns;
 use CrazyCodeGen\Definition\Expressions\Operators\Assigns\Decrements;
 use CrazyCodeGen\Definition\Expressions\Operators\Assigns\Increments;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Renderer;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use PHPUnit\Framework\TestCase;

@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Definition\Traits;
+namespace CrazyCodeGen\Common\Traits;
 
 trait FlattenFunction
 {

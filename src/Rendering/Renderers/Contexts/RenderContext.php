@@ -1,7 +1,9 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Renderers;
+namespace CrazyCodeGen\Rendering\Renderers\Contexts;
 
+use CrazyCodeGen\Rendering\Renderers\Enums\ContextShiftOperationEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 

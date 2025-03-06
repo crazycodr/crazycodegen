@@ -2,14 +2,14 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\ChopWrapDecisionEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\ChopWrapDecisionEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\ClassDefinitionRenderingRules;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
-use CrazyCodeGen\Rendering\Renderers\RenderTokensToStringTrait;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassDefinitionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
+use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
 use PHPUnit\Framework\TestCase;
 
 class ClassDefinitionTokenGroupTest extends TestCase

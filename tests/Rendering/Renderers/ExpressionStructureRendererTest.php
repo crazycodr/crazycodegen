@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Tests\Rendering\Renderers;
 use CrazyCodeGen\Definition\Definitions\Values\Variable;
 use CrazyCodeGen\Definition\Expressions\Operators\Arithmetics\Adds;
 use CrazyCodeGen\Definition\Expressions\Structures\Wraps;
-use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Renderer;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use PHPUnit\Framework\TestCase;

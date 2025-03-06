@@ -2,9 +2,9 @@
 
 namespace CrazyCodeGen\Definition\Expressions\Operators\LogicalOperators;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\CanBeComputed;
 use CrazyCodeGen\Definition\Traits\ComputableTrait;
-use CrazyCodeGen\Definition\Traits\FlattenFunction;
 
 class Ands implements CanBeComputed
 {
