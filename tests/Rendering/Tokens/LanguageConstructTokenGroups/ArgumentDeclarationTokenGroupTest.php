@@ -1,0 +1,251 @@
+<?php
+
+namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+
+use CrazyCodeGen\Rendering\Renderers\ChopDownRenderContext;
+use CrazyCodeGen\Rendering\Renderers\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
+use CrazyCodeGen\Rendering\Renderers\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
+use PHPUnit\Framework\TestCase;
+
+class ArgumentDeclarationTokenGroupTest extends TestCase
+{
+    use RenderTokensToStringTrait;
+
+    public function testRendersNameAsExpectedWithoutSpacesAround()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo')
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+
+        $this->assertEquals(
+            '$foo',
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testAddsTypeInFrontOfIdentifierAndSeparatesWithSpace()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo'),
+            new SingleTypeTokenGroup('int'),
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+
+        $this->assertEquals(
+            'int $foo',
+            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+        );
+    }
+
+    public function testAddsDefaultValueAfterIdentifierWithSpaceBetweenIdentifierAndEqual()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo'),
+            defaultValue: 123,
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+
+        $this->assertEquals(
+            '$foo = 123',
+            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+        );
+    }
+
+    public function testAddsDefaultValueWithSingleQuotesIfString()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo'),
+            defaultValue: 'Hello World',
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+
+        $this->assertEquals(
+            '$foo = \'Hello World\'',
+            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+        );
+    }
+
+    public function testAddsDefaultValueWithStringRepresentationIfBool()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo'),
+            defaultValue: true,
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+
+        $this->assertEquals(
+            '$foo = true',
+            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+        );
+    }
+
+    public function testAddsTheConfiguredSpacesBetweenTypeAndIdentifierAsPerRules()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo'),
+            new SingleTypeTokenGroup('int'),
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 2;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 2;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 2;
+
+        $this->assertEquals(
+            'int  $foo',
+            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+        );
+    }
+
+    public function testAddsTheConfiguredChopDownSpacesByPaddingTypeProperly()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo'),
+            new SingleTypeTokenGroup('int'),
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 2;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 2;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 2;
+
+        $context = new RenderContext();
+        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown->paddingSpacesForTypes = 7;
+
+        $this->assertEquals(
+            'int     $foo',
+            $this->renderTokensToString($token->render($context, $rules)),
+        );
+    }
+
+    public function testAddsTheConfiguredChopDownSpacesByPaddingTypeProperlyEvenIfThereIsNoType()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo'),
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 2;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 2;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 2;
+
+        $context = new RenderContext();
+        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown->paddingSpacesForTypes = 7;
+
+        $this->assertEquals(
+            '        $foo',
+            $this->renderTokensToString($token->render($context, $rules)),
+        );
+    }
+
+    public function testAddsTheConfiguredSpacesBetweenIdentifierAndEqualsAsPerRules()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo'),
+            defaultValue: 123,
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 2;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 2;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 2;
+
+        $this->assertEquals(
+            '$foo  =  123',
+            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+        );
+    }
+
+    public function testAddsTheConfiguredChopDownSpacesByPaddingIdentifier()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo'),
+            defaultValue: 123,
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+
+        $context = new RenderContext();
+        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown->paddingSpacesForIdentifiers = 7;
+
+        $this->assertEquals(
+            '$foo    = 123',
+            $this->renderTokensToString($token->render($context, $rules)),
+        );
+    }
+
+    public function testWhenTypePaddingIsLessThanTypeAtLeastOneSpaceIsAdded()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('foo'),
+            new SingleTypeTokenGroup('reallyLongType'),
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+
+        $context = new RenderContext();
+        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown->paddingSpacesForIdentifiers = 3;
+
+        $this->assertEquals(
+            'reallyLongType $foo',
+            $this->renderTokensToString($token->render($context, $rules)),
+        );
+    }
+
+    public function testWhenIdentifierPaddingIsLessThanIdentifierAtLeastOneSpaceIsAdded()
+    {
+        $token = new ArgumentDeclarationTokenGroup(
+            new IdentifierToken('reallyLongIdentifier'),
+            defaultValue: 123,
+        );
+
+        $rules = new RenderingRules();
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+
+        $context = new RenderContext();
+        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown->paddingSpacesForIdentifiers = 3;
+
+        $this->assertEquals(
+            '$reallyLongIdentifier = 123',
+            $this->renderTokensToString($token->render($context, $rules)),
+        );
+    }
+}
