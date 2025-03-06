@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\ChopWrapDecisionEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\ClassDefinitionRules;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImplementsTokenGroup;
@@ -23,7 +23,7 @@ class ImplementsTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->classes = new ClassDefinitionRules();
-        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
         $rules->classes->spacesAfterImplementsKeyword = 1;
         $rules->classes->spacesAfterImplementCommaIfSameLine = 1;
 
@@ -41,7 +41,7 @@ class ImplementsTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->classes = new ClassDefinitionRules();
-        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
         $rules->classes->spacesAfterImplementsKeyword = 1;
         $rules->classes->spacesAfterImplementCommaIfSameLine = 1;
 
@@ -60,7 +60,7 @@ class ImplementsTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->classes = new ClassDefinitionRules();
-        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
         $rules->classes->spacesAfterImplementsKeyword = 2;
         $rules->classes->spacesAfterImplementCommaIfSameLine = 1;
 
@@ -79,7 +79,7 @@ class ImplementsTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->classes = new ClassDefinitionRules();
-        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
         $rules->classes->spacesAfterImplementsKeyword = 1;
         $rules->classes->spacesAfterImplementCommaIfSameLine = 2;
 
@@ -98,7 +98,7 @@ class ImplementsTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->classes = new ClassDefinitionRules();
-        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
         $rules->classes->spacesAfterImplementsKeyword = 1;
         $rules->classes->spacesAfterImplementCommaIfSameLine = 2;
 
@@ -118,7 +118,7 @@ class ImplementsTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->classes = new ClassDefinitionRules();
-        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
         $rules->classes->spacesAfterImplementsKeyword = 4;
         $rules->classes->spacesAfterImplementCommaIfSameLine = 1;
 

@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\ChopWrapDecisionEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\ArgumentListDeclarationRules;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\FunctionDefinitionRules;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
@@ -659,7 +659,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
         $rules->argumentLists->padTypeNames = false;
         $rules->argumentLists->padIdentifiers = false;
         $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->argumentsOnDifferentLines = ChopWrapDecisionEnum::NEVER_WRAP;
+        $rules->functions->argumentsOnDifferentLines = WrappingDecision::NEVER;
         $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
@@ -697,7 +697,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
         $rules->argumentLists->padTypeNames = false;
         $rules->argumentLists->padIdentifiers = false;
         $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->argumentsOnDifferentLines = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
         $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
@@ -735,7 +735,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
         $rules->argumentLists->padTypeNames = false;
         $rules->argumentLists->padIdentifiers = false;
         $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->argumentsOnDifferentLines = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
         $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
@@ -776,7 +776,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
         $rules->argumentLists->padTypeNames = false;
         $rules->argumentLists->padIdentifiers = false;
         $rules->functions = new FunctionDefinitionRules();
-        $rules->functions->argumentsOnDifferentLines = ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP;
+        $rules->functions->argumentsOnDifferentLines = WrappingDecision::ALWAYS;
         $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;

@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\ChopWrapDecisionEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
@@ -40,9 +40,9 @@ class ImplementsTokenGroup extends TokenGroup
      */
     public function render(RenderContext $context, RenderingRules $rules): array
     {
-        if ($rules->classes->implementsOnNextLine === ChopWrapDecisionEnum::NEVER_WRAP) {
+        if ($rules->classes->implementsOnNextLine === WrappingDecision::NEVER) {
             return $this->renderInlineScenario($context, $rules);
-        } elseif ($rules->functions->argumentsOnDifferentLines === ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP) {
+        } elseif ($rules->functions->argumentsOnDifferentLines === WrappingDecision::ALWAYS) {
             return $this->renderChopDownScenario($context, $rules);
         } else {
             $inlineScenario = $this->renderInlineScenario($context, $rules);
