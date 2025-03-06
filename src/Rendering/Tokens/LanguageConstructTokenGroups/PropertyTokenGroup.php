@@ -157,7 +157,6 @@ class PropertyTokenGroup extends TokenGroup
     /**
      * @param RenderContext $context
      * @param RenderingRules $rules
-     * @param Token[] $identifierTokens
      * @return Token[]
      */
     public function renderDefaultValue(RenderContext $context, RenderingRules $rules): array
@@ -167,7 +166,7 @@ class PropertyTokenGroup extends TokenGroup
             $tokens[] = new EqualToken();
             $tokens[] = new SpacesToken($rules->properties->spacesAfterEquals);
             $tokens[] = new NullToken();
-        } elseif ($this->defaultValue) {
+        } elseif ($this->defaultValue !== null) {
             $tokens[] = new EqualToken();
             $tokens[] = new SpacesToken($rules->properties->spacesAfterEquals);
             if (is_string($this->defaultValue)) {

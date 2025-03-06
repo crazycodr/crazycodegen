@@ -137,12 +137,11 @@ class ClassTokenGroup extends TokenGroup
 
         if ($rules->classes->openingBrace === BracePositionEnum::SAME_LINE) {
             $tokens[] = new SpacesToken($rules->classes->spacesBeforeOpeningBrace);
-            $tokens[] = new BraceStartToken();
         } else {
             $tokens[] = new NewLineTokens();
             $tokens[] = SpacesToken::fromString($context->indents);
-            $tokens[] = new BraceStartToken();
         }
+        $tokens[] = new BraceStartToken();
         $rules->indent($context);
         if (!empty($this->properties) || !empty($this->methods)) {
             $tokens[] = new NewLineTokens();
