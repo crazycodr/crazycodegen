@@ -8,12 +8,12 @@ use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class DocBlockTokenGroup extends TokenGroup
 {
     use FlattenFunction;
-    use RenderTokensToStringTrait;
+    use TokenFunctions;
 
     public function __construct(
         /** @var string[] $texts */

@@ -8,12 +8,12 @@ use CrazyCodeGen\Rendering\Renderers\RenderingRules\ClassDefinitionRules;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImplementsTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
-use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
 class ImplementsTokenGroupTest extends TestCase
 {
-    use RenderTokensToStringTrait;
+    use TokenFunctions;
 
     public function testInlineScenarioRendersImplementsKeyword()
     {

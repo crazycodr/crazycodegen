@@ -10,12 +10,12 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\PipeToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
-use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
 class MultiTypeTokenGroupTest extends TestCase
 {
-    use RenderTokensToStringTrait;
+    use TokenFunctions;
 
     public function testTypesAreJoinedWithPipeWhenUnionIsTrueByDefault()
     {

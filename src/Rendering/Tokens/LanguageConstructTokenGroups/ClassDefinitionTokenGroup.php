@@ -18,12 +18,12 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ExtendsToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
-use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class ClassDefinitionTokenGroup extends TokenGroup
 {
     use FlattenFunction;
-    use RenderTokensToStringTrait;
+    use TokenFunctions;
 
     public function __construct(
         public readonly string|IdentifierToken             $name,
@@ -307,27 +307,6 @@ class ClassDefinitionTokenGroup extends TokenGroup
         $scenario[] = new SpacesToken();
         $scenario[] = $inlineImplementsTokens;
         return $this->flatten($scenario);
-    }
-
-    /**
-     * @param RenderContext $context
-     * @param Token[] $tokens
-     * @return Token[]
-     */
-    private function insertIndentationTokens(RenderContext $context, array $tokens): array
-    {
-        if (strlen($context->indents) === 0) {
-            return $tokens;
-        }
-        $newTokens = [];
-        $newTokens[] = SpacesToken::fromString($context->indents);
-        foreach ($tokens as $token) {
-            $newTokens[] = $token;
-            if ($token instanceof NewLineTokens) {
-                $newTokens[] = SpacesToken::fromString($context->indents);
-            }
-        }
-        return $newTokens;
     }
 
     /**

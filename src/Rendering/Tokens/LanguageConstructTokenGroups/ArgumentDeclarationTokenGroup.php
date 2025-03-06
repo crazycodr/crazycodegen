@@ -12,12 +12,12 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
-use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class ArgumentDeclarationTokenGroup extends TokenGroup
 {
     use FlattenFunction;
-    use RenderTokensToStringTrait;
+    use TokenFunctions;
 
     public function __construct(
         public readonly string|IdentifierToken             $name,

@@ -7,12 +7,12 @@ use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\DollarToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
-use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
 class NamespaceTokenGroupTest extends TestCase
 {
-    use RenderTokensToStringTrait;
+    use TokenFunctions;
 
     public function testNamespaceKeywordAndPathAndSemiColonAreRendered()
     {

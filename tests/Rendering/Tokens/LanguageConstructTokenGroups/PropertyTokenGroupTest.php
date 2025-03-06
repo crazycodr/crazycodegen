@@ -9,12 +9,12 @@ use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGrou
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
-use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
 class PropertyTokenGroupTest extends TestCase
 {
-    use RenderTokensToStringTrait;
+    use TokenFunctions;
 
     public function testRendersVisibilityAndNameWithSpaces()
     {

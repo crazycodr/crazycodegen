@@ -34,7 +34,13 @@ class InstructionTokenGroup extends TokenGroup
         } elseif ($this->instructions instanceof Token) {
             $tokens[] = $this->instructions;
         } else {
-            $tokens = array_merge($tokens, $this->instructions);
+            foreach ($this->instructions as $instruction) {
+                if ($instruction instanceof TokenGroup) {
+                    $tokens[] = $instruction->render($context, $rules);
+                } else {
+                    $tokens[] = $instruction;
+                }
+            }
         }
         $tokens[] = new SemiColonToken();
         return $this->flatten($tokens);

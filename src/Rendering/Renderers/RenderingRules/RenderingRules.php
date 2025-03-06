@@ -18,6 +18,7 @@ class RenderingRules
         public MethodDefinitionRules        $methods = new MethodDefinitionRules(),
         public ClassDefinitionRules         $classes = new ClassDefinitionRules(),
         public PropertyDeclarationRules     $properties = new PropertyDeclarationRules(),
+        public ConditionRules               $conditions = new ConditionRules(),
     )
     {
     }

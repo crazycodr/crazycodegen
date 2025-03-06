@@ -19,12 +19,12 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ImplementsToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
-use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class ImplementsTokenGroup extends TokenGroup
 {
     use FlattenFunction;
-    use RenderTokensToStringTrait;
+    use TokenFunctions;
 
     public function __construct(
         /** @var string[]|SingleTypeTokenGroup[] $implementations */

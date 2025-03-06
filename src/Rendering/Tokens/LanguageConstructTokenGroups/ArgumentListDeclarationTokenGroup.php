@@ -13,12 +13,12 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class ArgumentListDeclarationTokenGroup extends TokenGroup
 {
     use FlattenFunction;
-    use RenderTokensToStringTrait;
+    use TokenFunctions;
 
     public function __construct(
         /** @var ArgumentDeclarationTokenGroup[] $arguments */

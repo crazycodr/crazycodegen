@@ -17,12 +17,12 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\FunctionToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
-use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
+use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class FunctionDefinitionTokenGroup extends TokenGroup
 {
     use FlattenFunction;
-    use RenderTokensToStringTrait;
+    use TokenFunctions;
 
     public function __construct(
         public readonly string|IdentifierToken                 $name,
@@ -67,7 +67,7 @@ class FunctionDefinitionTokenGroup extends TokenGroup
         if ($this->namespace) {
             $tokens[] = $this->namespace->render($context, $rules);
         }
-        
+
         if ($this->docBlock) {
             $tokens[] = $this->docBlock->render($context, $rules);
             $tokens[] = new NewLineTokens($rules->functions->linesAfterDocBlock);
