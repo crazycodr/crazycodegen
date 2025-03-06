@@ -36,8 +36,7 @@ class MethodTokenGroup extends TokenGroup
         public readonly VisibilityEnum                     $visibility = VisibilityEnum::PUBLIC,
         public readonly bool                               $static = false,
         public readonly null|array                         $bodyInstructions = null,
-    )
-    {
+    ) {
     }
 
     /**

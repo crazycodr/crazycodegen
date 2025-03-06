@@ -2,3 +2,4 @@
 /.idea/
 /reports/
 /.phpunit.cache
+/.php-cs-fixer.cache

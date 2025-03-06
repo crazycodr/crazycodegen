@@ -20,7 +20,8 @@ class MultiTypeTokenGroupTest extends TestCase
             new SingleTypeTokenGroup('int'),
         ]);
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             string|int
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -37,7 +38,8 @@ class MultiTypeTokenGroupTest extends TestCase
             unionTypes: false
         );
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             string&int
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -48,7 +50,8 @@ class MultiTypeTokenGroupTest extends TestCase
     {
         $token = new MultiTypeTokenGroup(['string', 'int']);
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             string|int
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -59,7 +62,8 @@ class MultiTypeTokenGroupTest extends TestCase
     {
         $token = new MultiTypeTokenGroup(['string', 'int'], nestedTypes: true);
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             (string|int)
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -77,7 +81,8 @@ class MultiTypeTokenGroupTest extends TestCase
             nestedTypes: true,
         );
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             ((int|float)&(string|bool))
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))

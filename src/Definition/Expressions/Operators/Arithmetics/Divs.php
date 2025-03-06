@@ -14,16 +14,6 @@ class Divs implements CanBeComputed
     public function __construct(
         public CanBeComputed|int|float|string|bool $left,
         public CanBeComputed|int|float|string|bool $right,
-    )
-    {
-    }
-
-    public function getTokens(): array
-    {
-        return $this->flatten([
-            $this->makeComputed($this->left)->getTokens(),
-            '/',
-            $this->makeComputed($this->right)->getTokens()
-        ]);
+    ) {
     }
 }

@@ -18,8 +18,7 @@ class ClassDef implements CanBeComputed, CanBeCalled
         public bool                $abstract = false,
         public array               $implements = [],
         public null|string         $namespace = null,
-    )
-    {
+    ) {
     }
 
     public function getCallReference(): string

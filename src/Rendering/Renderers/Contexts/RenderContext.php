@@ -15,8 +15,7 @@ class RenderContext
         public bool                   $forcedChopDown = false,
         public ChopDownPaddingContext $chopDown = new ChopDownPaddingContext(),
         public array                  $importedClasses = [],
-    )
-    {
+    ) {
     }
 
     public function getCurrentLine(): string

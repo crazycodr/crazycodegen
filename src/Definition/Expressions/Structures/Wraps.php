@@ -13,16 +13,6 @@ class Wraps implements CanBeComputed
 
     public function __construct(
         public CanBeComputed|int|float|string|bool $wrappedOperand,
-    )
-    {
-    }
-
-    public function getTokens(): array
-    {
-        return $this->flatten([
-            '(',
-            $this->makeComputed($this->wrappedOperand)->getTokens(),
-            ')'
-        ]);
+    ) {
     }
 }

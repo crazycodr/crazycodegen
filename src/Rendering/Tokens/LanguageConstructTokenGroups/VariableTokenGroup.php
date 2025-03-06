@@ -17,8 +17,7 @@ class VariableTokenGroup extends TokenGroup
 
     public function __construct(
         public readonly string|IdentifierToken $name,
-    )
-    {
+    ) {
     }
 
     /**

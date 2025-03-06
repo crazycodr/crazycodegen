@@ -17,29 +17,6 @@ class Calls implements CanBeComputed
     public function __construct(
         public CanBeCalled|string $target,
         public array              $arguments = [],
-    )
-    {
-    }
-
-    public function getTokens(): array
-    {
-        return $this->flatten([
-            $this->getCallReference($this->target),
-            '(',
-            $this->generateArgumentTokens(),
-            ')'
-        ]);
-    }
-
-    private function generateArgumentTokens(): array
-    {
-        $tokens = [];
-        foreach ($this->arguments as $argument) {
-            $tokens[] = $this->flatten($this->makeComputed($argument)->getTokens());
-            $tokens[] = ',';
-        }
-        // Remove last comma
-        array_pop($tokens);
-        return $tokens;
+    ) {
     }
 }

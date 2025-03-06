@@ -11,8 +11,7 @@ class PairedTokenConverter extends TokenConverter
         public string $endTrigger,
         public mixed  $extractor,
         public mixed  $subConverter,
-    )
-    {
+    ) {
     }
 
     public function getTrigger(): string

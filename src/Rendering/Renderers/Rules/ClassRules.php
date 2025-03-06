@@ -23,7 +23,6 @@ class ClassRules
         public int               $newLinesAfterProperties = 2,
         public int               $newLinesAfterEachMethod = 2,
         public int               $newLinesAfterClosingBrace = 1,
-    )
-    {
+    ) {
     }
 }

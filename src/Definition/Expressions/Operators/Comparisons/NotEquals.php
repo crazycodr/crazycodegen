@@ -16,16 +16,6 @@ class NotEquals implements CanBeComputed
         public CanBeComputed|int|float|string|bool $right,
         public bool                                $soft = false,
         public bool                                $useLtGt = false
-    )
-    {
-    }
-
-    public function getTokens(): array
-    {
-        return $this->flatten([
-            $this->makeComputed($this->left)->getTokens(),
-            $this->useLtGt ? '<>' : ($this->soft ? '!=' : '!=='),
-            $this->makeComputed($this->right)->getTokens()
-        ]);
+    ) {
     }
 }

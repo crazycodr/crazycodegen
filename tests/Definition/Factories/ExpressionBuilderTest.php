@@ -31,7 +31,6 @@ use PHPUnit\Framework\TestCase;
 
 class ExpressionBuilderTest extends TestCase
 {
-
     public static function providesPrecedence(): array
     {
         return [

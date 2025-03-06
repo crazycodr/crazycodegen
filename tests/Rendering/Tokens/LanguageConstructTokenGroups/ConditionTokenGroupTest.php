@@ -29,7 +29,8 @@ class ConditionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->conditions->spacesAfterKeyword = 4;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             if    (true) {
                 true;
             }
@@ -70,7 +71,8 @@ class ConditionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             if (1 === (1*3)) {
                 true;
             }
@@ -90,7 +92,8 @@ class ConditionTokenGroupTest extends TestCase
         $rules->conditions->openingBrace = BracePositionEnum::SAME_LINE;
         $rules->conditions->spacesBeforeOpeningBrace = 4;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             if (true)    {
                 true;
             }
@@ -110,7 +113,8 @@ class ConditionTokenGroupTest extends TestCase
         $rules->conditions->openingBrace = BracePositionEnum::NEXT_LINE;
         $rules->conditions->spacesBeforeOpeningBrace = 4;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             if (true)
             {
                 true;
@@ -152,7 +156,8 @@ class ConditionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             if (true) {
                 1 === (1*3);
                 return 1;
@@ -172,7 +177,8 @@ class ConditionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             if (true) {
                 true;
             } else {
@@ -195,7 +201,8 @@ class ConditionTokenGroupTest extends TestCase
         $rules->conditions->openingBrace = BracePositionEnum::NEXT_LINE;
         $rules->conditions->keywordAfterClosingBrace = BracePositionEnum::NEXT_LINE;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             if (true)
             {
                 true;
@@ -231,7 +238,8 @@ class ConditionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             if (true) {
                 0;
             } elseif (1===2) {

@@ -23,8 +23,7 @@ class ArgumentTokenGroup extends TokenGroup
         public readonly null|string|AbstractTypeTokenGroup $type = null,
         public readonly null|int|float|string|bool|Token   $defaultValue = null,
         public readonly bool                               $defaultValueIsNull = false,
-    )
-    {
+    ) {
     }
 
     /**

@@ -12,8 +12,7 @@ class UnpairedTokenConverter extends TokenConverter
         public mixed       $extractor,
         public null|string $lookAheadToken = null,
         public bool        $useRightAssociativity = false,
-    )
-    {
+    ) {
     }
 
     public function getTrigger(): string

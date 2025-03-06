@@ -30,8 +30,7 @@ class FunctionTokenGroup extends TokenGroup
         public readonly null|ArgumentListTokenGroup        $arguments = null,
         public readonly null|string|AbstractTypeTokenGroup $returnType = null,
         public readonly null|array                         $bodyInstructions = null,
-    )
-    {
+    ) {
     }
 
     /**

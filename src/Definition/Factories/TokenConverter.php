@@ -9,7 +9,7 @@ abstract class TokenConverter
     /**
      * @throws ExpressionBuildingMissingOperandForFoundTokenException
      */
-    public abstract function convertTokens(array $tokens): array;
+    abstract public function convertTokens(array $tokens): array;
 
     public function getTrigger(): string
     {

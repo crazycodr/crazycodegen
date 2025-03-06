@@ -19,7 +19,8 @@ class ImportTokenGroupTest extends TestCase
         $rules = new RenderingRules();
         $rules->imports->spacesAfterUse = 4;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             use    CrazyCodeGen\Tests;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -34,7 +35,8 @@ class ImportTokenGroupTest extends TestCase
         $rules->imports->spacesAfterType = 4;
         $rules->imports->spacesAfterAs = 4;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             use CrazyCodeGen\Tests    as    tests;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))

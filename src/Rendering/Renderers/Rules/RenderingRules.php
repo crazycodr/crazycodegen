@@ -19,8 +19,7 @@ class RenderingRules
         public ClassRules        $classes = new ClassRules(),
         public PropertyRules     $properties = new PropertyRules(),
         public ConditionRules    $conditions = new ConditionRules(),
-    )
-    {
+    ) {
     }
 
     public function indent(RenderContext $context): void

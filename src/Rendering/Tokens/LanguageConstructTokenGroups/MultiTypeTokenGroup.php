@@ -21,8 +21,7 @@ class MultiTypeTokenGroup extends AbstractTypeTokenGroup
         public array $types,
         public bool  $unionTypes = true,
         public bool  $nestedTypes = false,
-    )
-    {
+    ) {
     }
 
     /**

@@ -18,7 +18,7 @@ trait TokenFunctions
      */
     private function renderTokensToString(array $tokens): string
     {
-        return join('', array_map(fn(Token $token) => $token->render(), $tokens));
+        return join('', array_map(fn (Token $token) => $token->render(), $tokens));
     }
 
     /**
@@ -54,8 +54,7 @@ trait TokenFunctions
         array|Token|TokenGroup $instructions,
         RenderContext          $context,
         RenderingRules         $rules
-    ): array
-    {
+    ): array {
         $tokens = [];
         if (is_array($instructions)) {
             foreach ($instructions as $instruction) {
@@ -84,8 +83,7 @@ trait TokenFunctions
         array|Token|TokenGroup $values,
         RenderContext          $context,
         RenderingRules         $rules,
-    ): array
-    {
+    ): array {
         $tokens = [];
         if (is_array($values)) {
             foreach ($values as $value) {

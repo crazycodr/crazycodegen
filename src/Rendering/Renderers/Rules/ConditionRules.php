@@ -12,7 +12,6 @@ class ConditionRules
         public BracePositionEnum $keywordAfterClosingBrace = BracePositionEnum::NEXT_LINE,
         public int               $spacesBeforeOpeningBrace = 1,
         public int               $spacesAfterClosingBrace = 1,
-    )
-    {
+    ) {
     }
 }

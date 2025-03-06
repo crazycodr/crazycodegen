@@ -14,15 +14,6 @@ class Nots implements CanBeComputed
     public function __construct(
         public CanBeComputed|int|float|string|bool $operand,
         public bool                                $doubled = false,
-    )
-    {
-    }
-
-    public function getTokens(): array
-    {
-        return $this->flatten([
-            $this->doubled ? ['!', '!'] : ['!'],
-            $this->makeComputed($this->operand)->getTokens()
-        ]);
+    ) {
     }
 }

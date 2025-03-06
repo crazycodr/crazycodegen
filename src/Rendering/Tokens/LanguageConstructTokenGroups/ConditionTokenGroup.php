@@ -30,8 +30,7 @@ class ConditionTokenGroup extends TokenGroup
         public readonly array|Token|TokenGroup $trueInstructions,
         /** @var array<Token|TokenGroup>|Token|TokenGroup $falseInstructions */
         public readonly array|Token|TokenGroup $falseInstructions = [],
-    )
-    {
+    ) {
     }
 
     /**

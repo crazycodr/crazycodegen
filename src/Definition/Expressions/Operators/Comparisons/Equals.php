@@ -15,16 +15,6 @@ class Equals implements CanBeComputed
         public CanBeComputed|int|float|string|bool $left,
         public CanBeComputed|int|float|string|bool $right,
         public bool                                $soft = false,
-    )
-    {
-    }
-
-    public function getTokens(): array
-    {
-        return $this->flatten([
-            $this->makeComputed($this->left)->getTokens(),
-            $this->soft ? '==' : '===',
-            $this->makeComputed($this->right)->getTokens()
-        ]);
+    ) {
     }
 }

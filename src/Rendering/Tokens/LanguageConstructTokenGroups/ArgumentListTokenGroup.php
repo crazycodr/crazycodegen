@@ -22,8 +22,7 @@ class ArgumentListTokenGroup extends TokenGroup
     public function __construct(
         /** @var ArgumentTokenGroup[] $arguments */
         public array $arguments = [],
-    )
-    {
+    ) {
     }
 
     /**
@@ -43,8 +42,8 @@ class ArgumentListTokenGroup extends TokenGroup
                     $types[] = $argument->renderType($context, $rules);
                     $identifiers[] = $argument->renderIdentifier($context, $rules);
                 }
-                $longestType = max(array_map(fn(array $tokens) => strlen($this->renderTokensToString($tokens)), $types));
-                $longestIdentifier = max(array_map(fn(array $tokens) => strlen($this->renderTokensToString($tokens)), $identifiers));
+                $longestType = max(array_map(fn (array $tokens) => strlen($this->renderTokensToString($tokens)), $types));
+                $longestIdentifier = max(array_map(fn (array $tokens) => strlen($this->renderTokensToString($tokens)), $identifiers));
                 $context->chopDown->paddingSpacesForTypes = $rules->argumentLists->padTypes ? $longestType : null;
                 $context->chopDown->paddingSpacesForIdentifiers = $rules->argumentLists->padIdentifiers ? $longestIdentifier : null;
             }

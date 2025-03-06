@@ -9,7 +9,6 @@ class ArgumentListRules
         public bool $addSeparatorToLastItem = true,
         public bool $padTypes = false,
         public bool $padIdentifiers = false,
-    )
-    {
+    ) {
     }
 }

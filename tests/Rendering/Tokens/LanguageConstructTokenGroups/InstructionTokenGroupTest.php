@@ -22,7 +22,8 @@ class InstructionTokenGroupTest extends TestCase
             new Token(1),
         );
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             1;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -35,7 +36,8 @@ class InstructionTokenGroupTest extends TestCase
             new SingleTypeTokenGroup('int'),
         );
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             int;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -48,7 +50,8 @@ class InstructionTokenGroupTest extends TestCase
             [new Token(1), new CommaToken(), new Token(2)],
         );
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             1,2;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -61,7 +64,8 @@ class InstructionTokenGroupTest extends TestCase
             [new Token(1), new SpacesToken(), new SingleTypeTokenGroup('string')],
         );
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             1 string;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))

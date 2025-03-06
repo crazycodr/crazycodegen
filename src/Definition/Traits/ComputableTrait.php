@@ -3,12 +3,12 @@
 namespace CrazyCodeGen\Definition\Traits;
 
 use CrazyCodeGen\Definition\Base\CanBeComputed;
-use CrazyCodeGen\Definitions\Values\BoolValue;
-use CrazyCodeGen\Definitions\Values\FloatValue;
-use CrazyCodeGen\Definitions\Values\IntValue;
-use CrazyCodeGen\Definitions\Values\NullValue;
-use CrazyCodeGen\Definitions\Values\StringValue;
-use CrazyCodeGen\Exceptions\NonComputableValueException;
+use CrazyCodeGen\Definition\Definitions\Values\BoolValue;
+use CrazyCodeGen\Definition\Definitions\Values\FloatValue;
+use CrazyCodeGen\Definition\Definitions\Values\IntValue;
+use CrazyCodeGen\Definition\Definitions\Values\NullValue;
+use CrazyCodeGen\Definition\Definitions\Values\StringValue;
+use CrazyCodeGen\Definition\Exceptions\NonComputableValueException;
 
 trait ComputableTrait
 {

@@ -45,7 +45,8 @@ class ImplementsTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplements = 1;
         $rules->classes->spacesAfterImplementSeparator = 1;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             implements \\JsonSerializable, \\ArrayAccess
             EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
@@ -64,7 +65,8 @@ class ImplementsTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplements = 2;
         $rules->classes->spacesAfterImplementSeparator = 1;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             implements  \\JsonSerializable, \\ArrayAccess
             EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
@@ -83,7 +85,8 @@ class ImplementsTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplements = 1;
         $rules->classes->spacesAfterImplementSeparator = 2;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             implements \\JsonSerializable,  \\ArrayAccess
             EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
@@ -102,7 +105,8 @@ class ImplementsTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplements = 1;
         $rules->classes->spacesAfterImplementSeparator = 2;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             implements \\JsonSerializable,
                        \\ArrayAccess
             EOS,
@@ -122,7 +126,8 @@ class ImplementsTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplements = 4;
         $rules->classes->spacesAfterImplementSeparator = 1;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             implements    \\JsonSerializable,
                           \\ArrayAccess
             EOS,

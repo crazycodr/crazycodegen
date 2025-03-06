@@ -15,16 +15,6 @@ class ConcatAssigns implements CanBeComputed
     public function __construct(
         public CanBeAssigned                       $left,
         public CanBeComputed|int|float|string|bool $right,
-    )
-    {
-    }
-
-    public function getTokens(): array
-    {
-        return $this->flatten([
-            $this->left->getTokens(),
-            '.=',
-            $this->makeComputed($this->right)->getTokens()
-        ]);
+    ) {
     }
 }

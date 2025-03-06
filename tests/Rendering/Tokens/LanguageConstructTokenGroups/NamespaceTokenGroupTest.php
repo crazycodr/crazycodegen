@@ -20,7 +20,8 @@ class NamespaceTokenGroupTest extends TestCase
         $rules->namespaces->spacesAfterNamespace = 1;
         $rules->namespaces->newLinesAfterSemiColon = 0;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             namespace CrazyCodeGen\Tests;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -35,7 +36,8 @@ class NamespaceTokenGroupTest extends TestCase
         $rules->namespaces->spacesAfterNamespace = 4;
         $rules->namespaces->newLinesAfterSemiColon = 0;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             namespace    CrazyCodeGen\Tests;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -50,7 +52,8 @@ class NamespaceTokenGroupTest extends TestCase
         $rules->namespaces->spacesAfterNamespace = 1;
         $rules->namespaces->newLinesAfterSemiColon = 2;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             namespace CrazyCodeGen\Tests;
             
             

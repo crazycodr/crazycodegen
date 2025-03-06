@@ -27,7 +27,8 @@ class DocBlockTokenGroupTest extends TestCase
             texts: ['', ''],
         );
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             /**
              */
             EOS,
@@ -41,7 +42,8 @@ class DocBlockTokenGroupTest extends TestCase
             texts: ['Hello', 'World', 'Foo'],
         );
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             /**
              * Hello
              *
@@ -63,7 +65,8 @@ class DocBlockTokenGroupTest extends TestCase
         $rules = new RenderingRules();
         $rules->docBlocks->lineLength = 25;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             /**
              * Hello world, i love
              * programming and this

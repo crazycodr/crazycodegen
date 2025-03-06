@@ -38,8 +38,7 @@ class ClassTokenGroup extends TokenGroup
         public readonly array                              $properties = [],
         /** @var MethodTokenGroup[] $methods */
         public readonly array                              $methods = [],
-    )
-    {
+    ) {
     }
 
     /**
@@ -251,8 +250,7 @@ class ClassTokenGroup extends TokenGroup
         WrappingDecision $wrapIndividualImplements,
         RenderContext    $context,
         RenderingRules   $rules,
-    ): array
-    {
+    ): array {
         $scenario = [];
         $scenario[] = $this->getDeclarationTokens();
         $extendsTokens = $this->getExtendsTokens($context, $rules);

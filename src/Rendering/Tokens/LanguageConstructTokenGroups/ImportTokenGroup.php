@@ -22,8 +22,7 @@ class ImportTokenGroup extends TokenGroup
     public function __construct(
         public string|SingleTypeTokenGroup $type,
         public null|string                 $alias = null,
-    )
-    {
+    ) {
     }
 
     /**

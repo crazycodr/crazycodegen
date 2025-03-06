@@ -13,12 +13,6 @@ class Increments implements CanBeComputed
     public function __construct(
         public CanBeAssigned $operand,
         public bool          $pre = false,
-    )
-    {
-    }
-
-    public function getTokens(): array
-    {
-        return $this->flatten([$this->pre ? '++' : [], $this->operand->getTokens(), $this->pre ? [] : '++']);
+    ) {
     }
 }

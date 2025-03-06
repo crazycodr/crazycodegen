@@ -22,8 +22,7 @@ class ImplementsTokenGroup extends TokenGroup
     public function __construct(
         /** @var string[]|SingleTypeTokenGroup[] $implementations */
         public readonly array $implementations,
-    )
-    {
+    ) {
     }
 
     /**

@@ -20,7 +20,6 @@ class MethodRules
         public int               $spacesAfterArguments = 0,
         public int               $spacesAfterReturnColon = 1,
         public int               $spacesBeforeOpeningBrace = 1,
-    )
-    {
+    ) {
     }
 }

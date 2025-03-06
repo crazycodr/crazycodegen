@@ -8,7 +8,6 @@ class ImportRules
         public int $spacesAfterUse = 1,
         public int $spacesAfterType = 1,
         public int $spacesAfterAs = 1,
-    )
-    {
+    ) {
     }
 }

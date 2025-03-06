@@ -19,8 +19,7 @@ class NamespaceTokenGroup extends TokenGroup
 
     public function __construct(
         public readonly string $path,
-    )
-    {
+    ) {
     }
 
     /**

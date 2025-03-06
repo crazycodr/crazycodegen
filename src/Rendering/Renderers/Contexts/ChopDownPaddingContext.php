@@ -9,7 +9,6 @@ class ChopDownPaddingContext
         public null|int $paddingSpacesForModifiers = null,
         public null|int $paddingSpacesForTypes = null,
         public null|int $paddingSpacesForIdentifiers = null,
-    )
-    {
+    ) {
     }
 }

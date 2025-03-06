@@ -14,8 +14,7 @@ class SingleTypeTokenGroup extends AbstractTypeTokenGroup
 
     public function __construct(
         public readonly string $type,
-    )
-    {
+    ) {
         if (str_contains($type, '\\')) {
             $this->namespace = substr($type, 0, strrpos($type, '\\'));
             $this->shortName = substr($type, strrpos($type, '\\') + 1);

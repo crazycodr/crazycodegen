@@ -8,7 +8,6 @@ class ArgumentRules
         public int $spacesAfterType = 1,
         public int $spacesAfterIdentifier = 1,
         public int $spacesAfterEquals = 1,
-    )
-    {
+    ) {
     }
 }

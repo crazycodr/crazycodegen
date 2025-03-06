@@ -25,7 +25,8 @@ class FunctionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction()
             {
             }
@@ -62,7 +63,8 @@ class FunctionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction()
             {
             }
@@ -79,7 +81,8 @@ class FunctionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction()
             {
             }
@@ -97,7 +100,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->spacesAfterIdentifier = 1;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction ()
             {
             }
@@ -121,7 +125,8 @@ class FunctionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(\$foo, int \$bar, bool \$baz = true)
             {
             }
@@ -140,7 +145,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->spacesAfterArguments = 1;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction() : string
             {
             }
@@ -159,7 +165,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->spacesAfterReturnColon = 2;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction():  string
             {
             }
@@ -179,7 +186,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules->functions->spacesBeforeOpeningBrace = 2;
         $rules->functions->openingBrace = BracePositionEnum::SAME_LINE;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(): string  {
             }
             EOS,
@@ -198,7 +206,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules->functions->openingBrace = BracePositionEnum::SAME_LINE;
         $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction()  {
             }
             EOS,
@@ -216,7 +225,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules->functions->openingBrace = BracePositionEnum::SAME_LINE;
         $rules->functions->closingBrace = BracePositionEnum::SAME_LINE;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction() {}
             EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
@@ -289,7 +299,8 @@ class FunctionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
             ) {
             }
@@ -306,7 +317,8 @@ class FunctionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
             ) {
             }
@@ -323,7 +335,8 @@ class FunctionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
             ) {
             }
@@ -341,7 +354,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->spacesAfterIdentifier = 1;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction (
             ) {
             }
@@ -365,7 +379,8 @@ class FunctionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
                 \$foo,
                 int \$bar,
@@ -387,7 +402,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->spacesAfterArguments = 1;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
             ) : string {
             }
@@ -406,7 +422,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->spacesAfterReturnColon = 2;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
             ):  string {
             }
@@ -425,7 +442,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->spacesBeforeOpeningBrace = 2;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
             ): string  {
             }
@@ -443,7 +461,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->spacesBeforeOpeningBrace = 2;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
             )  {
             }
@@ -462,7 +481,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules->functions->openingBrace = BracePositionEnum::NEXT_LINE;
         $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
             ) {
             }
@@ -488,7 +508,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules->lineLength = 40;
         $rules->functions->argumentsOnDifferentLines = WrappingDecision::NEVER;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(\$foo, int \$bar, bool \$baz = true)
             {
             }
@@ -513,7 +534,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(\$foo, int \$bar, bool \$baz = true)
             {
             }
@@ -539,7 +561,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules->lineLength = 40;
         $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
                 \$foo,
                 int \$bar,
@@ -567,7 +590,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->argumentsOnDifferentLines = WrappingDecision::ALWAYS;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             function myFunction(
                 \$foo,
                 int \$bar,
@@ -590,7 +614,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules->docBlocks->lineLength = 40;
         $rules->functions->newLinesAfterDocBlock = 3;
 
-        $this->assertEquals(<<<EOS
+        $this->assertEquals(
+            <<<EOS
             /**
              * This is a docblock that should be
              * wrapped and displayed before the

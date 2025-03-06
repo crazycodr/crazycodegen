@@ -10,8 +10,7 @@ class TokenConverterGroup extends TokenConverter
         /** @var TokenConverter[] */
         public array $converters,
         public bool  $useRightAssociativity = false,
-    )
-    {
+    ) {
     }
 
     /**

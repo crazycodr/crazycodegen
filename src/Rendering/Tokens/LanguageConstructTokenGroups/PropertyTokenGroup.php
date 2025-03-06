@@ -31,8 +31,7 @@ class PropertyTokenGroup extends TokenGroup
         public readonly bool                               $static = false,
         public readonly null|int|float|string|bool|Token   $defaultValue = null,
         public readonly bool                               $defaultValueIsNull = false,
-    )
-    {
+    ) {
     }
 
     /**
@@ -83,8 +82,7 @@ class PropertyTokenGroup extends TokenGroup
         array|Token $tokensToPad,
         ?int        $paddingContextSpaces,
         int         $ruleSpacingValue
-    ): int
-    {
+    ): int {
         if ($paddingContextSpaces) {
             $renderedTokensLength = strlen($this->renderTokensToString(
                 is_array($tokensToPad) ? $tokensToPad : [$tokensToPad]
