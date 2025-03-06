@@ -22,9 +22,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $this->assertEquals(
             '$foo',
@@ -40,9 +40,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $this->assertEquals(
             'int $foo',
@@ -58,9 +58,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $this->assertEquals(
             '$foo = 123',
@@ -76,9 +76,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $this->assertEquals(
             '$foo = \'Hello World\'',
@@ -94,9 +94,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $this->assertEquals(
             '$foo = true',
@@ -112,9 +112,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 2;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 2;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 2;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 2;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 2;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 2;
 
         $this->assertEquals(
             'int  $foo',
@@ -130,9 +130,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 2;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 2;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 2;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 2;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 2;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 2;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownRenderContext();
@@ -151,9 +151,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 2;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 2;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 2;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 2;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 2;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 2;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownRenderContext();
@@ -173,9 +173,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 2;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 2;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 2;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 2;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 2;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 2;
 
         $this->assertEquals(
             '$foo  =  123',
@@ -191,9 +191,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownRenderContext();
@@ -213,9 +213,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownRenderContext();
@@ -235,9 +235,9 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
+        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
+        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownRenderContext();

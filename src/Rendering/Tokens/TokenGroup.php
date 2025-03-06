@@ -22,14 +22,4 @@ abstract class TokenGroup
     {
         return [];
     }
-
-    protected function repeatNTimes(int $newLinesAfterNamespace, Token $clonedToken): array
-    {
-        $tokens = [];
-        while ($newLinesAfterNamespace > 0) {
-            $newLinesAfterNamespace--;
-            $tokens[] = clone $clonedToken;
-        }
-        return $tokens;
-    }
 }

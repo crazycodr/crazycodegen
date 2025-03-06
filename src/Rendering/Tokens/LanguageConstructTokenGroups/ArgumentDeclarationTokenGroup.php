@@ -116,7 +116,7 @@ class ArgumentDeclarationTokenGroup extends TokenGroup
             $tokensAsString = $this->renderTokensToString($typesTokens);
             $spacesToAdd = max(0, $context->chopDown->paddingSpacesForTypes - strlen($tokensAsString)) + 1;
         } elseif (!empty($typesTokens)) {
-            $spacesToAdd = $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentTypeAndIdentifier;
+            $spacesToAdd = $rules->arguments->spacesBetweenArgumentTypeAndIdentifier;
         } else {
             return [];
         }
@@ -135,7 +135,7 @@ class ArgumentDeclarationTokenGroup extends TokenGroup
             $tokensAsString = $this->renderTokensToString($identifierTokens);
             $spacesToAdd = max(0, $context->chopDown->paddingSpacesForIdentifiers - strlen($tokensAsString)) + 1;
         } elseif (!empty($identifierTokens)) {
-            $spacesToAdd = $rules->argumentDefinitionRenderingRules->spacesBetweenArgumentIdentifierAndEquals;
+            $spacesToAdd = $rules->arguments->spacesBetweenArgumentIdentifierAndEquals;
         } else {
             return [];
         }
@@ -148,6 +148,6 @@ class ArgumentDeclarationTokenGroup extends TokenGroup
      */
     private function getSpacesBetweenEqualsAndValue(RenderingRules $rules): array
     {
-        return [new SpacesToken($rules->argumentDefinitionRenderingRules->spacesBetweenArgumentEqualsAndValue)];
+        return [new SpacesToken($rules->arguments->spacesBetweenArgumentEqualsAndValue)];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Rendering\Renderers\RenderingRules;
 
-class ArgumentListDefinitionRenderingRules
+class ArgumentListDeclarationRules
 {
     public function __construct(
         public int  $spacesAfterArgumentComma = 1,

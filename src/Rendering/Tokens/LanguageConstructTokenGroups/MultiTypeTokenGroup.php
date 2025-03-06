@@ -56,9 +56,7 @@ class MultiTypeTokenGroup extends AbstractTypeTokenGroup
         if ($this->nestedTypes) {
             $tokens[] = new ParEndToken();
         }
-        if ($context->argumentDefinitionTypePaddingSize > 0) {
-            $tokens[] = new SpacesToken($context->argumentDefinitionTypePaddingSize);
-        }
+        $tokens[] = new SpacesToken($context->argumentDefinitionTypePaddingSize);
         return $this->flatten($tokens);
     }
 

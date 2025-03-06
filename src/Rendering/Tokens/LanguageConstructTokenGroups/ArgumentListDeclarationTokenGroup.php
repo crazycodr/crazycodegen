@@ -8,7 +8,7 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
@@ -88,10 +88,10 @@ class ArgumentListDeclarationTokenGroup extends TokenGroup
     {
         $tokens = [];
         $tokens[] = new ParStartToken();
-        $tokens[] = new NewLineToken();
+        $tokens[] = new NewLineTokens();
         if (!empty($this->arguments)) {
             $rules->indent($context);
-            if ($rules->argumentListDefinitionRenderingRules->padTypeNames || $rules->argumentListDefinitionRenderingRules->padIdentifiers) {
+            if ($rules->argumentLists->padTypeNames || $rules->argumentLists->padIdentifiers) {
                 $types = [];
                 $identifiers = [];
                 foreach ($this->arguments as $argument) {
@@ -101,8 +101,8 @@ class ArgumentListDeclarationTokenGroup extends TokenGroup
                 $longestType = max(array_map(fn (array $tokens) => strlen($this->renderTokensToString($tokens)), $types));
                 $longestIdentifier = max(array_map(fn (array $tokens) => strlen($this->renderTokensToString($tokens)), $identifiers));
                 $context->chopDown = new ChopDownRenderContext(
-                    paddingSpacesForTypes: $rules->argumentListDefinitionRenderingRules->padTypeNames ? $longestType : null,
-                    paddingSpacesForIdentifiers: $rules->argumentListDefinitionRenderingRules->padIdentifiers ? $longestIdentifier : null,
+                    paddingSpacesForTypes: $rules->argumentLists->padTypeNames ? $longestType : null,
+                    paddingSpacesForIdentifiers: $rules->argumentLists->padIdentifiers ? $longestIdentifier : null,
                 );
             }
             $argumentsLeft = count($this->arguments);
@@ -110,10 +110,10 @@ class ArgumentListDeclarationTokenGroup extends TokenGroup
                 $argumentsLeft--;
                 $tokens[] = new SpacesToken(strlen($context->indents));
                 $tokens[] = $argument->render($context, $rules);
-                if ($argumentsLeft > 0 || $rules->argumentListDefinitionRenderingRules->addTrailingCommaToLastItemInChopDown) {
+                if ($argumentsLeft > 0 || $rules->argumentLists->addTrailingCommaToLastItemInChopDown) {
                     $tokens[] = new CommaToken();
                 }
-                $tokens[] = new NewLineToken();
+                $tokens[] = new NewLineTokens();
             }
             $context->chopDown = null;
             $rules->unindent($context);

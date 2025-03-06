@@ -10,24 +10,24 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\PipeToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
+use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
 use PHPUnit\Framework\TestCase;
 
 class MultiTypeTokenGroupTest extends TestCase
 {
+    use RenderTokensToStringTrait;
+
     public function testTypesAreJoinedWithPipeWhenUnionIsTrueByDefault()
     {
         $token = new MultiTypeTokenGroup([
-            $stringType = new SingleTypeTokenGroup('string'),
-            $intType = new SingleTypeTokenGroup('int'),
+            new SingleTypeTokenGroup('string'),
+            new SingleTypeTokenGroup('int'),
         ]);
 
-        $this->assertEquals(
-            array_merge(
-                $stringType->render(new RenderContext(), new RenderingRules()),
-                [new PipeToken()],
-                $intType->render(new RenderContext(), new RenderingRules()),
-            ),
-            $token->render(new RenderContext(), new RenderingRules())
+        $this->assertEquals(<<<EOS
+            string|int
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
         );
     }
 
@@ -35,19 +35,16 @@ class MultiTypeTokenGroupTest extends TestCase
     {
         $token = new MultiTypeTokenGroup(
             [
-                $stringType = new SingleTypeTokenGroup('string'),
-                $intType = new SingleTypeTokenGroup('int'),
+                new SingleTypeTokenGroup('string'),
+                new SingleTypeTokenGroup('int'),
             ],
             unionTypes: false
         );
 
-        $this->assertEquals(
-            array_merge(
-                $stringType->render(new RenderContext(), new RenderingRules()),
-                [new AmpersandToken()],
-                $intType->render(new RenderContext(), new RenderingRules()),
-            ),
-            $token->render(new RenderContext(), new RenderingRules())
+        $this->assertEquals(<<<EOS
+            string&int
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
         );
     }
 
@@ -55,13 +52,10 @@ class MultiTypeTokenGroupTest extends TestCase
     {
         $token = new MultiTypeTokenGroup(['string', 'int']);
 
-        $this->assertEquals(
-            array_merge(
-                (new SingleTypeTokenGroup('string'))->render(new RenderContext(), new RenderingRules()),
-                [new PipeToken()],
-                (new SingleTypeTokenGroup('int'))->render(new RenderContext(), new RenderingRules()),
-            ),
-            $token->render(new RenderContext(), new RenderingRules())
+        $this->assertEquals(<<<EOS
+            string|int
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
         );
     }
 
@@ -69,15 +63,10 @@ class MultiTypeTokenGroupTest extends TestCase
     {
         $token = new MultiTypeTokenGroup(['string', 'int'], nestedTypes: true);
 
-        $this->assertEquals(
-            array_merge(
-                [new ParStartToken()],
-                (new SingleTypeTokenGroup('string'))->render(new RenderContext(), new RenderingRules()),
-                [new PipeToken()],
-                (new SingleTypeTokenGroup('int'))->render(new RenderContext(), new RenderingRules()),
-                [new ParEndToken()],
-            ),
-            $token->render(new RenderContext(), new RenderingRules())
+        $this->assertEquals(<<<EOS
+            (string|int)
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
         );
     }
 
@@ -85,22 +74,17 @@ class MultiTypeTokenGroupTest extends TestCase
     {
         $token = new MultiTypeTokenGroup(
             [
-                $intFloatType = new MultiTypeTokenGroup(['int', 'float'], nestedTypes: true),
-                $stringBoolType = new MultiTypeTokenGroup(['string', 'bool'], nestedTypes: true),
+                new MultiTypeTokenGroup(['int', 'float'], nestedTypes: true),
+                new MultiTypeTokenGroup(['string', 'bool'], nestedTypes: true),
             ],
             unionTypes: false,
             nestedTypes: true,
         );
 
-        $this->assertEquals(
-            array_merge(
-                [new ParStartToken()],
-                $intFloatType->render(new RenderContext(), new RenderingRules()),
-                [new AmpersandToken()],
-                $stringBoolType->render(new RenderContext(), new RenderingRules()),
-                [new ParEndToken()],
-            ),
-            $token->render(new RenderContext(), new RenderingRules())
+        $this->assertEquals(<<<EOS
+            ((int|float)&(string|bool))
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
         );
     }
 }

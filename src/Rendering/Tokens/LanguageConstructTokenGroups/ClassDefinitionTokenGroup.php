@@ -10,7 +10,7 @@ use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\AbstractToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ClassToken;
@@ -64,15 +64,15 @@ class ClassDefinitionTokenGroup extends TokenGroup
                 if ($rules->exceedsAvailableSpace($context->getCurrentLine(), $textScenarioLine)) {
                     if (
                         str_contains($textScenarioLine, 'extends ')
-                        && $rules->classDefinitionRenderingRules->extendsOnNextLine === ChopWrapDecisionEnum::NEVER_WRAP
+                        && $rules->classes->extendsOnNextLine === ChopWrapDecisionEnum::NEVER_WRAP
                     ) {
                         continue;
                     }
                     if (
                         str_contains($textScenarioLine, 'implements ')
                         && (
-                            $rules->classDefinitionRenderingRules->implementsOnNextLine === ChopWrapDecisionEnum::NEVER_WRAP
-                            || $rules->classDefinitionRenderingRules->implementsOnDifferentLines === ChopWrapDecisionEnum::NEVER_WRAP
+                            $rules->classes->implementsOnNextLine === ChopWrapDecisionEnum::NEVER_WRAP
+                            || $rules->classes->implementsOnDifferentLines === ChopWrapDecisionEnum::NEVER_WRAP
                         )
                     ) {
                         continue;
@@ -86,11 +86,11 @@ class ClassDefinitionTokenGroup extends TokenGroup
         /** @var Token[] $tokens */
         $tokens = array_merge($tokens, array_pop($scenarios));
 
-        if ($rules->classDefinitionRenderingRules->classOpeningBrace === BracePositionEnum::SAME_LINE) {
-            $tokens[] = new SpacesToken($rules->classDefinitionRenderingRules->spacesBeforeOpeningBraceIfSameLine);
+        if ($rules->classes->classOpeningBrace === BracePositionEnum::SAME_LINE) {
+            $tokens[] = new SpacesToken($rules->classes->spacesBeforeOpeningBraceIfSameLine);
             $tokens[] = new BraceStartToken();
         } else {
-            $tokens[] = new NewLineToken();
+            $tokens[] = new NewLineTokens();
             if (!empty($context->indents)) {
                 $tokens[] = SpacesToken::fromString($context->indents);
             }
@@ -98,9 +98,9 @@ class ClassDefinitionTokenGroup extends TokenGroup
             $rules->indent($context);
         }
 
-        if ($rules->classDefinitionRenderingRules->classClosingBrace !== BracePositionEnum::SAME_LINE) {
+        if ($rules->classes->classClosingBrace !== BracePositionEnum::SAME_LINE) {
             $rules->unindent($context);
-            $tokens[] = new NewLineToken();
+            $tokens[] = new NewLineTokens();
             if (!empty($context->indents)) {
                 $tokens[] = SpacesToken::fromString($context->indents);
             }
@@ -204,7 +204,7 @@ class ClassDefinitionTokenGroup extends TokenGroup
             $scenario[] = new SpacesToken();
             $scenario[] = $extendsTokens;
         } elseif (!empty($extendsTokens)) {
-            $scenario[] = new NewLineToken();
+            $scenario[] = new NewLineTokens();
             $rules->indent($context);
             $scenario[] = SpacesToken::fromString($context->indents);
             $scenario[] = $extendsTokens;
@@ -218,12 +218,12 @@ class ClassDefinitionTokenGroup extends TokenGroup
             && $wrapIndividualImplements === ChopWrapDecisionEnum::NEVER_WRAP
             && !empty($inlineImplementsTokens)
         ) {
-            $scenario[] = new NewLineToken();
+            $scenario[] = new NewLineTokens();
             $rules->indent($context);
             $scenario[] = $this->insertIndentationTokens($context, $inlineImplementsTokens);
             $rules->unindent($context);
         } elseif (!empty($chopDownImplementsTokens)) {
-            $scenario[] = new NewLineToken();
+            $scenario[] = new NewLineTokens();
             $rules->indent($context);
             $scenario[] = $this->insertIndentationTokens($context, $chopDownImplementsTokens);
             $rules->unindent($context);
@@ -266,7 +266,7 @@ class ClassDefinitionTokenGroup extends TokenGroup
         $newTokens[] = SpacesToken::fromString($context->indents);
         foreach ($tokens as $token) {
             $newTokens[] = $token;
-            if ($token instanceof NewLineToken) {
+            if ($token instanceof NewLineTokens) {
                 $newTokens[] = SpacesToken::fromString($context->indents);
             }
         }
@@ -282,33 +282,33 @@ class ClassDefinitionTokenGroup extends TokenGroup
         $permutations = [];
 
         $extendsChopWrapDecisions = [];
-        if ($rules->classDefinitionRenderingRules->extendsOnNextLine === ChopWrapDecisionEnum::NEVER_WRAP) {
+        if ($rules->classes->extendsOnNextLine === ChopWrapDecisionEnum::NEVER_WRAP) {
             $extendsChopWrapDecisions[] = ChopWrapDecisionEnum::NEVER_WRAP;
-        } elseif ($rules->classDefinitionRenderingRules->extendsOnNextLine === ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG) {
+        } elseif ($rules->classes->extendsOnNextLine === ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG) {
             $extendsChopWrapDecisions[] = ChopWrapDecisionEnum::NEVER_WRAP;
             $extendsChopWrapDecisions[] = ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP;
-        } elseif ($rules->classDefinitionRenderingRules->extendsOnNextLine === ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP) {
+        } elseif ($rules->classes->extendsOnNextLine === ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP) {
             $extendsChopWrapDecisions[] = ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP;
         }
 
         $implementsChopWrapDecisions = [];
-        if ($rules->classDefinitionRenderingRules->implementsOnNextLine === ChopWrapDecisionEnum::NEVER_WRAP) {
+        if ($rules->classes->implementsOnNextLine === ChopWrapDecisionEnum::NEVER_WRAP) {
             $implementsChopWrapDecisions[] = ChopWrapDecisionEnum::NEVER_WRAP;
-        } elseif ($rules->classDefinitionRenderingRules->implementsOnNextLine === ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG) {
+        } elseif ($rules->classes->implementsOnNextLine === ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG) {
             $implementsChopWrapDecisions[] = ChopWrapDecisionEnum::NEVER_WRAP;
             $implementsChopWrapDecisions[] = ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP;
-        } elseif ($rules->classDefinitionRenderingRules->implementsOnNextLine === ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP) {
+        } elseif ($rules->classes->implementsOnNextLine === ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP) {
             $implementsChopWrapDecisions[] = ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP;
         }
 
         $individualImplementsChopWrapDecisions = [];
         if (in_array(ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP, $implementsChopWrapDecisions)) {
-            if ($rules->classDefinitionRenderingRules->implementsOnDifferentLines === ChopWrapDecisionEnum::NEVER_WRAP) {
+            if ($rules->classes->implementsOnDifferentLines === ChopWrapDecisionEnum::NEVER_WRAP) {
                 $individualImplementsChopWrapDecisions[ChopWrapDecisionEnum::NEVER_WRAP->name] = ChopWrapDecisionEnum::NEVER_WRAP;
-            } elseif ($rules->classDefinitionRenderingRules->implementsOnDifferentLines === ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG) {
+            } elseif ($rules->classes->implementsOnDifferentLines === ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG) {
                 $individualImplementsChopWrapDecisions[ChopWrapDecisionEnum::NEVER_WRAP->name] = ChopWrapDecisionEnum::NEVER_WRAP;
                 $individualImplementsChopWrapDecisions[ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP->name] = ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP;
-            } elseif ($rules->classDefinitionRenderingRules->implementsOnDifferentLines === ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP) {
+            } elseif ($rules->classes->implementsOnDifferentLines === ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP) {
                 $individualImplementsChopWrapDecisions[ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP->name] = ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP;
             }
         }

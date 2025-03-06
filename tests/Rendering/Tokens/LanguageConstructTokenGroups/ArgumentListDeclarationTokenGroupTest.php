@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownRenderContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\ArgumentListDefinitionRenderingRules;
+use CrazyCodeGen\Rendering\Renderers\RenderingRules\ArgumentListDeclarationRules;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListDeclarationTokenGroup;
@@ -26,9 +26,9 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentListDefinitionRenderingRules = new ArgumentListDefinitionRenderingRules();
-        $rules->argumentListDefinitionRenderingRules->spacesAfterArgumentComma = 1;
-        $rules->argumentListDefinitionRenderingRules->addTrailingCommaToLastItemInChopDown = true;
+        $rules->argumentLists = new ArgumentListDeclarationRules();
+        $rules->argumentLists->spacesAfterArgumentComma = 1;
+        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
 
         $this->assertEquals(
             '($foo)',
@@ -48,9 +48,9 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentListDefinitionRenderingRules = new ArgumentListDefinitionRenderingRules();
-        $rules->argumentListDefinitionRenderingRules->spacesAfterArgumentComma = 1;
-        $rules->argumentListDefinitionRenderingRules->addTrailingCommaToLastItemInChopDown = true;
+        $rules->argumentLists = new ArgumentListDeclarationRules();
+        $rules->argumentLists->spacesAfterArgumentComma = 1;
+        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
 
         $this->assertEquals(
             '($foo, $bar, $baz)',
@@ -70,9 +70,9 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentListDefinitionRenderingRules = new ArgumentListDefinitionRenderingRules();
-        $rules->argumentListDefinitionRenderingRules->spacesAfterArgumentComma = 1;
-        $rules->argumentListDefinitionRenderingRules->addTrailingCommaToLastItemInChopDown = false;
+        $rules->argumentLists = new ArgumentListDeclarationRules();
+        $rules->argumentLists->spacesAfterArgumentComma = 1;
+        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
 
         $this->assertEquals(
             <<<EOS
@@ -98,9 +98,9 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentListDefinitionRenderingRules = new ArgumentListDefinitionRenderingRules();
-        $rules->argumentListDefinitionRenderingRules->spacesAfterArgumentComma = 1;
-        $rules->argumentListDefinitionRenderingRules->addTrailingCommaToLastItemInChopDown = true;
+        $rules->argumentLists = new ArgumentListDeclarationRules();
+        $rules->argumentLists->spacesAfterArgumentComma = 1;
+        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
 
         $this->assertEquals(
             <<<EOS
@@ -126,9 +126,9 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentListDefinitionRenderingRules = new ArgumentListDefinitionRenderingRules();
-        $rules->argumentListDefinitionRenderingRules->spacesAfterArgumentComma = 1;
-        $rules->argumentListDefinitionRenderingRules->addTrailingCommaToLastItemInChopDown = true;
+        $rules->argumentLists = new ArgumentListDeclarationRules();
+        $rules->argumentLists->spacesAfterArgumentComma = 1;
+        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownRenderContext();

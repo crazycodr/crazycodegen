@@ -36,9 +36,7 @@ class VariableTokenGroup extends TokenGroup
         } else {
             $tokens[] = $this->name;
         }
-        if ($context->argumentDefinitionIdentifierPaddingSize > 0) {
-            $tokens[] = new SpacesToken($context->argumentDefinitionIdentifierPaddingSize);
-        }
+        $tokens[] = new SpacesToken($context->argumentDefinitionIdentifierPaddingSize);
         return $this->flatten($tokens);
     }
 

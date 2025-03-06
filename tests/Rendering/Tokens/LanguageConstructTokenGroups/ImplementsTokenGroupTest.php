@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\ChopWrapDecisionEnum;
-use CrazyCodeGen\Rendering\Renderers\RenderingRules\ClassDefinitionRenderingRules;
+use CrazyCodeGen\Rendering\Renderers\RenderingRules\ClassDefinitionRules;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImplementsTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
@@ -22,10 +22,10 @@ class ImplementsTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->classDefinitionRenderingRules = new ClassDefinitionRenderingRules();
-        $rules->classDefinitionRenderingRules->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementsKeyword = 1;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementCommaIfSameLine = 1;
+        $rules->classes = new ClassDefinitionRules();
+        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->spacesAfterImplementsKeyword = 1;
+        $rules->classes->spacesAfterImplementCommaIfSameLine = 1;
 
         $this->assertEquals(
             'implements \\JsonSerializable, \\ArrayAccess',
@@ -40,10 +40,10 @@ class ImplementsTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->classDefinitionRenderingRules = new ClassDefinitionRenderingRules();
-        $rules->classDefinitionRenderingRules->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementsKeyword = 1;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementCommaIfSameLine = 1;
+        $rules->classes = new ClassDefinitionRules();
+        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->spacesAfterImplementsKeyword = 1;
+        $rules->classes->spacesAfterImplementCommaIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             implements \\JsonSerializable, \\ArrayAccess
@@ -59,10 +59,10 @@ class ImplementsTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->classDefinitionRenderingRules = new ClassDefinitionRenderingRules();
-        $rules->classDefinitionRenderingRules->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementsKeyword = 2;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementCommaIfSameLine = 1;
+        $rules->classes = new ClassDefinitionRules();
+        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->spacesAfterImplementsKeyword = 2;
+        $rules->classes->spacesAfterImplementCommaIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             implements  \\JsonSerializable, \\ArrayAccess
@@ -78,10 +78,10 @@ class ImplementsTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->classDefinitionRenderingRules = new ClassDefinitionRenderingRules();
-        $rules->classDefinitionRenderingRules->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementsKeyword = 1;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementCommaIfSameLine = 2;
+        $rules->classes = new ClassDefinitionRules();
+        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->spacesAfterImplementsKeyword = 1;
+        $rules->classes->spacesAfterImplementCommaIfSameLine = 2;
 
         $this->assertEquals(<<<EOS
             implements \\JsonSerializable,  \\ArrayAccess
@@ -97,10 +97,10 @@ class ImplementsTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->classDefinitionRenderingRules = new ClassDefinitionRenderingRules();
-        $rules->classDefinitionRenderingRules->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementsKeyword = 1;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementCommaIfSameLine = 2;
+        $rules->classes = new ClassDefinitionRules();
+        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->spacesAfterImplementsKeyword = 1;
+        $rules->classes->spacesAfterImplementCommaIfSameLine = 2;
 
         $this->assertEquals(<<<EOS
             implements \\JsonSerializable,
@@ -117,10 +117,10 @@ class ImplementsTokenGroupTest extends TestCase
         );
 
         $rules = new RenderingRules();
-        $rules->classDefinitionRenderingRules = new ClassDefinitionRenderingRules();
-        $rules->classDefinitionRenderingRules->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementsKeyword = 4;
-        $rules->classDefinitionRenderingRules->spacesAfterImplementCommaIfSameLine = 1;
+        $rules->classes = new ClassDefinitionRules();
+        $rules->classes->implementsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG;
+        $rules->classes->spacesAfterImplementsKeyword = 4;
+        $rules->classes->spacesAfterImplementCommaIfSameLine = 1;
 
         $this->assertEquals(<<<EOS
             implements    \\JsonSerializable,

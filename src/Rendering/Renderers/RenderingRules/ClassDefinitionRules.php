@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Rendering\Renderers\RenderingRules;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\ChopWrapDecisionEnum;
 
-class ClassDefinitionRenderingRules
+class ClassDefinitionRules
 {
     public function __construct(
         public ChopWrapDecisionEnum $extendsOnNextLine = ChopWrapDecisionEnum::CHOP_OR_WRAP_IF_TOO_LONG,

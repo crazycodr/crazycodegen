@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Rendering\Renderers\Contexts;
 
 use CrazyCodeGen\Rendering\Renderers\Enums\ContextShiftOperationEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
 class RenderContext
@@ -35,7 +35,7 @@ class RenderContext
     {
         $this->lastRenderedToken = $token;
         $this->buffer .= $token->render();
-        if ($token instanceof NewLineToken) {
+        if ($token instanceof NewLineTokens) {
             $this->currentLine = '';
         } else {
             $this->currentLine .= $token->text;

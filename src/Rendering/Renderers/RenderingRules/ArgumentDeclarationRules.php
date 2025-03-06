@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Rendering\Renderers\RenderingRules;
 
-class ArgumentDefinitionRenderingRules
+class ArgumentDeclarationRules
 {
     public function __construct(
         public int $spacesBetweenArgumentTypeAndIdentifier = 1,

@@ -11,7 +11,7 @@ use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ColonToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\FunctionToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -41,9 +41,9 @@ class FunctionDefinitionTokenGroup extends TokenGroup
      */
     public function render(RenderContext $context, RenderingRules $rules): array
     {
-        if ($rules->functionDefinitionRenderingRules->argumentsOnDifferentLines === ChopWrapDecisionEnum::NEVER_WRAP) {
+        if ($rules->functions->argumentsOnDifferentLines === ChopWrapDecisionEnum::NEVER_WRAP) {
             return $this->renderInlineScenario($context, $rules);
-        } elseif ($rules->functionDefinitionRenderingRules->argumentsOnDifferentLines === ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP) {
+        } elseif ($rules->functions->argumentsOnDifferentLines === ChopWrapDecisionEnum::ALWAYS_CHOP_OR_WRAP) {
             return $this->renderChopDownScenario($context, $rules);
         } else {
             $inlineScenario = $this->renderInlineScenario($context, $rules);
@@ -122,38 +122,38 @@ class FunctionDefinitionTokenGroup extends TokenGroup
     public function addInlineBraceTokens(RenderingRules $rules, array $tokens): array
     {
         if (
-            $rules->functionDefinitionRenderingRules->funcOpeningBrace === BracePositionEnum::SAME_LINE
-            && $rules->functionDefinitionRenderingRules->funcClosingBrace === BracePositionEnum::SAME_LINE
+            $rules->functions->funcOpeningBrace === BracePositionEnum::SAME_LINE
+            && $rules->functions->funcClosingBrace === BracePositionEnum::SAME_LINE
         ) {
-            if ($rules->functionDefinitionRenderingRules->spacesBeforeOpeningBraceIfSameLine) {
-                $tokens[] = new SpacesToken($rules->functionDefinitionRenderingRules->spacesBeforeOpeningBraceIfSameLine);
+            if ($rules->functions->spacesBeforeOpeningBraceIfSameLine) {
+                $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBraceIfSameLine);
             }
             $tokens[] = new BraceStartToken();
             $tokens[] = new BraceEndToken();
         } elseif (
-            $rules->functionDefinitionRenderingRules->funcOpeningBrace === BracePositionEnum::SAME_LINE
-            && $rules->functionDefinitionRenderingRules->funcClosingBrace === BracePositionEnum::NEXT_LINE
+            $rules->functions->funcOpeningBrace === BracePositionEnum::SAME_LINE
+            && $rules->functions->funcClosingBrace === BracePositionEnum::NEXT_LINE
         ) {
-            if ($rules->functionDefinitionRenderingRules->spacesBeforeOpeningBraceIfSameLine) {
-                $tokens[] = new SpacesToken($rules->functionDefinitionRenderingRules->spacesBeforeOpeningBraceIfSameLine);
+            if ($rules->functions->spacesBeforeOpeningBraceIfSameLine) {
+                $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBraceIfSameLine);
             }
             $tokens[] = new BraceStartToken();
-            $tokens[] = new NewLineToken();
+            $tokens[] = new NewLineTokens();
             $tokens[] = new BraceEndToken();
         } elseif (
-            $rules->functionDefinitionRenderingRules->funcOpeningBrace === BracePositionEnum::NEXT_LINE
-            && $rules->functionDefinitionRenderingRules->funcClosingBrace === BracePositionEnum::SAME_LINE
+            $rules->functions->funcOpeningBrace === BracePositionEnum::NEXT_LINE
+            && $rules->functions->funcClosingBrace === BracePositionEnum::SAME_LINE
         ) {
-            $tokens[] = new NewLineToken();
+            $tokens[] = new NewLineTokens();
             $tokens[] = new BraceStartToken();
             $tokens[] = new BraceEndToken();
         } elseif (
-            $rules->functionDefinitionRenderingRules->funcOpeningBrace === BracePositionEnum::NEXT_LINE
-            && $rules->functionDefinitionRenderingRules->funcClosingBrace === BracePositionEnum::NEXT_LINE
+            $rules->functions->funcOpeningBrace === BracePositionEnum::NEXT_LINE
+            && $rules->functions->funcClosingBrace === BracePositionEnum::NEXT_LINE
         ) {
-            $tokens[] = new NewLineToken();
+            $tokens[] = new NewLineTokens();
             $tokens[] = new BraceStartToken();
-            $tokens[] = new NewLineToken();
+            $tokens[] = new NewLineTokens();
             $tokens[] = new BraceEndToken();
         }
         return $tokens;
@@ -166,11 +166,11 @@ class FunctionDefinitionTokenGroup extends TokenGroup
      */
     public function addChopDownBraceTokens(RenderingRules $rules, array $tokens): array
     {
-        if ($rules->functionDefinitionRenderingRules->spacesBeforeOpeningBraceIfSameLine) {
-            $tokens[] = new SpacesToken($rules->functionDefinitionRenderingRules->spacesBeforeOpeningBraceIfSameLine);
+        if ($rules->functions->spacesBeforeOpeningBraceIfSameLine) {
+            $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBraceIfSameLine);
         }
         $tokens[] = new BraceStartToken();
-        $tokens[] = new NewLineToken();
+        $tokens[] = new NewLineTokens();
         $tokens[] = new BraceEndToken();
         return $tokens;
     }
@@ -184,12 +184,12 @@ class FunctionDefinitionTokenGroup extends TokenGroup
     public function addReturnTypeTokens(RenderingRules $rules, array $tokens, RenderContext $context): array
     {
         if ($this->returnType) {
-            if ($rules->functionDefinitionRenderingRules->spacesBetweenArgumentListAndReturnColon) {
-                $tokens[] = new SpacesToken($rules->functionDefinitionRenderingRules->spacesBetweenArgumentListAndReturnColon);
+            if ($rules->functions->spacesBetweenArgumentListAndReturnColon) {
+                $tokens[] = new SpacesToken($rules->functions->spacesBetweenArgumentListAndReturnColon);
             }
             $tokens[] = new ColonToken();
-            if ($rules->functionDefinitionRenderingRules->spacesBetweenReturnColonAndType) {
-                $tokens[] = new SpacesToken($rules->functionDefinitionRenderingRules->spacesBetweenReturnColonAndType);
+            if ($rules->functions->spacesBetweenReturnColonAndType) {
+                $tokens[] = new SpacesToken($rules->functions->spacesBetweenReturnColonAndType);
             }
             if (is_string($this->returnType)) {
                 $tokens[] = (new SingleTypeTokenGroup($this->returnType))->render($context, $rules);
@@ -214,8 +214,8 @@ class FunctionDefinitionTokenGroup extends TokenGroup
         } else {
             $tokens[] = $this->name;
         }
-        if ($rules->functionDefinitionRenderingRules->spacesBetweenIdentifierAndArgumentList) {
-            $tokens[] = new SpacesToken($rules->functionDefinitionRenderingRules->spacesBetweenIdentifierAndArgumentList);
+        if ($rules->functions->spacesBetweenIdentifierAndArgumentList) {
+            $tokens[] = new SpacesToken($rules->functions->spacesBetweenIdentifierAndArgumentList);
         }
         return $tokens;
     }
