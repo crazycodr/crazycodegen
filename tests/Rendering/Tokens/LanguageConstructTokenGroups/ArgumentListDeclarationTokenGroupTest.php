@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownRenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\ArgumentListDeclarationRules;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
@@ -131,7 +131,7 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
         $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
 
         $context = new RenderContext();
-        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown = new ChopDownPaddingContext();
         $context->chopDown->paddingSpacesForTypes = strlen('string|bool|float');
         $context->chopDown->paddingSpacesForIdentifiers = strlen('$longerVarName');
 

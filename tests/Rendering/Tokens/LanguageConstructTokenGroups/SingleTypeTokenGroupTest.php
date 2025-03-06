@@ -19,9 +19,12 @@ class SingleTypeTokenGroupTest extends TestCase
 
     public function testShortNameIsRenderedAsAnIdentifierWhenShortenIsTurnedOn()
     {
-        $token = new SingleTypeTokenGroup('CrazyCodeGen\\Tokens\\Token', true);
+        $token = new SingleTypeTokenGroup('CrazyCodeGen\\Tokens\\Token');
 
-        $this->assertEquals(new IdentifierToken('Token'), $token->render(new RenderContext(), new RenderingRules())[0]);
+        $context = new RenderContext();
+        $context->importedClasses[] = 'CrazyCodeGen\\Tokens\\Token';
+
+        $this->assertEquals(new IdentifierToken('Token'), $token->render($context, new RenderingRules())[0]);
     }
 
     public function testShortNameAndNamespaceAlwaysAvailableEvenWhenShortenIsOff()

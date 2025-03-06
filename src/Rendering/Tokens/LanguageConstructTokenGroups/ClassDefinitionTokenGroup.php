@@ -5,8 +5,8 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
@@ -28,10 +28,16 @@ class ClassDefinitionTokenGroup extends TokenGroup
     public function __construct(
         public readonly string|IdentifierToken             $name,
         public readonly null|NamespaceTokenGroup           $namespace = null,
+        /** @var string[]|ImportTokenGroup[] $imports */
+        public readonly array                              $imports = [],
+        public readonly bool                               $abstract = false,
         public readonly null|string|AbstractTypeTokenGroup $extends = null,
         /** @var string[]|AbstractTypeTokenGroup[] $implements */
         public readonly array                              $implements = [],
-        public readonly bool                               $abstract = false,
+        /** @var PropertyTokenGroup[] $properties */
+        public readonly array                              $properties = [],
+        /** @var MethodDefinitionTokenGroup[] $methods */
+        public readonly array                              $methods = [],
     )
     {
     }
@@ -46,6 +52,27 @@ class ClassDefinitionTokenGroup extends TokenGroup
         $tokens = [];
         if ($this->namespace) {
             $tokens[] = $this->namespace->render($context, $rules);
+        }
+
+        $previousImportedClasses = $context->importedClasses;
+        $importsLeft = count($this->imports);
+        foreach ($this->imports as $import) {
+            $importsLeft--;
+            if (is_string($import)) {
+                $tokens[] = (new ImportTokenGroup($import))->render($context, $rules);
+                $context->importedClasses[] = $import;
+            } else {
+                $tokens[] = $import->render($context, $rules);
+                if (!$import->alias) {
+                    $context->importedClasses[] = $import->type;
+                }
+            }
+            if ($importsLeft > 0) {
+                $tokens[] = new NewLineTokens($rules->classes->newLinesBetweenImports);
+            }
+        }
+        if (!empty($this->imports)) {
+            $tokens[] = new NewLineTokens($rules->classes->newLinesAfterAllImports);
         }
 
         $scenarios = [];
@@ -91,21 +118,45 @@ class ClassDefinitionTokenGroup extends TokenGroup
             $tokens[] = new BraceStartToken();
         } else {
             $tokens[] = new NewLineTokens();
-            if (!empty($context->indents)) {
-                $tokens[] = SpacesToken::fromString($context->indents);
-            }
+            $tokens[] = SpacesToken::fromString($context->indents);
             $tokens[] = new BraceStartToken();
-            $rules->indent($context);
+        }
+        $rules->indent($context);
+        if (!empty($this->properties) || !empty($this->methods)) {
+            $tokens[] = new NewLineTokens();
+        }
+
+        $propertiesLeft = count($this->properties);
+        foreach ($this->properties as $property) {
+            $propertiesLeft--;
+            $tokens[] = $this->insertIndentationTokens($context, $property->render($context, $rules));
+            if ($propertiesLeft > 0) {
+                $tokens[] = new NewLineTokens($rules->classes->newLinesBetweenProperties);
+            }
+        }
+
+        if (!empty($this->properties) && !empty($this->methods)) {
+            $tokens[] = new NewLineTokens($rules->classes->newLinesBetweenPropertiesAndMethods);
+        }
+
+        $methodsLeft = count($this->methods);
+        foreach ($this->methods as $method) {
+            $methodsLeft--;
+            $tokens[] = $this->insertIndentationTokens($context, $method->render($context, $rules));
+            if ($methodsLeft > 0) {
+                $tokens[] = new NewLineTokens($rules->classes->newLinesBetweenMethods);
+            }
         }
 
         if ($rules->classes->classClosingBrace !== BracePositionEnum::SAME_LINE) {
             $rules->unindent($context);
             $tokens[] = new NewLineTokens();
-            if (!empty($context->indents)) {
-                $tokens[] = SpacesToken::fromString($context->indents);
-            }
+            $tokens[] = SpacesToken::fromString($context->indents);
         }
         $tokens[] = new BraceEndToken();
+        $tokens[] = new NewLineTokens($rules->classes->newLinesAfterClosingBrace);
+
+        $context->importedClasses = $previousImportedClasses;
 
         return $this->flatten($tokens);
     }

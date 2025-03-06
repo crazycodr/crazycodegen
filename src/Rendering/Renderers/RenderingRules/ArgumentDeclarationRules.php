@@ -10,11 +10,5 @@ class ArgumentDeclarationRules
         public int $spacesBetweenArgumentEqualsAndValue = 1,
     )
     {
-
-    }
-
-    public function clone(): self
-    {
-        return clone $this;
     }
 }

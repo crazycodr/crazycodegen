@@ -12,9 +12,4 @@ class ArgumentListDeclarationRules
     )
     {
     }
-
-    public function clone(): self
-    {
-        return clone $this;
-    }
 }

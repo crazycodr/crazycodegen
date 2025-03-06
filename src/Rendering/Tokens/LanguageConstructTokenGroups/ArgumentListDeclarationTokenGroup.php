@@ -3,7 +3,6 @@
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownRenderContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
@@ -26,19 +25,6 @@ class ArgumentListDeclarationTokenGroup extends TokenGroup
         public array $arguments = [],
     )
     {
-    }
-
-    /**
-     * @param RenderContext $context
-     * @param RenderingRules $rules
-     * @return array<Token[]>
-     */
-    public function renderScenarios(RenderContext $context, RenderingRules $rules): array
-    {
-        return [
-            $this->renderInlineScenario($context, $rules),
-            $this->renderChopDownScenario($context, $rules),
-        ];
     }
 
     /**
@@ -100,10 +86,8 @@ class ArgumentListDeclarationTokenGroup extends TokenGroup
                 }
                 $longestType = max(array_map(fn (array $tokens) => strlen($this->renderTokensToString($tokens)), $types));
                 $longestIdentifier = max(array_map(fn (array $tokens) => strlen($this->renderTokensToString($tokens)), $identifiers));
-                $context->chopDown = new ChopDownRenderContext(
-                    paddingSpacesForTypes: $rules->argumentLists->padTypeNames ? $longestType : null,
-                    paddingSpacesForIdentifiers: $rules->argumentLists->padIdentifiers ? $longestIdentifier : null,
-                );
+                $context->chopDown->paddingSpacesForTypes = $rules->argumentLists->padTypeNames ? $longestType : null;
+                $context->chopDown->paddingSpacesForIdentifiers = $rules->argumentLists->padIdentifiers ? $longestIdentifier : null;
             }
             $argumentsLeft = count($this->arguments);
             foreach ($this->arguments as $argument) {
@@ -115,7 +99,8 @@ class ArgumentListDeclarationTokenGroup extends TokenGroup
                 }
                 $tokens[] = new NewLineTokens();
             }
-            $context->chopDown = null;
+            $context->chopDown->paddingSpacesForTypes = null;
+            $context->chopDown->paddingSpacesForIdentifiers = null;
             $rules->unindent($context);
         }
         $tokens[] = new ParEndToken();

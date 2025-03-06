@@ -9,6 +9,5 @@ class NamespaceDeclarationRules
         public int $linesAfterNamespaceDeclaration = 2,
     )
     {
-
     }
 }

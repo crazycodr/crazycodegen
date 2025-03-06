@@ -13,15 +13,16 @@ class RenderContext
     private string $currentLine = '';
 
     public function __construct(
-        public string                     $buffer = '',
-        public string                     $indents = '',
+        public string                 $buffer = '',
+        public string                 $indents = '',
         /** @var ContextTypeEnum[] $contextStack */
-        public array                      $contextStack = [],
-        public int                        $argumentDefinitionTypePaddingSize = 0,
-        public int                        $argumentDefinitionIdentifierPaddingSize = 0,
-        public bool                       $forcedWrap = false,
-        public bool                       $forcedChopDown = false,
-        public null|ChopDownRenderContext $chopDown = null,
+        public array                  $contextStack = [],
+        public int                    $argumentDefinitionTypePaddingSize = 0,
+        public int                    $argumentDefinitionIdentifierPaddingSize = 0,
+        public bool                   $forcedWrap = false,
+        public bool                   $forcedChopDown = false,
+        public ChopDownPaddingContext $chopDown = new ChopDownPaddingContext(),
+        public array                  $importedClasses = [],
     )
     {
     }

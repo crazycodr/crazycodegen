@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownRenderContext;
+use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
@@ -135,7 +135,7 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         $rules->arguments->spacesBetweenArgumentEqualsAndValue = 2;
 
         $context = new RenderContext();
-        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown = new ChopDownPaddingContext();
         $context->chopDown->paddingSpacesForTypes = 7;
 
         $this->assertEquals(
@@ -156,7 +156,7 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         $rules->arguments->spacesBetweenArgumentEqualsAndValue = 2;
 
         $context = new RenderContext();
-        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown = new ChopDownPaddingContext();
         $context->chopDown->paddingSpacesForTypes = 7;
 
         $this->assertEquals(
@@ -196,7 +196,7 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $context = new RenderContext();
-        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown = new ChopDownPaddingContext();
         $context->chopDown->paddingSpacesForIdentifiers = 7;
 
         $this->assertEquals(
@@ -218,7 +218,7 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $context = new RenderContext();
-        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown = new ChopDownPaddingContext();
         $context->chopDown->paddingSpacesForIdentifiers = 3;
 
         $this->assertEquals(
@@ -240,7 +240,7 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
         $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
 
         $context = new RenderContext();
-        $context->chopDown = new ChopDownRenderContext();
+        $context->chopDown = new ChopDownPaddingContext();
         $context->chopDown->paddingSpacesForIdentifiers = 3;
 
         $this->assertEquals(

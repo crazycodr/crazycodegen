@@ -2,33 +2,39 @@
 
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
+use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\RenderingRules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
+use CrazyCodeGen\Rendering\Tokens\KeywordTokens\AbstractToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\FunctionToken;
+use CrazyCodeGen\Rendering\Tokens\KeywordTokens\StaticToken;
+use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\RenderTokensToStringTrait;
 
-class FunctionDefinitionTokenGroup extends TokenGroup
+class MethodDefinitionTokenGroup extends TokenGroup
 {
     use FlattenFunction;
     use RenderTokensToStringTrait;
 
     public function __construct(
         public readonly string|IdentifierToken                 $name,
-        public readonly null|NamespaceTokenGroup               $namespace = null,
         public readonly null|ArgumentListDeclarationTokenGroup $arguments = null,
         public readonly null|string|AbstractTypeTokenGroup     $returnType = null,
+        public readonly bool                                   $abstract = false,
+        public readonly VisibilityEnum                         $visibility = VisibilityEnum::PUBLIC,
+        public readonly bool                                   $static = false,
         public readonly null|array                             $bodyInstructions = null,
     )
     {
@@ -41,9 +47,9 @@ class FunctionDefinitionTokenGroup extends TokenGroup
      */
     public function render(RenderContext $context, RenderingRules $rules): array
     {
-        if ($rules->functions->argumentsOnDifferentLines === WrappingDecision::NEVER) {
+        if ($rules->methods->argumentsOnDifferentLines === WrappingDecision::NEVER) {
             return $this->renderInlineScenario($context, $rules);
-        } elseif ($rules->functions->argumentsOnDifferentLines === WrappingDecision::ALWAYS) {
+        } elseif ($rules->methods->argumentsOnDifferentLines === WrappingDecision::ALWAYS) {
             return $this->renderChopDownScenario($context, $rules);
         } else {
             $inlineScenario = $this->renderInlineScenario($context, $rules);
@@ -63,9 +69,6 @@ class FunctionDefinitionTokenGroup extends TokenGroup
     public function renderInlineScenario(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->namespace) {
-            $tokens[] = $this->namespace->render($context, $rules);
-        }
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
         if ($this->arguments) {
             $tokens[] = $this->arguments->render($context, $rules);
@@ -85,9 +88,6 @@ class FunctionDefinitionTokenGroup extends TokenGroup
     public function renderChopDownScenario(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->namespace) {
-            $tokens[] = $this->namespace->render($context, $rules);
-        }
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
         if ($this->arguments) {
             $tokens[] = $this->arguments->renderChopDownScenario($context, $rules);
@@ -117,34 +117,34 @@ class FunctionDefinitionTokenGroup extends TokenGroup
     public function addInlineBraceTokens(RenderingRules $rules, array $tokens): array
     {
         if (
-            $rules->functions->funcOpeningBrace === BracePositionEnum::SAME_LINE
-            && $rules->functions->funcClosingBrace === BracePositionEnum::SAME_LINE
+            $rules->methods->funcOpeningBrace === BracePositionEnum::SAME_LINE
+            && $rules->methods->funcClosingBrace === BracePositionEnum::SAME_LINE
         ) {
-            if ($rules->functions->spacesBeforeOpeningBraceIfSameLine) {
-                $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBraceIfSameLine);
+            if ($rules->methods->spacesBeforeOpeningBraceIfSameLine) {
+                $tokens[] = new SpacesToken($rules->methods->spacesBeforeOpeningBraceIfSameLine);
             }
             $tokens[] = new BraceStartToken();
             $tokens[] = new BraceEndToken();
         } elseif (
-            $rules->functions->funcOpeningBrace === BracePositionEnum::SAME_LINE
-            && $rules->functions->funcClosingBrace === BracePositionEnum::NEXT_LINE
+            $rules->methods->funcOpeningBrace === BracePositionEnum::SAME_LINE
+            && $rules->methods->funcClosingBrace === BracePositionEnum::NEXT_LINE
         ) {
-            if ($rules->functions->spacesBeforeOpeningBraceIfSameLine) {
-                $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBraceIfSameLine);
+            if ($rules->methods->spacesBeforeOpeningBraceIfSameLine) {
+                $tokens[] = new SpacesToken($rules->methods->spacesBeforeOpeningBraceIfSameLine);
             }
             $tokens[] = new BraceStartToken();
             $tokens[] = new NewLineTokens();
             $tokens[] = new BraceEndToken();
         } elseif (
-            $rules->functions->funcOpeningBrace === BracePositionEnum::NEXT_LINE
-            && $rules->functions->funcClosingBrace === BracePositionEnum::SAME_LINE
+            $rules->methods->funcOpeningBrace === BracePositionEnum::NEXT_LINE
+            && $rules->methods->funcClosingBrace === BracePositionEnum::SAME_LINE
         ) {
             $tokens[] = new NewLineTokens();
             $tokens[] = new BraceStartToken();
             $tokens[] = new BraceEndToken();
         } elseif (
-            $rules->functions->funcOpeningBrace === BracePositionEnum::NEXT_LINE
-            && $rules->functions->funcClosingBrace === BracePositionEnum::NEXT_LINE
+            $rules->methods->funcOpeningBrace === BracePositionEnum::NEXT_LINE
+            && $rules->methods->funcClosingBrace === BracePositionEnum::NEXT_LINE
         ) {
             $tokens[] = new NewLineTokens();
             $tokens[] = new BraceStartToken();
@@ -161,8 +161,8 @@ class FunctionDefinitionTokenGroup extends TokenGroup
      */
     public function addChopDownBraceTokens(RenderingRules $rules, array $tokens): array
     {
-        if ($rules->functions->spacesBeforeOpeningBraceIfSameLine) {
-            $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBraceIfSameLine);
+        if ($rules->methods->spacesBeforeOpeningBraceIfSameLine) {
+            $tokens[] = new SpacesToken($rules->methods->spacesBeforeOpeningBraceIfSameLine);
         }
         $tokens[] = new BraceStartToken();
         $tokens[] = new NewLineTokens();
@@ -179,12 +179,12 @@ class FunctionDefinitionTokenGroup extends TokenGroup
     public function addReturnTypeTokens(RenderingRules $rules, array $tokens, RenderContext $context): array
     {
         if ($this->returnType) {
-            if ($rules->functions->spacesBetweenArgumentListAndReturnColon) {
-                $tokens[] = new SpacesToken($rules->functions->spacesBetweenArgumentListAndReturnColon);
+            if ($rules->methods->spacesBetweenArgumentListAndReturnColon) {
+                $tokens[] = new SpacesToken($rules->methods->spacesBetweenArgumentListAndReturnColon);
             }
             $tokens[] = new ColonToken();
-            if ($rules->functions->spacesBetweenReturnColonAndType) {
-                $tokens[] = new SpacesToken($rules->functions->spacesBetweenReturnColonAndType);
+            if ($rules->methods->spacesBetweenReturnColonAndType) {
+                $tokens[] = new SpacesToken($rules->methods->spacesBetweenReturnColonAndType);
             }
             if (is_string($this->returnType)) {
                 $tokens[] = (new SingleTypeTokenGroup($this->returnType))->render($context, $rules);
@@ -202,16 +202,24 @@ class FunctionDefinitionTokenGroup extends TokenGroup
      */
     public function getFunctionDeclarationTokens(array $tokens, RenderingRules $rules): array
     {
+        if ($this->abstract) {
+            $tokens[] = new AbstractToken();
+            $tokens[] = new SpacesToken($rules->methods->spacesBetweenAbstractAndNextToken);
+        }
+        $tokens[] = new VisibilityToken($this->visibility);
+        $tokens[] = new SpacesToken($rules->methods->spacesBetweenVisibilityAndNextToken);
+        if ($this->static) {
+            $tokens[] = new StaticToken();
+            $tokens[] = new SpacesToken($rules->methods->spacesBetweenStaticAndNextToken);
+        }
         $tokens[] = new FunctionToken();
-        $tokens[] = new SpacesToken();
+        $tokens[] = new SpacesToken($rules->methods->spacesBetweenFunctionAndIdentifier);
         if (!$this->name instanceof IdentifierToken) {
             $tokens[] = new IdentifierToken($this->name);
         } else {
             $tokens[] = $this->name;
         }
-        if ($rules->functions->spacesBetweenIdentifierAndArgumentList) {
-            $tokens[] = new SpacesToken($rules->functions->spacesBetweenIdentifierAndArgumentList);
-        }
+        $tokens[] = new SpacesToken($rules->methods->spacesBetweenIdentifierAndArgumentList);
         return $tokens;
     }
 }

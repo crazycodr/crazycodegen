@@ -15,7 +15,6 @@ class SingleTypeTokenGroup extends AbstractTypeTokenGroup
 
     public function __construct(
         public readonly string $type,
-        public readonly bool $shorten = false,
     )
     {
         if (str_contains($type, '\\')) {
@@ -34,7 +33,7 @@ class SingleTypeTokenGroup extends AbstractTypeTokenGroup
     public function render(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->shorten) {
+        if (in_array($this->type, $context->importedClasses)) {
             $tokens[] = new IdentifierToken($this->shortName);
         } else {
             $tokens[] = new IdentifierToken($this->type);

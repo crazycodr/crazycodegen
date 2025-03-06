@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Definition\Definitions\Structures;
+namespace CrazyCodeGen\Common\Enums;
 
 enum VisibilityEnum: string
 {

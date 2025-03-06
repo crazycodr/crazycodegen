@@ -10,13 +10,15 @@ class RenderingRules
         public int                          $lineLength = 120,
         public string                       $indentation = '    ',
         public NamespaceDeclarationRules    $namespaces = new NameSpaceDeclarationRules(),
+        public ImportRules                  $imports = new ImportRules(),
         public ArgumentListDeclarationRules $argumentLists = new ArgumentListDeclarationRules(),
         public ArgumentDeclarationRules     $arguments = new ArgumentDeclarationRules(),
         public FunctionDefinitionRules      $functions = new FunctionDefinitionRules(),
+        public MethodDefinitionRules        $methods = new MethodDefinitionRules(),
         public ClassDefinitionRules         $classes = new ClassDefinitionRules(),
+        public PropertyDeclarationRules     $properties = new PropertyDeclarationRules(),
     )
     {
-
     }
 
     public function indent(RenderContext $context): void

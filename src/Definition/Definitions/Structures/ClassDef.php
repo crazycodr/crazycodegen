@@ -2,24 +2,22 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\CanBeCalled;
 use CrazyCodeGen\Definition\Base\CanBeComputed;
-use CrazyCodeGen\Definition\Renderers\ContextShift;
-use CrazyCodeGen\Definition\Renderers\ContextShiftOperationEnum;
-use CrazyCodeGen\Definition\Renderers\ContextTypeEnum;
-use CrazyCodeGen\Definition\Tokens\CharacterTokens\BraceEndToken;
-use CrazyCodeGen\Definition\Tokens\CharacterTokens\BraceStartToken;
-use CrazyCodeGen\Definition\Tokens\CharacterTokens\SemiColonToken;
-use CrazyCodeGen\Definition\Tokens\KeywordTokens\AbstractToken;
-use CrazyCodeGen\Definition\Tokens\KeywordTokens\ClassToken;
-use CrazyCodeGen\Definition\Tokens\KeywordTokens\ExtendsToken;
-use CrazyCodeGen\Definition\Tokens\KeywordTokens\ImplementsToken;
-use CrazyCodeGen\Definition\Tokens\KeywordTokens\NamespaceToken;
-use CrazyCodeGen\Definition\Tokens\KeywordTokens\VisibilityToken;
-use CrazyCodeGen\Definition\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
-use CrazyCodeGen\Definition\Tokens\UserLandTokens\IdentifierToken;
-use CrazyCodeGen\Definition\Tokens\UserLandTokens\NamespacePathToken;
+use CrazyCodeGen\Rendering\Renderers\Contexts\ContextShift;
+use CrazyCodeGen\Rendering\Renderers\Enums\ContextShiftOperationEnum;
+use CrazyCodeGen\Rendering\Renderers\Enums\ContextTypeEnum;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
+use CrazyCodeGen\Rendering\Tokens\KeywordTokens\AbstractToken;
+use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ClassToken;
+use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ExtendsToken;
+use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ImplementsToken;
+use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 
 class ClassDef implements CanBeComputed, CanBeCalled
 {

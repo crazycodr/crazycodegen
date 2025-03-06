@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Rendering\Tokens\KeywordTokens;
 
-use CrazyCodeGen\Definitions\Structures\VisibilityEnum;
+use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
 class VisibilityToken extends Token
