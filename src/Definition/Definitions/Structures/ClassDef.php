@@ -12,12 +12,12 @@ class ClassDef implements CanBeComputed, CanBeCalled
     use FlattenFunction;
 
     public function __construct(
-        public string      $name,
-        public null|string $extends = null,
+        public string              $name,
+        public null|string         $extends = null,
         public null|VisibilityEnum $visibility = null,
-        public bool $abstract = false,
-        public array $implements = [],
-        public null|string $namespace = null,
+        public bool                $abstract = false,
+        public array               $implements = [],
+        public null|string         $namespace = null,
     )
     {
     }

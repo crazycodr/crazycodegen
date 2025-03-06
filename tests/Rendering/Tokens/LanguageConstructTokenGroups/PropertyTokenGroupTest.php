@@ -32,6 +32,17 @@ class PropertyTokenGroupTest extends TestCase
         );
     }
 
+    private function getTestRules(): RenderingRules
+    {
+        $rules = new RenderingRules();
+        $rules->properties->spacesAfterVisibility = 1;
+        $rules->properties->spacesAfterStatic = 1;
+        $rules->properties->spacesAfterType = 1;
+        $rules->properties->spacesAfterIdentifier = 1;
+        $rules->properties->spacesAfterEquals = 1;
+        return $rules;
+    }
+
     public function testRendersNameFromStringAsExpected()
     {
         $token = new PropertyTokenGroup(
@@ -71,7 +82,7 @@ class PropertyTokenGroupTest extends TestCase
         );
 
         $rules = $this->getTestRules();
-        $rules->properties->spacesAfterStaticKeyword = 4;
+        $rules->properties->spacesAfterStatic = 4;
 
         $this->assertEquals(<<<EOS
             public static    \$foo;
@@ -188,7 +199,7 @@ class PropertyTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
         $rules->docBlocks->lineLength = 40;
-        $rules->properties->linesAfterDocBlock = 3;
+        $rules->properties->newLinesAfterDocBlock = 3;
 
         $this->assertEquals(<<<EOS
             /**
@@ -201,16 +212,5 @@ class PropertyTokenGroupTest extends TestCase
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
-    }
-
-    private function getTestRules(): RenderingRules
-    {
-        $rules = new RenderingRules();
-        $rules->properties->spacesAfterVisibility = 1;
-        $rules->properties->spacesAfterStaticKeyword = 1;
-        $rules->properties->spacesAfterType = 1;
-        $rules->properties->spacesAfterIdentifier = 1;
-        $rules->properties->spacesAfterEquals = 1;
-        return $rules;
     }
 }

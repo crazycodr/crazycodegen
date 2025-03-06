@@ -57,7 +57,7 @@ class ImplementsTokenGroup extends TokenGroup
         $tokens = [];
         if (!empty($this->implementations)) {
             $tokens[] = new ImplementsToken();
-            $tokens[] = new SpacesToken($rules->classes->spacesAfterImplementsKeyword);
+            $tokens[] = new SpacesToken($rules->classes->spacesAfterImplements);
         }
         $implementsLeft = count($this->implementations);
         foreach ($this->implementations as $implement) {
@@ -69,7 +69,7 @@ class ImplementsTokenGroup extends TokenGroup
             }
             if ($implementsLeft > 0) {
                 $tokens[] = new CommaToken();
-                $tokens[] = new SpacesToken($rules->classes->spacesAfterImplementCommaIfSameLine);
+                $tokens[] = new SpacesToken($rules->classes->spacesAfterImplementSeparator);
             }
         }
         return $this->flatten($tokens);
@@ -87,9 +87,9 @@ class ImplementsTokenGroup extends TokenGroup
             return $tokens;
         }
         $tokens[] = new ImplementsToken();
-        $tokens[] = new SpacesToken($rules->classes->spacesAfterImplementsKeyword);
+        $tokens[] = new SpacesToken($rules->classes->spacesAfterImplements);
         $paddingSpaces = strlen((new ImplementsToken())->render())
-            + $rules->classes->spacesAfterImplementsKeyword;
+            + $rules->classes->spacesAfterImplements;
         $implementsLeft = count($this->implementations);
         foreach ($this->implementations as $implement) {
             if ($implementsLeft !== count($this->implementations)) {

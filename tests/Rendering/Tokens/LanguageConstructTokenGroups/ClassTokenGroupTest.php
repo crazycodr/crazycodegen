@@ -6,26 +6,26 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListDeclarationTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassDefinitionTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodDefinitionTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImportTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImportTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ClassDefinitionTokenGroupTest extends TestCase
+class ClassTokenGroupTest extends TestCase
 {
     use TokenFunctions;
 
     public function testFunctionKeywordIsRendered()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
         );
 
@@ -40,9 +40,52 @@ class ClassDefinitionTokenGroupTest extends TestCase
         );
     }
 
+    private function getBaseTestingRules(): RenderingRules
+    {
+        $newRules = new RenderingRules();
+        $newRules->lineLength = 120;
+        $newRules->docBlocks->lineLength = 80;
+        $newRules->argumentLists->spacesAfterSeparator = 1;
+        $newRules->argumentLists->addSeparatorToLastItem = true;
+        $newRules->argumentLists->padTypes = true;
+        $newRules->argumentLists->padIdentifiers = true;
+        $newRules->classes->extendsOnNextLine = WrappingDecision::IF_TOO_LONG;
+        $newRules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
+        $newRules->classes->implementsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
+        $newRules->classes->spacesAfterImplements = 1;
+        $newRules->classes->spacesAfterImplementSeparator = 1;
+        $newRules->classes->openingBrace = BracePositionEnum::NEXT_LINE;
+        $newRules->classes->closingBrace = BracePositionEnum::NEXT_LINE;
+        $newRules->classes->spacesBeforeOpeningBrace = 1;
+        $newRules->classes->newLinesAfterDocBlock = 1;
+        $newRules->classes->newLinesAfterEachImport = 1;
+        $newRules->classes->newLinesAfterAllImports = 2;
+        $newRules->classes->newLinesAfterEachProperty = 1;
+        $newRules->classes->newLinesAfterProperties = 2;
+        $newRules->classes->newLinesAfterEachMethod = 2;
+        $newRules->classes->newLinesAfterClosingBrace = 0;
+        $newRules->methods->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
+        $newRules->methods->openingBrace = BracePositionEnum::NEXT_LINE;
+        $newRules->methods->closingBrace = BracePositionEnum::NEXT_LINE;
+        $newRules->methods->spacesAfterAbstract = 1;
+        $newRules->methods->spacesAfterVisibility = 1;
+        $newRules->methods->spacesAfterStatic = 1;
+        $newRules->methods->spacesAfterFunction = 1;
+        $newRules->methods->spacesAfterIdentifier = 0;
+        $newRules->methods->spacesAfterArguments = 0;
+        $newRules->methods->spacesAfterReturnColon = 1;
+        $newRules->methods->spacesBeforeOpeningBrace = 1;
+        $newRules->properties->spacesAfterVisibility = 1;
+        $newRules->properties->spacesAfterStatic = 1;
+        $newRules->properties->spacesAfterType = 1;
+        $newRules->properties->spacesAfterIdentifier = 1;
+        $newRules->properties->spacesAfterEquals = 1;
+        return $newRules;
+    }
+
     public function testClassNameIsRendered()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
         );
 
@@ -59,7 +102,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testAbstractKeywordIsRendered()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             abstract: true,
         );
@@ -77,7 +120,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testNamespaceIsRendered()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             namespace: new NamespaceTokenGroup('CrazyCodeGen\\Tests'),
         );
@@ -97,7 +140,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testStringsAreConvertedToImportTokenGroupsAndAreRenderedWithProperLinesBetweenThemAndAfterBlock()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             imports: [
                 new ImportTokenGroup('CrazyCodeGen\\Tests\\Tests1'),
@@ -106,7 +149,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->classes->newLinesBetweenImports = 3;
+        $rules->classes->newLinesAfterEachImport = 3;
         $rules->classes->newLinesAfterAllImports = 4;
 
         $this->assertEquals(<<<EOS
@@ -127,7 +170,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testImportsShortenTheTypesEvenIfSpecifiedAsStrings()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             imports: [
                 new ImportTokenGroup('CrazyCodeGen\\Tests\\Test1'),
@@ -144,11 +187,11 @@ class ClassDefinitionTokenGroupTest extends TestCase
                 ),
             ],
             methods: [
-                new MethodDefinitionTokenGroup(
+                new MethodTokenGroup(
                     name: 'method1',
-                    arguments: new ArgumentListDeclarationTokenGroup(
+                    arguments: new ArgumentListTokenGroup(
                         arguments: [
-                            new ArgumentDeclarationTokenGroup(
+                            new ArgumentTokenGroup(
                                 name: 'arg1',
                                 type: 'CrazyCodeGen\\Tests\\Test2',
                             )
@@ -181,14 +224,14 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testDocBlockIsProperlyRendered()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the class declaration.']),
         );
 
         $rules = $this->getBaseTestingRules();
         $rules->docBlocks->lineLength = 40;
-        $rules->classes->linesAfterDocBlock = 3;
+        $rules->classes->newLinesAfterDocBlock = 3;
 
         $this->assertEquals(<<<EOS
             /**
@@ -208,7 +251,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testExtendsIsRenderedInlineEvenIfTooLong()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
         );
@@ -228,7 +271,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testExtendsIsRenderedOnNewLineWhenTooLongAndExtendsIsTabbedIn()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
         );
@@ -249,7 +292,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testExtendsIsRenderedOnNewLineWhenForcedToWrapAndIsTabbedInEvenIfNotLongEnough()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests',
         );
@@ -269,7 +312,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testSpacesBetweenImplementsAndFirstTypeIsRespected()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests',
@@ -278,8 +321,8 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
         $rules = $this->getBaseTestingRules();
         $rules->classes->implementsOnNextLine = WrappingDecision::NEVER;
-        $rules->classes->spacesAfterImplementsKeyword = 4;
-        $rules->classes->spacesAfterImplementCommaIfSameLine = 4;
+        $rules->classes->spacesAfterImplements = 4;
+        $rules->classes->spacesAfterImplementSeparator = 4;
 
         $this->assertEquals(<<<EOS
             class myClass implements    CrazyCodeGen\Tests
@@ -292,7 +335,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testSpacesBetweenImplementTypesOnSameLineAreRespected()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests1',
@@ -302,8 +345,8 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
         $rules = $this->getBaseTestingRules();
         $rules->classes->implementsOnNextLine = WrappingDecision::NEVER;
-        $rules->classes->spacesAfterImplementsKeyword = 4;
-        $rules->classes->spacesAfterImplementCommaIfSameLine = 4;
+        $rules->classes->spacesAfterImplements = 4;
+        $rules->classes->spacesAfterImplementSeparator = 4;
 
         $this->assertEquals(<<<EOS
             class myClass implements    CrazyCodeGen\Tests1,    CrazyCodeGen\Tests2
@@ -316,7 +359,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testSpacesBetweenImplementsAndTypesAreTakenIntoPaddingAccountWhenOnMultipleLines()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests1',
@@ -327,8 +370,8 @@ class ClassDefinitionTokenGroupTest extends TestCase
         $rules = $this->getBaseTestingRules();
         $rules->classes->implementsOnNextLine = WrappingDecision::ALWAYS;
         $rules->classes->implementsOnDifferentLines = WrappingDecision::ALWAYS;
-        $rules->classes->spacesAfterImplementsKeyword = 4;
-        $rules->classes->spacesAfterImplementCommaIfSameLine = 4;
+        $rules->classes->spacesAfterImplements = 4;
+        $rules->classes->spacesAfterImplementSeparator = 4;
 
         $this->assertEquals(<<<EOS
             class myClass
@@ -343,7 +386,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testImplementsIsRenderedOnSameLineEvenIfTooLong()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
@@ -364,7 +407,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testImplementsIsRenderedOnNextLineIfTooLong()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
@@ -387,7 +430,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testImplementsIsRenderedOnNextLineEvenIfNotLongEnough()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests',
@@ -410,7 +453,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testMultipleImplementsAreRenderedOnSameLineEvenIfTooLong()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -437,7 +480,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testMultipleImplementsAreRenderedOnIndividualLinesIfTheyAreTooLongInTotalAndAreProperlyIndented()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -467,7 +510,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testMultipleImplementsAreRenderedOnIndividualLinesWhenForcedToEvenIfNotLongEnough()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -492,7 +535,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testMultipleImplementsAreNotRenderedOnIndividualLinesWhenForcedToBecauseImplementsOnNextLineIsPrevented()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -515,7 +558,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testCombinationOfExtendsAndImplementsWithForcedWrappingAllGoOnDifferentLines()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\Test1',
             implements: [
@@ -543,14 +586,14 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testSameLineOpeningAndClosingBraceAreAfterClassNameWithExpectedSpaces()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->classes->classOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->classes->classClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->classes->spacesBeforeOpeningBraceIfSameLine = 4;
+        $rules->classes->openingBrace = BracePositionEnum::SAME_LINE;
+        $rules->classes->closingBrace = BracePositionEnum::SAME_LINE;
+        $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(<<<EOS
             class myClass    {}
@@ -561,14 +604,14 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testSameLineOpeningAndNextLineClosingBraceAreAfterClassNameAndOnNextLineWithExpectedSpaces()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->classes->classOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->classes->classClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->classes->spacesBeforeOpeningBraceIfSameLine = 4;
+        $rules->classes->openingBrace = BracePositionEnum::SAME_LINE;
+        $rules->classes->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(<<<EOS
             class myClass    {
@@ -580,14 +623,14 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testNextLineOpeningAndSameLineClosingBraceAreUnderClassNameAndNoExtraSpacesAreAdded()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->classes->classOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $rules->classes->classClosingBrace = BracePositionEnum::SAME_LINE;
-        $rules->classes->spacesBeforeOpeningBraceIfSameLine = 4;
+        $rules->classes->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->closingBrace = BracePositionEnum::SAME_LINE;
+        $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(<<<EOS
             class myClass
@@ -599,14 +642,14 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testNextLineOpeningAndNextLineClosingBraceAreUnderClassNameAndNoExtraSpacesAreAdded()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->classes->classOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $rules->classes->classClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->classes->spacesBeforeOpeningBraceIfSameLine = 4;
+        $rules->classes->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(<<<EOS
             class myClass
@@ -619,7 +662,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testSameLineOpeningBraceEndsUpAfterExtendsWithProperSpacing()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\Test1',
         );
@@ -628,9 +671,9 @@ class ClassDefinitionTokenGroupTest extends TestCase
         $rules->classes->extendsOnNextLine = WrappingDecision::ALWAYS;
         $rules->classes->implementsOnNextLine = WrappingDecision::ALWAYS;
         $rules->classes->implementsOnDifferentLines = WrappingDecision::ALWAYS;
-        $rules->classes->classOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->classes->classClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->classes->spacesBeforeOpeningBraceIfSameLine = 4;
+        $rules->classes->openingBrace = BracePositionEnum::SAME_LINE;
+        $rules->classes->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(<<<EOS
             class myClass
@@ -643,7 +686,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testSameLineOpeningBraceEndsUpAfterImplementsWithProperSpacing()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -655,9 +698,9 @@ class ClassDefinitionTokenGroupTest extends TestCase
         $rules->classes->extendsOnNextLine = WrappingDecision::ALWAYS;
         $rules->classes->implementsOnNextLine = WrappingDecision::ALWAYS;
         $rules->classes->implementsOnDifferentLines = WrappingDecision::ALWAYS;
-        $rules->classes->classOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->classes->classClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->classes->spacesBeforeOpeningBraceIfSameLine = 4;
+        $rules->classes->openingBrace = BracePositionEnum::SAME_LINE;
+        $rules->classes->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(<<<EOS
             class myClass
@@ -671,7 +714,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testPropertiesAreRenderedWithNewLinesBetweenThemAsExpected()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             properties: [
                 new PropertyTokenGroup(name: 'prop1'),
@@ -681,7 +724,7 @@ class ClassDefinitionTokenGroupTest extends TestCase
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->classes->newLinesBetweenProperties = 3;
+        $rules->classes->newLinesAfterEachProperty = 3;
 
         $this->assertEquals(<<<EOS
             class myClass
@@ -701,17 +744,17 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testMethodsAreRenderedWithNewLinesBetweenThemAsConfigured()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             methods: [
-                new MethodDefinitionTokenGroup(name: 'method1'),
-                new MethodDefinitionTokenGroup(name: 'method2'),
-                new MethodDefinitionTokenGroup(name: 'method3'),
+                new MethodTokenGroup(name: 'method1'),
+                new MethodTokenGroup(name: 'method2'),
+                new MethodTokenGroup(name: 'method3'),
             ]
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->classes->newLinesBetweenMethods = 4;
+        $rules->classes->newLinesAfterEachMethod = 4;
 
         $this->assertEquals(<<<EOS
             class myClass
@@ -739,18 +782,18 @@ class ClassDefinitionTokenGroupTest extends TestCase
 
     public function testLinesBetweenPropertiesAndMethodsAreRespected()
     {
-        $token = new ClassDefinitionTokenGroup(
+        $token = new ClassTokenGroup(
             name: 'myClass',
             properties: [
                 new PropertyTokenGroup(name: 'prop1'),
             ],
             methods: [
-                new MethodDefinitionTokenGroup(name: 'method1'),
+                new MethodTokenGroup(name: 'method1'),
             ]
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->classes->newLinesBetweenPropertiesAndMethods = 4;
+        $rules->classes->newLinesAfterProperties = 4;
 
         $this->assertEquals(<<<EOS
             class myClass
@@ -766,48 +809,5 @@ class ClassDefinitionTokenGroupTest extends TestCase
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
-    }
-
-    private function getBaseTestingRules(): RenderingRules
-    {
-        $newRules = new RenderingRules();
-        $newRules->lineLength = 120;
-        $newRules->docBlocks->lineLength = 80;
-        $newRules->argumentLists->spacesAfterArgumentComma = 1;
-        $newRules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
-        $newRules->argumentLists->padTypeNames = true;
-        $newRules->argumentLists->padIdentifiers = true;
-        $newRules->classes->extendsOnNextLine = WrappingDecision::IF_TOO_LONG;
-        $newRules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
-        $newRules->classes->implementsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
-        $newRules->classes->spacesAfterImplementsKeyword = 1;
-        $newRules->classes->spacesAfterImplementCommaIfSameLine = 1;
-        $newRules->classes->classOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $newRules->classes->classClosingBrace = BracePositionEnum::NEXT_LINE;
-        $newRules->classes->spacesBeforeOpeningBraceIfSameLine = 1;
-        $newRules->classes->linesAfterDocBlock = 1;
-        $newRules->classes->newLinesBetweenImports = 1;
-        $newRules->classes->newLinesAfterAllImports = 2;
-        $newRules->classes->newLinesBetweenProperties = 1;
-        $newRules->classes->newLinesBetweenPropertiesAndMethods = 2;
-        $newRules->classes->newLinesBetweenMethods = 2;
-        $newRules->classes->newLinesAfterClosingBrace = 0;
-        $newRules->methods->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
-        $newRules->methods->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $newRules->methods->funcClosingBrace = BracePositionEnum::NEXT_LINE;
-        $newRules->methods->spacesBetweenAbstractAndNextToken = 1;
-        $newRules->methods->spacesBetweenVisibilityAndNextToken = 1;
-        $newRules->methods->spacesBetweenStaticAndNextToken = 1;
-        $newRules->methods->spacesBetweenFunctionAndIdentifier = 1;
-        $newRules->methods->spacesBetweenIdentifierAndArgumentList = 0;
-        $newRules->methods->spacesBetweenArgumentListAndReturnColon = 0;
-        $newRules->methods->spacesBetweenReturnColonAndType = 1;
-        $newRules->methods->spacesBeforeOpeningBraceIfSameLine = 1;
-        $newRules->properties->spacesAfterVisibility = 1;
-        $newRules->properties->spacesAfterStaticKeyword = 1;
-        $newRules->properties->spacesAfterType = 1;
-        $newRules->properties->spacesAfterIdentifier = 1;
-        $newRules->properties->spacesAfterEquals = 1;
-        return $newRules;
     }
 }

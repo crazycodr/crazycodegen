@@ -7,11 +7,11 @@ use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 class ConditionRules
 {
     public function __construct(
-        public int               $spacesBeforeParentheses = 1,
-        public BracePositionEnum $startBrace = BracePositionEnum::SAME_LINE,
-        public BracePositionEnum $elseAfterEndBrace = BracePositionEnum::NEXT_LINE,
-        public int               $spacesBeforeBraceOnSameLine = 1,
-        public int               $spacesAfterBraceOnSameLine = 1,
+        public int               $spacesAfterKeyword = 1,
+        public BracePositionEnum $openingBrace = BracePositionEnum::SAME_LINE,
+        public BracePositionEnum $keywordAfterClosingBrace = BracePositionEnum::NEXT_LINE,
+        public int               $spacesBeforeOpeningBrace = 1,
+        public int               $spacesAfterClosingBrace = 1,
     )
     {
     }

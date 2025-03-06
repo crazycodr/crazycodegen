@@ -4,31 +4,31 @@ namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\ArgumentListDeclarationRules;
+use CrazyCodeGen\Rendering\Renderers\Rules\ArgumentListRules;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListDeclarationTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ArgumentListDeclarationTokenGroupTest extends TestCase
+class ArgumentListTokenGroupTest extends TestCase
 {
     use TokenFunctions;
 
     public function testInlineScenarioHasStartAndEndParenthesisAndTokensFromArgumentAndNoTrailingComma()
     {
-        $token = new ArgumentListDeclarationTokenGroup(
+        $token = new ArgumentListTokenGroup(
             [
-                new ArgumentDeclarationTokenGroup('foo'),
+                new ArgumentTokenGroup('foo'),
             ],
         );
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
+        $rules->argumentLists = new ArgumentListRules();
+        $rules->argumentLists->spacesAfterSeparator = 1;
+        $rules->argumentLists->addSeparatorToLastItem = true;
 
         $this->assertEquals(
             '($foo)',
@@ -38,19 +38,19 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
 
     public function testInlineScenarioHasCommaAndSpaceAfterEachArgumentExceptLast()
     {
-        $token = new ArgumentListDeclarationTokenGroup(
+        $token = new ArgumentListTokenGroup(
             [
-                new ArgumentDeclarationTokenGroup('foo'),
-                new ArgumentDeclarationTokenGroup('bar'),
-                new ArgumentDeclarationTokenGroup('baz'),
+                new ArgumentTokenGroup('foo'),
+                new ArgumentTokenGroup('bar'),
+                new ArgumentTokenGroup('baz'),
             ],
         );
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
+        $rules->argumentLists = new ArgumentListRules();
+        $rules->argumentLists->spacesAfterSeparator = 1;
+        $rules->argumentLists->addSeparatorToLastItem = true;
 
         $this->assertEquals(
             '($foo, $bar, $baz)',
@@ -60,19 +60,19 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
 
     public function testChopDownScenarioHasIndentsForEachArgumentAndCommaAfterEachButNoSpacesExceptLastWhenConfiguredAsSo()
     {
-        $token = new ArgumentListDeclarationTokenGroup(
+        $token = new ArgumentListTokenGroup(
             [
-                new ArgumentDeclarationTokenGroup('foo'),
-                new ArgumentDeclarationTokenGroup('bar'),
-                new ArgumentDeclarationTokenGroup('baz'),
+                new ArgumentTokenGroup('foo'),
+                new ArgumentTokenGroup('bar'),
+                new ArgumentTokenGroup('baz'),
             ],
         );
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = false;
+        $rules->argumentLists = new ArgumentListRules();
+        $rules->argumentLists->spacesAfterSeparator = 1;
+        $rules->argumentLists->addSeparatorToLastItem = false;
 
         $this->assertEquals(
             <<<EOS
@@ -88,19 +88,19 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
 
     public function testChopDownScenarioHasIndentsForEachArgumentAndCommaAfterEachEventTheLastWhenConfiguredAsSo()
     {
-        $token = new ArgumentListDeclarationTokenGroup(
+        $token = new ArgumentListTokenGroup(
             [
-                new ArgumentDeclarationTokenGroup('foo'),
-                new ArgumentDeclarationTokenGroup('bar'),
-                new ArgumentDeclarationTokenGroup('baz'),
+                new ArgumentTokenGroup('foo'),
+                new ArgumentTokenGroup('bar'),
+                new ArgumentTokenGroup('baz'),
             ],
         );
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
+        $rules->argumentLists = new ArgumentListRules();
+        $rules->argumentLists->spacesAfterSeparator = 1;
+        $rules->argumentLists->addSeparatorToLastItem = true;
 
         $this->assertEquals(
             <<<EOS
@@ -116,19 +116,19 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
 
     public function testChopDownPadsTypesAndIdentifiersToAlignAllComponentsProperlyEvenIfTypeOrDefaultValueIsNotPresent()
     {
-        $token = new ArgumentListDeclarationTokenGroup(
+        $token = new ArgumentListTokenGroup(
             [
-                new ArgumentDeclarationTokenGroup('foo', type: 'string', defaultValue: 'Hello world'),
-                new ArgumentDeclarationTokenGroup('bar', type: new MultiTypeTokenGroup(['string', 'bool', 'float'])),
-                new ArgumentDeclarationTokenGroup('longerVarName', defaultValue: 1),
+                new ArgumentTokenGroup('foo', type: 'string', defaultValue: 'Hello world'),
+                new ArgumentTokenGroup('bar', type: new MultiTypeTokenGroup(['string', 'bool', 'float'])),
+                new ArgumentTokenGroup('longerVarName', defaultValue: 1),
             ],
         );
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentLists = new ArgumentListDeclarationRules();
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
+        $rules->argumentLists = new ArgumentListRules();
+        $rules->argumentLists->spacesAfterSeparator = 1;
+        $rules->argumentLists->addSeparatorToLastItem = true;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownPaddingContext();
@@ -149,9 +149,9 @@ class ArgumentListDeclarationTokenGroupTest extends TestCase
 
     public function testRenderReturnsInlineScenario(): void
     {
-        $token = new ArgumentListDeclarationTokenGroup(
+        $token = new ArgumentListTokenGroup(
             [
-                new ArgumentDeclarationTokenGroup('foo'),
+                new ArgumentTokenGroup('foo'),
             ],
         );
 

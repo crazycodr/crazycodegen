@@ -36,9 +36,9 @@ class UnpairedTokenConverter extends TokenConverter
     /**
      * @throws ExpressionBuildingMissingOperandForFoundTokenException
      */
-    private function convertTokensFromLeft(array $tokens): array
+    private function convertTokensFromRight(array $tokens): array
     {
-        for ($index = 0; $index < count($tokens); $index++) {
+        for ($index = count($tokens) - 1; $index >= 0; $index--) {
             $token = $tokens[$index];
             if ($token === $this->startTrigger) {
                 $lookAheadOffset = 0;
@@ -81,9 +81,9 @@ class UnpairedTokenConverter extends TokenConverter
     /**
      * @throws ExpressionBuildingMissingOperandForFoundTokenException
      */
-    private function convertTokensFromRight(array $tokens): array
+    private function convertTokensFromLeft(array $tokens): array
     {
-        for ($index = count($tokens) - 1; $index >= 0; $index--) {
+        for ($index = 0; $index < count($tokens); $index++) {
             $token = $tokens[$index];
             if ($token === $this->startTrigger) {
                 $lookAheadOffset = 0;

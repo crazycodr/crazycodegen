@@ -7,18 +7,18 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 class RenderingRules
 {
     public function __construct(
-        public int                          $lineLength = 120,
-        public string                       $indentation = '    ',
-        public DocBlockRules                $docBlocks = new DocBlockRules(),
-        public NamespaceDeclarationRules    $namespaces = new NameSpaceDeclarationRules(),
-        public ImportRules                  $imports = new ImportRules(),
-        public ArgumentListDeclarationRules $argumentLists = new ArgumentListDeclarationRules(),
-        public ArgumentDeclarationRules     $arguments = new ArgumentDeclarationRules(),
-        public FunctionDefinitionRules      $functions = new FunctionDefinitionRules(),
-        public MethodDefinitionRules        $methods = new MethodDefinitionRules(),
-        public ClassDefinitionRules         $classes = new ClassDefinitionRules(),
-        public PropertyDeclarationRules     $properties = new PropertyDeclarationRules(),
-        public ConditionRules               $conditions = new ConditionRules(),
+        public int               $lineLength = 120,
+        public string            $indentation = '    ',
+        public DocBlockRules     $docBlocks = new DocBlockRules(),
+        public NamespaceRules    $namespaces = new NamespaceRules(),
+        public ImportRules       $imports = new ImportRules(),
+        public ArgumentListRules $argumentLists = new ArgumentListRules(),
+        public ArgumentRules     $arguments = new ArgumentRules(),
+        public FunctionRules     $functions = new FunctionRules(),
+        public MethodRules       $methods = new MethodRules(),
+        public ClassRules        $classes = new ClassRules(),
+        public PropertyRules     $properties = new PropertyRules(),
+        public ConditionRules    $conditions = new ConditionRules(),
     )
     {
     }

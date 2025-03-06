@@ -9,7 +9,7 @@ class TokenConverterGroup extends TokenConverter
     public function __construct(
         /** @var TokenConverter[] */
         public array $converters,
-        public bool $useRightAssociativity = false,
+        public bool  $useRightAssociativity = false,
     )
     {
     }
@@ -29,11 +29,11 @@ class TokenConverterGroup extends TokenConverter
     /**
      * @throws ExpressionBuildingMissingOperandForFoundTokenException
      */
-    public function convertTokensFromLeft(array $tokens): array
+    public function convertTokensFromRight(array $tokens): array
     {
         do {
             $newComponentGenerated = false;
-            for ($index = 0; $index < count($tokens); $index++) {
+            for ($index = count($tokens) - 1; $index >= 0; $index--) {
                 $token = $tokens[$index];
                 foreach ($this->converters as $converter) {
                     if ($token === $converter->getTrigger()) {
@@ -51,11 +51,11 @@ class TokenConverterGroup extends TokenConverter
     /**
      * @throws ExpressionBuildingMissingOperandForFoundTokenException
      */
-    public function convertTokensFromRight(array $tokens): array
+    public function convertTokensFromLeft(array $tokens): array
     {
         do {
             $newComponentGenerated = false;
-            for ($index = count($tokens) - 1; $index >= 0; $index--) {
+            for ($index = 0; $index < count($tokens); $index++) {
                 $token = $tokens[$index];
                 foreach ($this->converters as $converter) {
                     if ($token === $converter->getTrigger()) {

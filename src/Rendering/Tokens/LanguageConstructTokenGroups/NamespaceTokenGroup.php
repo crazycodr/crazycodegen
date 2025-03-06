@@ -32,10 +32,10 @@ class NamespaceTokenGroup extends TokenGroup
     {
         $tokens = [];
         $tokens[] = new NamespaceToken();
-        $tokens[] = new SpacesToken($rules->namespaces->spacesBetweenNamespaceTokenAndPath);
+        $tokens[] = new SpacesToken($rules->namespaces->spacesAfterNamespace);
         $tokens[] = new NamespacePathToken($this->path);
         $tokens[] = new SemiColonToken();
-        $tokens[] = new NewLineTokens($rules->namespaces->linesAfterNamespaceDeclaration);
+        $tokens[] = new NewLineTokens($rules->namespaces->newLinesAfterSemiColon);
         return $this->flatten($tokens);
     }
 }

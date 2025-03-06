@@ -41,8 +41,8 @@ class ExpressionBuilder
             new PairedTokenConverter(
                 '(',
                 ')',
-                fn (array $tokens) => new Wraps($tokens[0]),
-                fn (array $tokens) => $this->build(...$tokens),
+                fn(array $tokens) => new Wraps($tokens[0]),
+                fn(array $tokens) => $this->build(...$tokens),
             ),
         ]);
         $this->tokenConverters[] = new TokenConverterGroup(
@@ -50,7 +50,7 @@ class ExpressionBuilder
                 new UnpairedTokenConverter(
                     '**',
                     [-1, +1],
-                    fn (array $tokens) => new Exps($tokens[0], $tokens[1]),
+                    fn(array $tokens) => new Exps($tokens[0], $tokens[1]),
                     useRightAssociativity: true
                 ),
             ],
@@ -60,7 +60,7 @@ class ExpressionBuilder
             new UnpairedTokenConverter(
                 '!',
                 [+1],
-                fn (array $tokens, null|string $lookAheadToken) => new Nots($tokens[0], (bool)$lookAheadToken),
+                fn(array $tokens, null|string $lookAheadToken) => new Nots($tokens[0], (bool)$lookAheadToken),
                 '!'
             ),
         ]);
@@ -68,120 +68,120 @@ class ExpressionBuilder
             new UnpairedTokenConverter(
                 '*',
                 [-1, +1],
-                fn (array $tokens) => new Mults($tokens[0], $tokens[1])
+                fn(array $tokens) => new Mults($tokens[0], $tokens[1])
             ),
             new UnpairedTokenConverter(
                 '/',
                 [-1, +1],
-                fn (array $tokens) => new Divs($tokens[0], $tokens[1])
+                fn(array $tokens) => new Divs($tokens[0], $tokens[1])
             ),
             new UnpairedTokenConverter(
                 '%',
                 [-1, +1],
-                fn (array $tokens) => new Mods($tokens[0], $tokens[1])
+                fn(array $tokens) => new Mods($tokens[0], $tokens[1])
             ),
         ]);
         $this->tokenConverters[] = new TokenConverterGroup([
             new UnpairedTokenConverter(
                 '+',
                 [-1, +1],
-                fn (array $tokens) => new Adds($tokens[0], $tokens[1])
+                fn(array $tokens) => new Adds($tokens[0], $tokens[1])
             ),
             new UnpairedTokenConverter(
                 '-',
                 [-1, +1],
-                fn (array $tokens) => new Subs($tokens[0], $tokens[1])
+                fn(array $tokens) => new Subs($tokens[0], $tokens[1])
             ),
         ]);
         $this->tokenConverters[] = new TokenConverterGroup([
             new UnpairedTokenConverter(
                 '.',
                 [-1, +1],
-                fn (array $tokens) => new Concats($tokens[0], $tokens[1])
+                fn(array $tokens) => new Concats($tokens[0], $tokens[1])
             )
         ]);
         $this->tokenConverters[] = new TokenConverterGroup([
             new UnpairedTokenConverter(
                 '<',
                 [-1, +1],
-                fn (array $tokens) => new IsLessThan($tokens[0], $tokens[1])
+                fn(array $tokens) => new IsLessThan($tokens[0], $tokens[1])
             ),
             new UnpairedTokenConverter(
                 '<=',
                 [-1, +1],
-                fn (array $tokens) => new IsLessThanOrEqualTo($tokens[0], $tokens[1])
+                fn(array $tokens) => new IsLessThanOrEqualTo($tokens[0], $tokens[1])
             ),
             new UnpairedTokenConverter(
                 '>',
                 [-1, +1],
-                fn (array $tokens) => new IsGreaterThan($tokens[0], $tokens[1])
+                fn(array $tokens) => new IsGreaterThan($tokens[0], $tokens[1])
             ),
             new UnpairedTokenConverter(
                 '>=',
                 [-1, +1],
-                fn (array $tokens) => new IsGreaterThanOrEqualTo($tokens[0], $tokens[1])
+                fn(array $tokens) => new IsGreaterThanOrEqualTo($tokens[0], $tokens[1])
             ),
         ]);
         $this->tokenConverters[] = new TokenConverterGroup([
             new UnpairedTokenConverter(
                 '==',
                 [-1, +1],
-                fn (array $tokens) => new Equals($tokens[0], $tokens[1], soft: true)
+                fn(array $tokens) => new Equals($tokens[0], $tokens[1], soft: true)
             ),
             new UnpairedTokenConverter(
                 '!=',
                 [-1, +1],
-                fn (array $tokens) => new NotEquals($tokens[0], $tokens[1], soft: true)
+                fn(array $tokens) => new NotEquals($tokens[0], $tokens[1], soft: true)
             ),
             new UnpairedTokenConverter(
                 '===',
                 [-1, +1],
-                fn (array $tokens) => new Equals($tokens[0], $tokens[1])
+                fn(array $tokens) => new Equals($tokens[0], $tokens[1])
             ),
             new UnpairedTokenConverter(
                 '!==',
                 [-1, +1],
-                fn (array $tokens) => new NotEquals($tokens[0], $tokens[1])
+                fn(array $tokens) => new NotEquals($tokens[0], $tokens[1])
             ),
             new UnpairedTokenConverter(
                 '<>',
                 [-1, +1],
-                fn (array $tokens) => new NotEquals($tokens[0], $tokens[1], useLtGt: true)
+                fn(array $tokens) => new NotEquals($tokens[0], $tokens[1], useLtGt: true)
             ),
         ]);
         $this->tokenConverters[] = new TokenConverterGroup([
             new UnpairedTokenConverter(
                 '&&',
                 [-1, +1],
-                fn (array $tokens) => new Ands($tokens[0], $tokens[1])
+                fn(array $tokens) => new Ands($tokens[0], $tokens[1])
             )
         ]);
         $this->tokenConverters[] = new TokenConverterGroup([
             new UnpairedTokenConverter(
                 '||',
                 [-1, +1],
-                fn (array $tokens) => new Ors($tokens[0], $tokens[1])
+                fn(array $tokens) => new Ors($tokens[0], $tokens[1])
             )
         ]);
         $this->tokenConverters[] = new TokenConverterGroup([
             new UnpairedTokenConverter(
                 'and',
                 [-1, +1],
-                fn (array $tokens) => new Ands($tokens[0], $tokens[1], textBased: true)
+                fn(array $tokens) => new Ands($tokens[0], $tokens[1], textBased: true)
             )
         ]);
         $this->tokenConverters[] = new TokenConverterGroup([
             new UnpairedTokenConverter(
                 'xor',
                 [-1, +1],
-                fn (array $tokens) => new Xors($tokens[0], $tokens[1])
+                fn(array $tokens) => new Xors($tokens[0], $tokens[1])
             )
         ]);
         $this->tokenConverters[] = new TokenConverterGroup([
             new UnpairedTokenConverter(
                 'or',
                 [-1, +1],
-                fn (array $tokens) => new Ors($tokens[0], $tokens[1], textBased: true)
+                fn(array $tokens) => new Ors($tokens[0], $tokens[1], textBased: true)
             )
         ]);
     }
@@ -198,6 +198,19 @@ class ExpressionBuilder
             throw new ExpressionBuildingYieldsMultipleFinalComponentsException();
         }
         return $tokens[0];
+    }
+
+    /**
+     * @param array $tokens
+     * @return array
+     * @throws ExpressionBuildingMissingOperandForFoundTokenException
+     */
+    public function convertUsingTokenConverters(array $tokens): array
+    {
+        foreach ($this->tokenConverters as $tokenConverter) {
+            $tokens = $tokenConverter->convertTokens($tokens);
+        }
+        return $tokens;
     }
 
     /**
@@ -218,18 +231,5 @@ class ExpressionBuilder
             }
         }
         return $components;
-    }
-
-    /**
-     * @param array $tokens
-     * @return array
-     * @throws ExpressionBuildingMissingOperandForFoundTokenException
-     */
-    public function convertUsingTokenConverters(array $tokens): array
-    {
-        foreach ($this->tokenConverters as $tokenConverter) {
-            $tokens = $tokenConverter->convertTokens($tokens);
-        }
-        return $tokens;
     }
 }

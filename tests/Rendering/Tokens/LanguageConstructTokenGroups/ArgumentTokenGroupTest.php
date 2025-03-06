@@ -5,26 +5,26 @@ namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ArgumentDeclarationTokenGroupTest extends TestCase
+class ArgumentTokenGroupTest extends TestCase
 {
     use TokenFunctions;
 
     public function testRendersNameAsExpectedWithoutSpacesAround()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo')
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesAfterType = 1;
+        $rules->arguments->spacesAfterIdentifier = 1;
+        $rules->arguments->spacesAfterEquals = 1;
 
         $this->assertEquals(
             '$foo',
@@ -34,15 +34,15 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testAddsTypeInFrontOfIdentifierAndSeparatesWithSpace()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo'),
             new SingleTypeTokenGroup('int'),
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesAfterType = 1;
+        $rules->arguments->spacesAfterIdentifier = 1;
+        $rules->arguments->spacesAfterEquals = 1;
 
         $this->assertEquals(
             'int $foo',
@@ -52,15 +52,15 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testAddsDefaultValueAfterIdentifierWithSpaceBetweenIdentifierAndEqual()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo'),
             defaultValue: 123,
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesAfterType = 1;
+        $rules->arguments->spacesAfterIdentifier = 1;
+        $rules->arguments->spacesAfterEquals = 1;
 
         $this->assertEquals(
             '$foo = 123',
@@ -70,15 +70,15 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testAddsDefaultValueWithSingleQuotesIfString()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo'),
             defaultValue: 'Hello World',
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesAfterType = 1;
+        $rules->arguments->spacesAfterIdentifier = 1;
+        $rules->arguments->spacesAfterEquals = 1;
 
         $this->assertEquals(
             '$foo = \'Hello World\'',
@@ -88,15 +88,15 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testAddsDefaultValueWithStringRepresentationIfBool()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo'),
             defaultValue: true,
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesAfterType = 1;
+        $rules->arguments->spacesAfterIdentifier = 1;
+        $rules->arguments->spacesAfterEquals = 1;
 
         $this->assertEquals(
             '$foo = true',
@@ -106,15 +106,15 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testAddsTheConfiguredSpacesBetweenTypeAndIdentifierAsPerRules()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo'),
             new SingleTypeTokenGroup('int'),
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 2;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 2;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 2;
+        $rules->arguments->spacesAfterType = 2;
+        $rules->arguments->spacesAfterIdentifier = 2;
+        $rules->arguments->spacesAfterEquals = 2;
 
         $this->assertEquals(
             'int  $foo',
@@ -124,15 +124,15 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testAddsTheConfiguredChopDownSpacesByPaddingTypeProperly()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo'),
             new SingleTypeTokenGroup('int'),
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 2;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 2;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 2;
+        $rules->arguments->spacesAfterType = 2;
+        $rules->arguments->spacesAfterIdentifier = 2;
+        $rules->arguments->spacesAfterEquals = 2;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownPaddingContext();
@@ -146,14 +146,14 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testAddsTheConfiguredChopDownSpacesByPaddingTypeProperlyEvenIfThereIsNoType()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo'),
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 2;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 2;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 2;
+        $rules->arguments->spacesAfterType = 2;
+        $rules->arguments->spacesAfterIdentifier = 2;
+        $rules->arguments->spacesAfterEquals = 2;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownPaddingContext();
@@ -167,15 +167,15 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testAddsTheConfiguredSpacesBetweenIdentifierAndEqualsAsPerRules()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo'),
             defaultValue: 123,
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 2;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 2;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 2;
+        $rules->arguments->spacesAfterType = 2;
+        $rules->arguments->spacesAfterIdentifier = 2;
+        $rules->arguments->spacesAfterEquals = 2;
 
         $this->assertEquals(
             '$foo  =  123',
@@ -185,15 +185,15 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testAddsTheConfiguredChopDownSpacesByPaddingIdentifier()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo'),
             defaultValue: 123,
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesAfterType = 1;
+        $rules->arguments->spacesAfterIdentifier = 1;
+        $rules->arguments->spacesAfterEquals = 1;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownPaddingContext();
@@ -207,15 +207,15 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testWhenTypePaddingIsLessThanTypeAtLeastOneSpaceIsAdded()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('foo'),
             new SingleTypeTokenGroup('reallyLongType'),
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesAfterType = 1;
+        $rules->arguments->spacesAfterIdentifier = 1;
+        $rules->arguments->spacesAfterEquals = 1;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownPaddingContext();
@@ -229,15 +229,15 @@ class ArgumentDeclarationTokenGroupTest extends TestCase
 
     public function testWhenIdentifierPaddingIsLessThanIdentifierAtLeastOneSpaceIsAdded()
     {
-        $token = new ArgumentDeclarationTokenGroup(
+        $token = new ArgumentTokenGroup(
             new IdentifierToken('reallyLongIdentifier'),
             defaultValue: 123,
         );
 
         $rules = new RenderingRules();
-        $rules->arguments->spacesBetweenArgumentTypeAndIdentifier = 1;
-        $rules->arguments->spacesBetweenArgumentIdentifierAndEquals = 1;
-        $rules->arguments->spacesBetweenArgumentEqualsAndValue = 1;
+        $rules->arguments->spacesAfterType = 1;
+        $rules->arguments->spacesAfterIdentifier = 1;
+        $rules->arguments->spacesAfterEquals = 1;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownPaddingContext();

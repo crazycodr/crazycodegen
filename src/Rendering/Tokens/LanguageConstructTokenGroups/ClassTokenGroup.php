@@ -19,7 +19,7 @@ use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ClassDefinitionTokenGroup extends TokenGroup
+class ClassTokenGroup extends TokenGroup
 {
     use FlattenFunction;
     use TokenFunctions;
@@ -36,10 +36,28 @@ class ClassDefinitionTokenGroup extends TokenGroup
         public readonly array                              $implements = [],
         /** @var PropertyTokenGroup[] $properties */
         public readonly array                              $properties = [],
-        /** @var MethodDefinitionTokenGroup[] $methods */
+        /** @var MethodTokenGroup[] $methods */
         public readonly array                              $methods = [],
     )
     {
+    }
+
+    /**
+     * @return Token[]
+     */
+    private function getExtendsTokens(RenderContext $context, RenderingRules $rules): array
+    {
+        $tokens = [];
+        if ($this->extends) {
+            $tokens[] = new ExtendsToken();
+            $tokens[] = new SpacesToken();
+            if (!$this->extends instanceof AbstractTypeTokenGroup) {
+                $tokens[] = (new SingleTypeTokenGroup($this->extends))->render($context, $rules);
+            } else {
+                $tokens[] = $this->extends->render($context, $rules);
+            }
+        }
+        return $this->flatten($tokens);
     }
 
     /**
@@ -68,7 +86,7 @@ class ClassDefinitionTokenGroup extends TokenGroup
                 }
             }
             if ($importsLeft > 0) {
-                $tokens[] = new NewLineTokens($rules->classes->newLinesBetweenImports);
+                $tokens[] = new NewLineTokens($rules->classes->newLinesAfterEachImport);
             }
         }
         if (!empty($this->imports)) {
@@ -77,7 +95,7 @@ class ClassDefinitionTokenGroup extends TokenGroup
 
         if ($this->docBlock) {
             $tokens[] = $this->docBlock->render($context, $rules);
-            $tokens[] = new NewLineTokens($rules->classes->linesAfterDocBlock);
+            $tokens[] = new NewLineTokens($rules->classes->newLinesAfterDocBlock);
         }
 
         $scenarios = [];
@@ -118,8 +136,8 @@ class ClassDefinitionTokenGroup extends TokenGroup
         /** @var Token[] $tokens */
         $tokens = array_merge($tokens, array_pop($scenarios));
 
-        if ($rules->classes->classOpeningBrace === BracePositionEnum::SAME_LINE) {
-            $tokens[] = new SpacesToken($rules->classes->spacesBeforeOpeningBraceIfSameLine);
+        if ($rules->classes->openingBrace === BracePositionEnum::SAME_LINE) {
+            $tokens[] = new SpacesToken($rules->classes->spacesBeforeOpeningBrace);
             $tokens[] = new BraceStartToken();
         } else {
             $tokens[] = new NewLineTokens();
@@ -136,12 +154,12 @@ class ClassDefinitionTokenGroup extends TokenGroup
             $propertiesLeft--;
             $tokens[] = $this->insertIndentationTokens($context, $property->render($context, $rules));
             if ($propertiesLeft > 0) {
-                $tokens[] = new NewLineTokens($rules->classes->newLinesBetweenProperties);
+                $tokens[] = new NewLineTokens($rules->classes->newLinesAfterEachProperty);
             }
         }
 
         if (!empty($this->properties) && !empty($this->methods)) {
-            $tokens[] = new NewLineTokens($rules->classes->newLinesBetweenPropertiesAndMethods);
+            $tokens[] = new NewLineTokens($rules->classes->newLinesAfterProperties);
         }
 
         $methodsLeft = count($this->methods);
@@ -149,11 +167,11 @@ class ClassDefinitionTokenGroup extends TokenGroup
             $methodsLeft--;
             $tokens[] = $this->insertIndentationTokens($context, $method->render($context, $rules));
             if ($methodsLeft > 0) {
-                $tokens[] = new NewLineTokens($rules->classes->newLinesBetweenMethods);
+                $tokens[] = new NewLineTokens($rules->classes->newLinesAfterEachMethod);
             }
         }
 
-        if ($rules->classes->classClosingBrace !== BracePositionEnum::SAME_LINE) {
+        if ($rules->classes->closingBrace !== BracePositionEnum::SAME_LINE) {
             $rules->unindent($context);
             $tokens[] = new NewLineTokens();
             $tokens[] = SpacesToken::fromString($context->indents);
@@ -164,117 +182,6 @@ class ClassDefinitionTokenGroup extends TokenGroup
         $context->importedClasses = $previousImportedClasses;
 
         return $this->flatten($tokens);
-    }
-
-    /**
-     * @return Token[]
-     */
-    private function getDeclarationTokens(): array
-    {
-        $tokens = [];
-        if ($this->abstract) {
-            $tokens[] = new AbstractToken();
-            $tokens[] = new SpacesToken();
-        }
-        $tokens[] = new ClassToken();
-        $tokens[] = new SpacesToken();
-        if (!$this->name instanceof IdentifierToken) {
-            $tokens[] = new IdentifierToken($this->name);
-        } else {
-            $tokens[] = $this->name;
-        }
-        return $this->flatten($tokens);
-    }
-
-    /**
-     * @return Token[]
-     */
-    private function getExtendsTokens(RenderContext $context, RenderingRules $rules): array
-    {
-        $tokens = [];
-        if ($this->extends) {
-            $tokens[] = new ExtendsToken();
-            $tokens[] = new SpacesToken();
-            if (!$this->extends instanceof AbstractTypeTokenGroup) {
-                $tokens[] = (new SingleTypeTokenGroup($this->extends))->render($context, $rules);
-            } else {
-                $tokens[] = $this->extends->render($context, $rules);
-            }
-        }
-        return $this->flatten($tokens);
-    }
-
-    /**
-     * @return Token[]
-     */
-    private function getInlineImplementsTokens(RenderContext $context, RenderingRules $rules): array
-    {
-        $tokens = [];
-        if (empty($this->implements)) {
-            return $tokens;
-        }
-        $implementsTokenGroup = new ImplementsTokenGroup($this->implements);
-        return $implementsTokenGroup->renderInlineScenario($context, $rules);
-    }
-
-    /**
-     * @return Token[]
-     */
-    private function getChopDownImplementsTokens(RenderContext $context, RenderingRules $rules): array
-    {
-        $tokens = [];
-        if (empty($this->implements)) {
-            return $tokens;
-        }
-        $implementsTokenGroup = new ImplementsTokenGroup($this->implements);
-        return $implementsTokenGroup->renderChopDownScenario($context, $rules);
-    }
-
-    /**
-     * @return Token[]
-     */
-    public function getDeclarationByWrappingPermutation(
-        WrappingDecision $wrapExtends,
-        WrappingDecision $wrapImplements,
-        WrappingDecision $wrapIndividualImplements,
-        RenderContext    $context,
-        RenderingRules   $rules,
-    ): array
-    {
-        $scenario = [];
-        $scenario[] = $this->getDeclarationTokens();
-        $extendsTokens = $this->getExtendsTokens($context, $rules);
-        $inlineImplementsTokens = $this->getInlineImplementsTokens($context, $rules);
-        $chopDownImplementsTokens = $this->getChopDownImplementsTokens($context, $rules);
-        if ($wrapExtends === WrappingDecision::NEVER && !empty($extendsTokens)) {
-            $scenario[] = new SpacesToken();
-            $scenario[] = $extendsTokens;
-        } elseif (!empty($extendsTokens)) {
-            $scenario[] = new NewLineTokens();
-            $rules->indent($context);
-            $scenario[] = SpacesToken::fromString($context->indents);
-            $scenario[] = $extendsTokens;
-            $rules->unindent($context);
-        }
-        if ($wrapImplements === WrappingDecision::NEVER && !empty($inlineImplementsTokens)) {
-            $scenario[] = new SpacesToken();
-            $scenario[] = $inlineImplementsTokens;
-        } elseif (
-            ($wrapImplements === WrappingDecision::ALWAYS || $wrapImplements === WrappingDecision::IF_TOO_LONG)
-            && $wrapIndividualImplements === WrappingDecision::NEVER
-            && !empty($inlineImplementsTokens)
-        ) {
-            $scenario[] = new NewLineTokens();
-            $rules->indent($context);
-            $scenario[] = $this->insertIndentationTokens($context, $inlineImplementsTokens);
-            $rules->unindent($context);
-        } elseif (!empty($chopDownImplementsTokens)) {
-            $scenario[] = new NewLineTokens();
-            $rules->indent($context);
-            $scenario[] = $this->insertIndentationTokens($context, $chopDownImplementsTokens);
-            $rules->unindent($context);
-        }
-        return $this->flatten($scenario);
     }
 
     /**
@@ -333,5 +240,98 @@ class ClassDefinitionTokenGroup extends TokenGroup
         }
 
         return $permutations;
+    }
+
+    /**
+     * @return Token[]
+     */
+    public function getDeclarationByWrappingPermutation(
+        WrappingDecision $wrapExtends,
+        WrappingDecision $wrapImplements,
+        WrappingDecision $wrapIndividualImplements,
+        RenderContext    $context,
+        RenderingRules   $rules,
+    ): array
+    {
+        $scenario = [];
+        $scenario[] = $this->getDeclarationTokens();
+        $extendsTokens = $this->getExtendsTokens($context, $rules);
+        $inlineImplementsTokens = $this->getInlineImplementsTokens($context, $rules);
+        $chopDownImplementsTokens = $this->getChopDownImplementsTokens($context, $rules);
+        if ($wrapExtends === WrappingDecision::NEVER && !empty($extendsTokens)) {
+            $scenario[] = new SpacesToken();
+            $scenario[] = $extendsTokens;
+        } elseif (!empty($extendsTokens)) {
+            $scenario[] = new NewLineTokens();
+            $rules->indent($context);
+            $scenario[] = SpacesToken::fromString($context->indents);
+            $scenario[] = $extendsTokens;
+            $rules->unindent($context);
+        }
+        if ($wrapImplements === WrappingDecision::NEVER && !empty($inlineImplementsTokens)) {
+            $scenario[] = new SpacesToken();
+            $scenario[] = $inlineImplementsTokens;
+        } elseif (
+            ($wrapImplements === WrappingDecision::ALWAYS || $wrapImplements === WrappingDecision::IF_TOO_LONG)
+            && $wrapIndividualImplements === WrappingDecision::NEVER
+            && !empty($inlineImplementsTokens)
+        ) {
+            $scenario[] = new NewLineTokens();
+            $rules->indent($context);
+            $scenario[] = $this->insertIndentationTokens($context, $inlineImplementsTokens);
+            $rules->unindent($context);
+        } elseif (!empty($chopDownImplementsTokens)) {
+            $scenario[] = new NewLineTokens();
+            $rules->indent($context);
+            $scenario[] = $this->insertIndentationTokens($context, $chopDownImplementsTokens);
+            $rules->unindent($context);
+        }
+        return $this->flatten($scenario);
+    }
+
+    /**
+     * @return Token[]
+     */
+    private function getDeclarationTokens(): array
+    {
+        $tokens = [];
+        if ($this->abstract) {
+            $tokens[] = new AbstractToken();
+            $tokens[] = new SpacesToken();
+        }
+        $tokens[] = new ClassToken();
+        $tokens[] = new SpacesToken();
+        if (!$this->name instanceof IdentifierToken) {
+            $tokens[] = new IdentifierToken($this->name);
+        } else {
+            $tokens[] = $this->name;
+        }
+        return $this->flatten($tokens);
+    }
+
+    /**
+     * @return Token[]
+     */
+    private function getInlineImplementsTokens(RenderContext $context, RenderingRules $rules): array
+    {
+        $tokens = [];
+        if (empty($this->implements)) {
+            return $tokens;
+        }
+        $implementsTokenGroup = new ImplementsTokenGroup($this->implements);
+        return $implementsTokenGroup->renderInlineScenario($context, $rules);
+    }
+
+    /**
+     * @return Token[]
+     */
+    private function getChopDownImplementsTokens(RenderContext $context, RenderingRules $rules): array
+    {
+        $tokens = [];
+        if (empty($this->implements)) {
+            return $tokens;
+        }
+        $implementsTokenGroup = new ImplementsTokenGroup($this->implements);
+        return $implementsTokenGroup->renderChopDownScenario($context, $rules);
     }
 }

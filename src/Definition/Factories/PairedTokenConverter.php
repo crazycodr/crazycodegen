@@ -9,8 +9,8 @@ class PairedTokenConverter extends TokenConverter
     public function __construct(
         public string $startTrigger,
         public string $endTrigger,
-        public mixed $extractor,
-        public mixed $subConverter,
+        public mixed  $extractor,
+        public mixed  $subConverter,
     )
     {
     }
@@ -35,8 +35,7 @@ class PairedTokenConverter extends TokenConverter
                 if ($nestingLevels === 1) {
                     $startIndex = $index;
                 }
-            }
-            elseif ($token === $this->endTrigger) {
+            } elseif ($token === $this->endTrigger) {
                 $nestingLevels--;
                 if ($nestingLevels === 0) {
                     $endIndex = $index;

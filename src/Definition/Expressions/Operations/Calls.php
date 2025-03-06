@@ -16,7 +16,7 @@ class Calls implements CanBeComputed
 
     public function __construct(
         public CanBeCalled|string $target,
-        public array  $arguments = [],
+        public array              $arguments = [],
     )
     {
     }

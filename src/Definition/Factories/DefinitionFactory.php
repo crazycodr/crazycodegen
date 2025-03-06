@@ -2,7 +2,6 @@
 
 namespace CrazyCodeGen\Definition\Factories;
 
-use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\FuncDef;
 use CrazyCodeGen\Definition\Definitions\Values\BoolValue;
 use CrazyCodeGen\Definition\Definitions\Values\FloatValue;

@@ -27,7 +27,7 @@ class ConditionTokenGroupTest extends TestCase
         );
 
         $rules = $this->getTestRules();
-        $rules->conditions->spacesBeforeParentheses = 4;
+        $rules->conditions->spacesAfterKeyword = 4;
 
         $this->assertEquals(<<<EOS
             if    (true) {
@@ -36,6 +36,17 @@ class ConditionTokenGroupTest extends TestCase
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
+    }
+
+    private function getTestRules(): RenderingRules
+    {
+        $rules = new RenderingRules();
+        $rules->conditions->spacesAfterKeyword = 1;
+        $rules->conditions->openingBrace = BracePositionEnum::SAME_LINE;
+        $rules->conditions->keywordAfterClosingBrace = BracePositionEnum::SAME_LINE;
+        $rules->conditions->spacesBeforeOpeningBrace = 1;
+        $rules->conditions->spacesAfterClosingBrace = 1;
+        return $rules;
     }
 
     public function testComplexConditionWithDifferentTokensAndTokenGroupsIsRenderedAsIsAndInsideParentheses()
@@ -76,8 +87,8 @@ class ConditionTokenGroupTest extends TestCase
         );
 
         $rules = $this->getTestRules();
-        $rules->conditions->startBrace = BracePositionEnum::SAME_LINE;
-        $rules->conditions->spacesBeforeBraceOnSameLine = 4;
+        $rules->conditions->openingBrace = BracePositionEnum::SAME_LINE;
+        $rules->conditions->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(<<<EOS
             if (true)    {
@@ -96,8 +107,8 @@ class ConditionTokenGroupTest extends TestCase
         );
 
         $rules = $this->getTestRules();
-        $rules->conditions->startBrace = BracePositionEnum::NEXT_LINE;
-        $rules->conditions->spacesBeforeBraceOnSameLine = 4;
+        $rules->conditions->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->conditions->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(<<<EOS
             if (true)
@@ -181,8 +192,8 @@ class ConditionTokenGroupTest extends TestCase
         );
 
         $rules = $this->getTestRules();
-        $rules->conditions->startBrace = BracePositionEnum::NEXT_LINE;
-        $rules->conditions->elseAfterEndBrace = BracePositionEnum::NEXT_LINE;
+        $rules->conditions->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->conditions->keywordAfterClosingBrace = BracePositionEnum::NEXT_LINE;
 
         $this->assertEquals(<<<EOS
             if (true)
@@ -235,16 +246,5 @@ class ConditionTokenGroupTest extends TestCase
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
-    }
-
-    private function getTestRules(): RenderingRules
-    {
-        $rules = new RenderingRules();
-        $rules->conditions->spacesBeforeParentheses = 1;
-        $rules->conditions->startBrace = BracePositionEnum::SAME_LINE;
-        $rules->conditions->elseAfterEndBrace = BracePositionEnum::SAME_LINE;
-        $rules->conditions->spacesBeforeBraceOnSameLine = 1;
-        $rules->conditions->spacesAfterBraceOnSameLine = 1;
-        return $rules;
     }
 }

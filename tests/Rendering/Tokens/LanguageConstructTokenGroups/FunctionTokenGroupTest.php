@@ -6,20 +6,20 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentDeclarationTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListDeclarationTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionDefinitionTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class FunctionDefinitionTokenGroupTest extends TestCase
+class FunctionTokenGroupTest extends TestCase
 {
     use TokenFunctions;
 
     public function testInlineDefinitionRendersFunctionKeyword()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
@@ -34,9 +34,29 @@ class FunctionDefinitionTokenGroupTest extends TestCase
         );
     }
 
+    private function getTestRules(): RenderingRules
+    {
+        $rules = new RenderingRules();
+        $rules->lineLength = 120;
+        $rules->docBlocks->lineLength = 80;
+        $rules->argumentLists->addSeparatorToLastItem = true;
+        $rules->argumentLists->padIdentifiers = false;
+        $rules->argumentLists->padTypes = false;
+        $rules->argumentLists->spacesAfterSeparator = 1;
+        $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
+        $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->newLinesAfterDocBlock = 1;
+        $rules->functions->spacesBeforeOpeningBrace = 1;
+        $rules->functions->spacesAfterArguments = 0;
+        $rules->functions->spacesAfterIdentifier = 0;
+        $rules->functions->spacesAfterReturnColon = 1;
+        return $rules;
+    }
+
     public function testInlineDefinitionRendersNameOfFunction()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
@@ -53,7 +73,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersNoSpaceBetweenNameAndArgumentList()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
@@ -70,12 +90,12 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersSpacesBetweenNameAndArgumentListAsPerRules()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 1;
+        $rules->functions->spacesAfterIdentifier = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction ()
@@ -88,13 +108,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersArgumentListInlineAsExpectedBetweenParentheses()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListDeclarationTokenGroup(
+            arguments: new ArgumentListTokenGroup(
                 arguments: [
-                    new ArgumentDeclarationTokenGroup(name: 'foo'),
-                    new ArgumentDeclarationTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentDeclarationTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ArgumentTokenGroup(name: 'foo'),
+                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
+                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -112,13 +132,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenListAndReturnColonAsPerRules()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
             returnType: 'string',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 1;
+        $rules->functions->spacesAfterArguments = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction() : string
@@ -131,13 +151,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenReturnColonAndTypeAsPerRules()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
             returnType: 'string',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->spacesBetweenReturnColonAndType = 2;
+        $rules->functions->spacesAfterReturnColon = 2;
 
         $this->assertEquals(<<<EOS
             function myFunction():  string
@@ -150,14 +170,14 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenTypeAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
             returnType: 'string',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 2;
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
+        $rules->functions->spacesBeforeOpeningBrace = 2;
+        $rules->functions->openingBrace = BracePositionEnum::SAME_LINE;
 
         $this->assertEquals(<<<EOS
             function myFunction(): string  {
@@ -169,14 +189,14 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceAfterArgumentListWithSpacesBetweenListAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 2;
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->spacesBeforeOpeningBrace = 2;
+        $rules->functions->openingBrace = BracePositionEnum::SAME_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
 
         $this->assertEquals(<<<EOS
             function myFunction()  {
@@ -188,13 +208,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningAndClosingBraceOnSameLineAsPerConfiguration()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
+        $rules->functions->openingBrace = BracePositionEnum::SAME_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::SAME_LINE;
 
         $this->assertEquals(<<<EOS
             function myFunction() {}
@@ -205,13 +225,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceOnSameLineAndClosingBraceOnNextLineAsPerConfiguration()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->openingBrace = BracePositionEnum::SAME_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
 
         $this->assertEquals(
             <<<EOS
@@ -224,13 +244,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceOnNextLineWithClosingBraceOnSameLineAsPerConfiguration()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::SAME_LINE;
+        $rules->functions->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::SAME_LINE;
 
         $this->assertEquals(
             <<<EOS
@@ -243,13 +263,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningAndClosingBracesOnSeparateLinesAsPerConfiguration()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
 
         $this->assertEquals(
             <<<EOS
@@ -263,7 +283,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersFunctionKeyword()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
@@ -280,7 +300,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersNameOfFunction()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
@@ -297,7 +317,7 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersNoSpaceBetweenNameAndArgumentList()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
@@ -314,12 +334,12 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersSpacesBetweenNameAndArgumentListAsPerRules()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 1;
+        $rules->functions->spacesAfterIdentifier = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction (
@@ -332,13 +352,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersArgumentListChopDownAsExpectedBetweenParentheses()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListDeclarationTokenGroup(
+            arguments: new ArgumentListTokenGroup(
                 arguments: [
-                    new ArgumentDeclarationTokenGroup(name: 'foo'),
-                    new ArgumentDeclarationTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentDeclarationTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ArgumentTokenGroup(name: 'foo'),
+                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
+                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -359,13 +379,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenListAndReturnColonAsPerRules()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
             returnType: 'string',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 1;
+        $rules->functions->spacesAfterArguments = 1;
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -378,13 +398,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenReturnColonAndTypeAsPerRules()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
             returnType: 'string',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->spacesBetweenReturnColonAndType = 2;
+        $rules->functions->spacesAfterReturnColon = 2;
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -397,13 +417,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenTypeAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
             returnType: 'string',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 2;
+        $rules->functions->spacesBeforeOpeningBrace = 2;
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -416,12 +436,12 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersOpeningBraceAfterArgumentListWithSpacesBetweenListAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 2;
+        $rules->functions->spacesBeforeOpeningBrace = 2;
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -434,13 +454,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersOpeningAndClosingBracesPositionIsNotRespectedAndAlwaysSameLineNextLine()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
 
         $this->assertEquals(<<<EOS
             function myFunction(
@@ -453,13 +473,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testRenderReturnsTheInlineVersionIfArgumentsOnDifferentLinesIsNeverWrap()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListDeclarationTokenGroup(
+            arguments: new ArgumentListTokenGroup(
                 arguments: [
-                    new ArgumentDeclarationTokenGroup(name: 'foo'),
-                    new ArgumentDeclarationTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentDeclarationTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ArgumentTokenGroup(name: 'foo'),
+                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
+                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -479,13 +499,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testRenderReturnsTheInlineVersionIfArgumentsOnDifferentLinesChopIfTooLongButItStillFits()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListDeclarationTokenGroup(
+            arguments: new ArgumentListTokenGroup(
                 arguments: [
-                    new ArgumentDeclarationTokenGroup(name: 'foo'),
-                    new ArgumentDeclarationTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentDeclarationTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ArgumentTokenGroup(name: 'foo'),
+                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
+                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -504,13 +524,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testRenderReturnsTheChopDownVersionIfArgumentsOnDifferentLinesChopIfTooLongAndItDoesNotFit()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListDeclarationTokenGroup(
+            arguments: new ArgumentListTokenGroup(
                 arguments: [
-                    new ArgumentDeclarationTokenGroup(name: 'foo'),
-                    new ArgumentDeclarationTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentDeclarationTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ArgumentTokenGroup(name: 'foo'),
+                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
+                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -533,13 +553,13 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testRenderReturnsTheChopDownVersionEvenIfArgumentsWouldFitButConfigurationForcesIt()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListDeclarationTokenGroup(
+            arguments: new ArgumentListTokenGroup(
                 arguments: [
-                    new ArgumentDeclarationTokenGroup(name: 'foo'),
-                    new ArgumentDeclarationTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentDeclarationTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ArgumentTokenGroup(name: 'foo'),
+                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
+                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -561,14 +581,14 @@ class FunctionDefinitionTokenGroupTest extends TestCase
 
     public function testDocBlockIsProperlyRendered()
     {
-        $token = new FunctionDefinitionTokenGroup(
+        $token = new FunctionTokenGroup(
             name: 'myFunction',
             docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the function declaration.']),
         );
 
         $rules = $this->getTestRules();
         $rules->docBlocks->lineLength = 40;
-        $rules->functions->linesAfterDocBlock = 3;
+        $rules->functions->newLinesAfterDocBlock = 3;
 
         $this->assertEquals(<<<EOS
             /**
@@ -584,25 +604,5 @@ class FunctionDefinitionTokenGroupTest extends TestCase
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
-    }
-
-    private function getTestRules(): RenderingRules
-    {
-        $rules = new RenderingRules();
-        $rules->lineLength = 120;
-        $rules->docBlocks->lineLength = 80;
-        $rules->argumentLists->addTrailingCommaToLastItemInChopDown = true;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->argumentLists->padTypeNames = false;
-        $rules->argumentLists->spacesAfterArgumentComma = 1;
-        $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
-        $rules->functions->funcClosingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->funcOpeningBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->linesAfterDocBlock = 1;
-        $rules->functions->spacesBeforeOpeningBraceIfSameLine = 1;
-        $rules->functions->spacesBetweenArgumentListAndReturnColon = 0;
-        $rules->functions->spacesBetweenIdentifierAndArgumentList = 0;
-        $rules->functions->spacesBetweenReturnColonAndType = 1;
-        return $rules;
     }
 }

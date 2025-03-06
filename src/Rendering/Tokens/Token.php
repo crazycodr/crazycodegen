@@ -8,7 +8,8 @@ class Token
     {
     }
 
-    public function render(): string {
+    public function render(): string
+    {
         return $this->text;
     }
 }

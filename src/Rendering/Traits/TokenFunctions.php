@@ -45,6 +45,39 @@ trait TokenFunctions
     }
 
     /**
+     * @param array<Token|TokenGroup>|Token|TokenGroup $instructions
+     * @param RenderContext $context
+     * @param RenderingRules $rules
+     * @return array
+     */
+    private function renderInstructionsFromFlexibleTokenValue(
+        array|Token|TokenGroup $instructions,
+        RenderContext          $context,
+        RenderingRules         $rules
+    ): array
+    {
+        $tokens = [];
+        if (is_array($instructions)) {
+            foreach ($instructions as $instruction) {
+                if (!$instruction instanceof Token && !$instruction instanceof TokenGroup) {
+                    continue;
+                }
+                $tokens[] = $this->convertFlexibleTokenValueToTokens($instruction, $context, $rules);
+                $tokens[] = new NewLineTokens();
+            }
+        } elseif ($instructions instanceof Token) {
+            $tokens[] = $instructions;
+            $tokens[] = new SemiColonToken();
+            $tokens[] = new NewLineTokens();
+        } elseif ($instructions instanceof TokenGroup) {
+            $tokens[] = $instructions->render($context, $rules);
+            $tokens[] = new SemiColonToken();
+            $tokens[] = new NewLineTokens();
+        }
+        return $tokens;
+    }
+
+    /**
      * @param array<Token|TokenGroup>|Token|TokenGroup $values
      */
     private function convertFlexibleTokenValueToTokens(
@@ -68,38 +101,6 @@ trait TokenFunctions
             $tokens[] = $values;
         } elseif ($values instanceof TokenGroup) {
             $tokens[] = $values->render($context, $rules);
-        }
-        return $tokens;
-    }
-
-    /**
-     * @param array<Token|TokenGroup>|Token|TokenGroup $instructions
-     * @param RenderContext $context
-     * @param RenderingRules $rules
-     * @return array
-     */
-    private function renderInstructionsFromFlexibleTokenValue(
-        array|Token|TokenGroup $instructions,
-        RenderContext $context,
-        RenderingRules $rules
-    ): array {
-        $tokens = [];
-        if (is_array($instructions)) {
-            foreach ($instructions as $instruction) {
-                if (!$instruction instanceof Token && !$instruction instanceof TokenGroup) {
-                    continue;
-                }
-                $tokens[] = $this->convertFlexibleTokenValueToTokens($instruction, $context, $rules);
-                $tokens[] = new NewLineTokens();
-            }
-        } elseif ($instructions instanceof Token) {
-            $tokens[] = $instructions;
-            $tokens[] = new SemiColonToken();
-            $tokens[] = new NewLineTokens();
-        } elseif ($instructions instanceof TokenGroup) {
-            $tokens[] = $instructions->render($context, $rules);
-            $tokens[] = new SemiColonToken();
-            $tokens[] = new NewLineTokens();
         }
         return $tokens;
     }

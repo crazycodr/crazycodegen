@@ -44,13 +44,13 @@ class ConditionTokenGroup extends TokenGroup
         $tokens = [];
 
         $tokens[] = new IfToken();
-        $tokens[] = new SpacesToken($rules->conditions->spacesBeforeParentheses);
+        $tokens[] = new SpacesToken($rules->conditions->spacesAfterKeyword);
         $tokens[] = new ParStartToken();
         $tokens[] = $this->convertFlexibleTokenValueToTokens($this->condition, $context, $rules);
         $tokens[] = new ParEndToken();
 
-        if ($rules->conditions->startBrace === BracePositionEnum::SAME_LINE) {
-            $tokens[] = new SpacesToken($rules->conditions->spacesBeforeBraceOnSameLine);
+        if ($rules->conditions->openingBrace === BracePositionEnum::SAME_LINE) {
+            $tokens[] = new SpacesToken($rules->conditions->spacesBeforeOpeningBrace);
         } else {
             $tokens[] = new NewLineTokens();
         }
@@ -68,18 +68,18 @@ class ConditionTokenGroup extends TokenGroup
         if (empty($this->falseInstructions)) {
             return $this->flatten($tokens);
         }
-        if ($rules->conditions->elseAfterEndBrace === BracePositionEnum::NEXT_LINE) {
+        if ($rules->conditions->keywordAfterClosingBrace === BracePositionEnum::NEXT_LINE) {
             $tokens[] = new NewLineTokens();
         } else {
-            $tokens[] = new SpacesToken($rules->conditions->spacesAfterBraceOnSameLine);
+            $tokens[] = new SpacesToken($rules->conditions->spacesAfterClosingBrace);
         }
 
         $tokens[] = new ElseToken();
         if ($this->falseInstructions instanceof ConditionTokenGroup) {
             $tokens[] = $this->falseInstructions->render($context, $rules);
         } else {
-            if ($rules->conditions->startBrace === BracePositionEnum::SAME_LINE) {
-                $tokens[] = new SpacesToken($rules->conditions->spacesBeforeBraceOnSameLine);
+            if ($rules->conditions->openingBrace === BracePositionEnum::SAME_LINE) {
+                $tokens[] = new SpacesToken($rules->conditions->spacesBeforeOpeningBrace);
             } else {
                 $tokens[] = new NewLineTokens();
             }

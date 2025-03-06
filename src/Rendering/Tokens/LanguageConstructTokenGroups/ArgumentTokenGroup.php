@@ -13,7 +13,7 @@ use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ArgumentDeclarationTokenGroup extends TokenGroup
+class ArgumentTokenGroup extends TokenGroup
 {
     use FlattenFunction;
     use TokenFunctions;
@@ -57,6 +57,25 @@ class ArgumentDeclarationTokenGroup extends TokenGroup
     }
 
     /**
+     * @param Token[] $typesTokens
+     * @param RenderContext $context
+     * @param RenderingRules $rules
+     * @return Token[]
+     */
+    private function getSpacesBetweenTypesAndIdentifier(array $typesTokens, RenderContext $context, RenderingRules $rules): array
+    {
+        if ($context->chopDown?->paddingSpacesForTypes) {
+            $tokensAsString = $this->renderTokensToString($typesTokens);
+            $spacesToAdd = max(0, $context->chopDown->paddingSpacesForTypes - strlen($tokensAsString)) + 1;
+        } elseif (!empty($typesTokens)) {
+            $spacesToAdd = $rules->arguments->spacesAfterType;
+        } else {
+            return [];
+        }
+        return [new SpacesToken($spacesToAdd)];
+    }
+
+    /**
      * @return Token[]
      */
     public function renderIdentifier(RenderContext $context, RenderingRules $rules): array
@@ -94,25 +113,6 @@ class ArgumentDeclarationTokenGroup extends TokenGroup
     }
 
     /**
-     * @param Token[] $typesTokens
-     * @param RenderContext $context
-     * @param RenderingRules $rules
-     * @return Token[]
-     */
-    private function getSpacesBetweenTypesAndIdentifier(array $typesTokens, RenderContext $context, RenderingRules $rules): array
-    {
-        if ($context->chopDown?->paddingSpacesForTypes) {
-            $tokensAsString = $this->renderTokensToString($typesTokens);
-            $spacesToAdd = max(0, $context->chopDown->paddingSpacesForTypes - strlen($tokensAsString)) + 1;
-        } elseif (!empty($typesTokens)) {
-            $spacesToAdd = $rules->arguments->spacesBetweenArgumentTypeAndIdentifier;
-        } else {
-            return [];
-        }
-        return [new SpacesToken($spacesToAdd)];
-    }
-
-    /**
      * @param Token[] $identifierTokens
      * @param RenderContext $context
      * @param RenderingRules $rules
@@ -124,7 +124,7 @@ class ArgumentDeclarationTokenGroup extends TokenGroup
             $tokensAsString = $this->renderTokensToString($identifierTokens);
             $spacesToAdd = max(0, $context->chopDown->paddingSpacesForIdentifiers - strlen($tokensAsString)) + 1;
         } elseif (!empty($identifierTokens)) {
-            $spacesToAdd = $rules->arguments->spacesBetweenArgumentIdentifierAndEquals;
+            $spacesToAdd = $rules->arguments->spacesAfterIdentifier;
         } else {
             return [];
         }
@@ -137,6 +137,6 @@ class ArgumentDeclarationTokenGroup extends TokenGroup
      */
     private function getSpacesBetweenEqualsAndValue(RenderingRules $rules): array
     {
-        return [new SpacesToken($rules->arguments->spacesBetweenArgumentEqualsAndValue)];
+        return [new SpacesToken($rules->arguments->spacesAfterEquals)];
     }
 }

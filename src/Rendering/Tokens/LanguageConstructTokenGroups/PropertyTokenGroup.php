@@ -46,7 +46,7 @@ class PropertyTokenGroup extends TokenGroup
 
         if ($this->docBlock) {
             $tokens[] = $this->docBlock->render($context, $rules);
-            $tokens[] = new NewLineTokens($rules->properties->linesAfterDocBlock);
+            $tokens[] = new NewLineTokens($rules->properties->newLinesAfterDocBlock);
         }
 
         $tokens[] = $this->renderVisibility($context, $rules);
@@ -66,11 +66,32 @@ class PropertyTokenGroup extends TokenGroup
         $tokens = [];
         $tokens[] = $tokenToPad = new VisibilityToken($this->visibility);
         $tokens[] = new SpacesToken($this->calculatePaddingOrGetRuleSpaces(
-                $tokenToPad,
-                $context->chopDown?->paddingSpacesForVisibilities,
-                $rules->properties->spacesAfterVisibility
-            ));
+            $tokenToPad,
+            $context->chopDown?->paddingSpacesForVisibilities,
+            $rules->properties->spacesAfterVisibility
+        ));
         return $this->flatten($tokens);
+    }
+
+    /**
+     * @param Token[]|Token $tokensToPad
+     * @param int|null $paddingContextSpaces
+     * @param int $ruleSpacingValue
+     * @return int
+     */
+    private function calculatePaddingOrGetRuleSpaces(
+        array|Token $tokensToPad,
+        ?int        $paddingContextSpaces,
+        int         $ruleSpacingValue
+    ): int
+    {
+        if ($paddingContextSpaces) {
+            $renderedTokensLength = strlen($this->renderTokensToString(
+                is_array($tokensToPad) ? $tokensToPad : [$tokensToPad]
+            ));
+            return max(1, $paddingContextSpaces - $renderedTokensLength);
+        }
+        return $ruleSpacingValue;
     }
 
     /**
@@ -82,10 +103,10 @@ class PropertyTokenGroup extends TokenGroup
         if ($this->static) {
             $tokens[] = $tokenToPad = new StaticToken();
             $tokens[] = new SpacesToken($this->calculatePaddingOrGetRuleSpaces(
-                    $tokenToPad,
-                    $context->chopDown?->paddingSpacesForModifiers,
-                    $rules->properties->spacesAfterStaticKeyword
-                ));
+                $tokenToPad,
+                $context->chopDown?->paddingSpacesForModifiers,
+                $rules->properties->spacesAfterStatic
+            ));
         } else {
             $tokens[] = new SpacesToken($context->chopDown?->paddingSpacesForModifiers ?? 0);
         }
@@ -101,17 +122,17 @@ class PropertyTokenGroup extends TokenGroup
         if (is_string($this->type)) {
             $tokens[] = $tokensToPad = (new SingleTypeTokenGroup(type: $this->type))->render($context, $rules);
             $tokens[] = new SpacesToken($this->calculatePaddingOrGetRuleSpaces(
-                    $tokensToPad,
-                    $context->chopDown?->paddingSpacesForTypes,
-                    $rules->properties->spacesAfterType
-                ));
+                $tokensToPad,
+                $context->chopDown?->paddingSpacesForTypes,
+                $rules->properties->spacesAfterType
+            ));
         } elseif (!is_null($this->type)) {
             $tokens[] = $tokensToPad = $this->type->render($context, $rules);
             $tokens[] = new SpacesToken($this->calculatePaddingOrGetRuleSpaces(
-                    $tokensToPad,
-                    $context->chopDown?->paddingSpacesForTypes,
-                    $rules->properties->spacesAfterType
-                ));
+                $tokensToPad,
+                $context->chopDown?->paddingSpacesForTypes,
+                $rules->properties->spacesAfterType
+            ));
         } else {
             $tokens[] = new SpacesToken($context->chopDown?->paddingSpacesForTypes ?? 0);
         }
@@ -127,10 +148,10 @@ class PropertyTokenGroup extends TokenGroup
         $tokens[] = $tokensToPad = (new VariableTokenGroup($this->name))->render($context, $rules);
         if ($this->defaultValue || $this->defaultValueIsNull) {
             $tokens[] = new SpacesToken($this->calculatePaddingOrGetRuleSpaces(
-                    $tokensToPad,
-                    $context->chopDown?->paddingSpacesForIdentifiers,
-                    $rules->properties->spacesAfterIdentifier
-                ));
+                $tokensToPad,
+                $context->chopDown?->paddingSpacesForIdentifiers,
+                $rules->properties->spacesAfterIdentifier
+            ));
         }
         return $this->flatten($tokens);
     }
@@ -160,26 +181,5 @@ class PropertyTokenGroup extends TokenGroup
             }
         }
         return $this->flatten($tokens);
-    }
-
-    /**
-     * @param Token[]|Token $tokensToPad
-     * @param int|null $paddingContextSpaces
-     * @param int $ruleSpacingValue
-     * @return int
-     */
-    private function calculatePaddingOrGetRuleSpaces(
-        array|Token $tokensToPad,
-        ?int        $paddingContextSpaces,
-        int         $ruleSpacingValue
-    ): int
-    {
-        if ($paddingContextSpaces) {
-            $renderedTokensLength = strlen($this->renderTokensToString(
-                is_array($tokensToPad) ? $tokensToPad : [$tokensToPad]
-            ));
-            return max(1, $paddingContextSpaces - $renderedTokensLength);
-        }
-        return $ruleSpacingValue;
     }
 }
