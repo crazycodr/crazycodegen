@@ -7,10 +7,16 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\AsteriskToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\InstructionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -708,6 +714,50 @@ class MethodTokenGroupTest extends TestCase
             
             public function myFunction()
             {
+            }
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testAreRenderedInBodyIndented()
+    {
+        $token = new MethodTokenGroup(
+            name: 'myFunction',
+            instructions: [
+                new InstructionTokenGroup(
+                    instructions: [
+                        new Token(1),
+                        new SpacesToken(),
+                        new Token('==='),
+                        new SpacesToken(),
+                        [
+                            new ParStartToken(),
+                            new Token(1),
+                            new AsteriskToken(),
+                            new Token(3),
+                            new ParEndToken(),
+                        ],
+                    ]
+                ),
+                new InstructionTokenGroup(
+                    instructions: [
+                        new Token('return'),
+                        new SpacesToken(),
+                        new Token(1),
+                    ]
+                ),
+            ],
+        );
+
+        $rules = $this->getBaseTestingRules();
+
+        $this->assertEquals(
+            <<<EOS
+            public function myFunction()
+            {
+                1 === (1*3);
+                return 1;
             }
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))

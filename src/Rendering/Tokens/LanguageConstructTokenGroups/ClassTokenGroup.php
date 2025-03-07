@@ -98,8 +98,8 @@ class ClassTokenGroup extends TokenGroup
         }
 
         $scenarios = [];
-        /** @var array{extends: WrappingDecision, implements: WrappingDecision, individualImplements: WrappingDecision} $permutation */
         foreach ($this->getWrapRulePermutations($rules) as $permutation) {
+            /** @var array{extends: WrappingDecision, implements: WrappingDecision, individualImplements: WrappingDecision} $permutation */
             $scenario = $this->getDeclarationByWrappingPermutation(
                 $permutation['extends'],
                 $permutation['implements'],
@@ -133,7 +133,7 @@ class ClassTokenGroup extends TokenGroup
         }
 
         /** @var Token[] $tokens */
-        $tokens = array_merge($tokens, array_pop($scenarios));
+        $tokens = array_merge($tokens, reset($scenarios));
 
         if ($rules->classes->openingBrace === BracePositionEnum::SAME_LINE) {
             $tokens[] = new SpacesToken($rules->classes->spacesBeforeOpeningBrace);
@@ -150,7 +150,7 @@ class ClassTokenGroup extends TokenGroup
         $propertiesLeft = count($this->properties);
         foreach ($this->properties as $property) {
             $propertiesLeft--;
-            $tokens[] = $this->insertIndentationTokens($context, $property->render($context, $rules));
+            $tokens[] = $this->insertIndentationTokens($rules, $property->render($context, $rules));
             if ($propertiesLeft > 0) {
                 $tokens[] = new NewLineTokens($rules->classes->newLinesAfterEachProperty);
             }
@@ -163,7 +163,7 @@ class ClassTokenGroup extends TokenGroup
         $methodsLeft = count($this->methods);
         foreach ($this->methods as $method) {
             $methodsLeft--;
-            $tokens[] = $this->insertIndentationTokens($context, $method->render($context, $rules));
+            $tokens[] = $this->insertIndentationTokens($rules, $method->render($context, $rules));
             if ($methodsLeft > 0) {
                 $tokens[] = new NewLineTokens($rules->classes->newLinesAfterEachMethod);
             }
@@ -275,12 +275,12 @@ class ClassTokenGroup extends TokenGroup
         ) {
             $scenario[] = new NewLineTokens();
             $rules->indent($context);
-            $scenario[] = $this->insertIndentationTokens($context, $inlineImplementsTokens);
+            $scenario[] = $this->insertIndentationTokens($rules, $inlineImplementsTokens);
             $rules->unindent($context);
         } elseif (!empty($chopDownImplementsTokens)) {
             $scenario[] = new NewLineTokens();
             $rules->indent($context);
-            $scenario[] = $this->insertIndentationTokens($context, $chopDownImplementsTokens);
+            $scenario[] = $this->insertIndentationTokens($rules, $chopDownImplementsTokens);
             $rules->unindent($context);
         }
         return $this->flatten($scenario);

@@ -14,6 +14,40 @@ trait TokenFunctions
 {
     /**
      * @param Token[] $tokens
+     * @return Token[]
+     */
+    public function splitTokensWithNewlines(array $tokens): array
+    {
+        $newTokens = [];
+        foreach ($tokens as $token) {
+            if ($token instanceof Token && !$token instanceof NewLineTokens) {
+                $hasNewLines = str_contains($token->text, "\n");
+                if ($hasNewLines) {
+                    $renderedToken = $token->render();
+                    $splitTokens = array_map(
+                        fn (string $token) => new Token($token),
+                        explode("\n", $renderedToken)
+                    );
+                    $splitTokensLeft = count($splitTokens);
+                    foreach ($splitTokens as $splitToken) {
+                        $splitTokensLeft--;
+                        $newTokens[] = $splitToken;
+                        if ($splitTokensLeft > 0) {
+                            $newTokens[] = new NewLineTokens();
+                        }
+                    }
+                } else {
+                    $newTokens[] = $token;
+                }
+            } else {
+                $newTokens[] = $token;
+            }
+        }
+        return $newTokens;
+    }
+
+    /**
+     * @param Token[] $tokens
      * @return string
      */
     private function renderTokensToString(array $tokens): string
@@ -22,23 +56,24 @@ trait TokenFunctions
     }
 
     /**
-     * @param RenderContext $context
+     * @param RenderingRules $rules
      * @param Token[] $tokens
      * @return Token[]
      */
-    private function insertIndentationTokens(RenderContext $context, array $tokens): array
+    private function insertIndentationTokens(RenderingRules $rules, array $tokens): array
     {
-        if (strlen($context->indents) === 0) {
-            return $tokens;
-        }
-        $tokensLeft = count($tokens);
+        $tokens = $this->splitTokensWithNewlines($tokens);
         $newTokens = [];
-        $newTokens[] = SpacesToken::fromString($context->indents);
+        $lineTokens = [];
         foreach ($tokens as $token) {
-            $tokensLeft--;
+            if (empty($lineTokens) && !$token instanceof NewLineTokens) {
+                $newTokens[] = SpacesToken::fromString($rules->indentation);
+            }
             $newTokens[] = $token;
-            if ($token instanceof NewLineTokens && $tokensLeft > 0) {
-                $newTokens[] = SpacesToken::fromString($context->indents);
+            if ($token instanceof NewLineTokens) {
+                $lineTokens = [];
+            } else {
+                $lineTokens[] = $token;
             }
         }
         return $newTokens;
@@ -61,9 +96,15 @@ trait TokenFunctions
                 if (!$instruction instanceof Token && !$instruction instanceof TokenGroup) {
                     continue;
                 }
-                $tokens[] = $this->convertFlexibleTokenValueToTokens($instruction, $context, $rules);
-                $tokens[] = new NewLineTokens();
+                if ($instruction instanceof NewLineTokens) {
+                    $tokens[] = $instruction;
+                } else {
+                    $tokens[] = $this->convertFlexibleTokenValueToTokens($instruction, $context, $rules);
+                    $tokens[] = new NewLineTokens();
+                }
             }
+        } elseif ($instructions instanceof NewLineTokens) {
+            $tokens[] = $instructions;
         } elseif ($instructions instanceof Token) {
             $tokens[] = $instructions;
             $tokens[] = new SemiColonToken();
@@ -73,7 +114,7 @@ trait TokenFunctions
             $tokens[] = new SemiColonToken();
             $tokens[] = new NewLineTokens();
         }
-        return $tokens;
+        return $this->flatten($tokens);
     }
 
     /**
@@ -100,6 +141,6 @@ trait TokenFunctions
         } elseif ($values instanceof TokenGroup) {
             $tokens[] = $values->render($context, $rules);
         }
-        return $tokens;
+        return $this->flatten($tokens);
     }
 }

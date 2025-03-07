@@ -1,0 +1,7 @@
+services:
+  php:
+    image: php:8.3-xdebug
+    build:
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/app

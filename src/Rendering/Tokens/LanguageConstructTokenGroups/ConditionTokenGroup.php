@@ -59,7 +59,7 @@ class ConditionTokenGroup extends TokenGroup
         $rules->indent($context);
         $trueTokens = $this->renderInstructionsFromFlexibleTokenValue($this->trueInstructions, $context, $rules);
         if (!empty($trueTokens)) {
-            $tokens[] = $this->insertIndentationTokens($context, $trueTokens);
+            $tokens[] = $this->insertIndentationTokens($rules, $trueTokens);
         }
         $rules->unindent($context);
 
@@ -88,7 +88,7 @@ class ConditionTokenGroup extends TokenGroup
             $rules->indent($context);
             $falseTokens = $this->renderInstructionsFromFlexibleTokenValue($this->falseInstructions, $context, $rules);
             if (!empty($falseTokens)) {
-                $tokens = array_merge($tokens, $this->insertIndentationTokens($context, $falseTokens));
+                $tokens = array_merge($tokens, $this->insertIndentationTokens($rules, $falseTokens));
             }
             $rules->unindent($context);
 

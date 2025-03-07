@@ -35,7 +35,8 @@ class MethodTokenGroup extends TokenGroup
         public readonly bool                               $abstract = false,
         public readonly VisibilityEnum                     $visibility = VisibilityEnum::PUBLIC,
         public readonly bool                               $static = false,
-        public readonly null|array                         $bodyInstructions = null,
+        /** @var array<Token|TokenGroup>|Token|TokenGroup $instructions */
+        public readonly array|Token|TokenGroup             $instructions = [],
     ) {
     }
 
@@ -81,7 +82,7 @@ class MethodTokenGroup extends TokenGroup
             $tokens[] = (new ArgumentListTokenGroup())->render($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
-        $tokens = $this->addInlineBraceTokens($rules, $tokens);
+        $tokens = $this->addInlineBraceTokensAndInstructions($context, $rules, $tokens);
         return $this->flatten($tokens);
     }
 
@@ -139,11 +140,12 @@ class MethodTokenGroup extends TokenGroup
     }
 
     /**
+     * @param RenderContext $context
      * @param RenderingRules $rules
      * @param array $tokens
      * @return array
      */
-    public function addInlineBraceTokens(RenderingRules $rules, array $tokens): array
+    public function addInlineBraceTokensAndInstructions(RenderContext $context, RenderingRules $rules, array $tokens): array
     {
         if (
             $rules->methods->openingBrace === BracePositionEnum::SAME_LINE
@@ -153,6 +155,15 @@ class MethodTokenGroup extends TokenGroup
                 $tokens[] = new SpacesToken($rules->methods->spacesBeforeOpeningBrace);
             }
             $tokens[] = new BraceStartToken();
+            if (!empty($this->instructions)) {
+                $tokens[] = new NewLineTokens();
+                $rules->indent($context);
+                $bodyTokens = $this->renderInstructionsFromFlexibleTokenValue($this->instructions, $context, $rules);
+                if (!empty($bodyTokens)) {
+                    $tokens[] = $this->insertIndentationTokens($rules, $bodyTokens);
+                }
+                $rules->unindent($context);
+            }
             $tokens[] = new BraceEndToken();
         } elseif (
             $rules->methods->openingBrace === BracePositionEnum::SAME_LINE
@@ -163,6 +174,14 @@ class MethodTokenGroup extends TokenGroup
             }
             $tokens[] = new BraceStartToken();
             $tokens[] = new NewLineTokens();
+            if (!empty($this->instructions)) {
+                $rules->indent($context);
+                $bodyTokens = $this->renderInstructionsFromFlexibleTokenValue($this->instructions, $context, $rules);
+                if (!empty($bodyTokens)) {
+                    $tokens[] = $this->insertIndentationTokens($rules, $bodyTokens);
+                }
+                $rules->unindent($context);
+            }
             $tokens[] = new BraceEndToken();
         } elseif (
             $rules->methods->openingBrace === BracePositionEnum::NEXT_LINE
@@ -170,6 +189,14 @@ class MethodTokenGroup extends TokenGroup
         ) {
             $tokens[] = new NewLineTokens();
             $tokens[] = new BraceStartToken();
+            if (!empty($this->instructions)) {
+                $rules->indent($context);
+                $bodyTokens = $this->renderInstructionsFromFlexibleTokenValue($this->instructions, $context, $rules);
+                if (!empty($bodyTokens)) {
+                    $tokens[] = $this->insertIndentationTokens($rules, $bodyTokens);
+                }
+                $rules->unindent($context);
+            }
             $tokens[] = new BraceEndToken();
         } elseif (
             $rules->methods->openingBrace === BracePositionEnum::NEXT_LINE
@@ -178,6 +205,14 @@ class MethodTokenGroup extends TokenGroup
             $tokens[] = new NewLineTokens();
             $tokens[] = new BraceStartToken();
             $tokens[] = new NewLineTokens();
+            if (!empty($this->instructions)) {
+                $rules->indent($context);
+                $bodyTokens = $this->renderInstructionsFromFlexibleTokenValue($this->instructions, $context, $rules);
+                if (!empty($bodyTokens)) {
+                    $tokens[] = $this->insertIndentationTokens($rules, $bodyTokens);
+                }
+                $rules->unindent($context);
+            }
             $tokens[] = new BraceEndToken();
         }
         return $tokens;
@@ -204,22 +239,31 @@ class MethodTokenGroup extends TokenGroup
             $tokens[] = (new ArgumentListTokenGroup())->renderChopDownScenario($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
-        $tokens = $this->addChopDownBraceTokens($rules, $tokens);
+        $tokens = $this->addChopDownBraceTokensAndInstructions($context, $rules, $tokens);
         return $this->flatten($tokens);
     }
 
     /**
+     * @param RenderContext $context
      * @param RenderingRules $rules
      * @param array $tokens
      * @return array
      */
-    public function addChopDownBraceTokens(RenderingRules $rules, array $tokens): array
+    public function addChopDownBraceTokensAndInstructions(RenderContext $context, RenderingRules $rules, array $tokens): array
     {
         if ($rules->methods->spacesBeforeOpeningBrace) {
             $tokens[] = new SpacesToken($rules->methods->spacesBeforeOpeningBrace);
         }
         $tokens[] = new BraceStartToken();
         $tokens[] = new NewLineTokens();
+        if (!empty($this->instructions)) {
+            $rules->indent($context);
+            $trueTokens = $this->renderInstructionsFromFlexibleTokenValue($this->instructions, $context, $rules);
+            if (!empty($trueTokens)) {
+                $tokens[] = $this->insertIndentationTokens($rules, $trueTokens);
+            }
+            $rules->unindent($context);
+        }
         $tokens[] = new BraceEndToken();
         return $tokens;
     }

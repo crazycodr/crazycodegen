@@ -48,15 +48,16 @@ class ArgumentListTokenGroup extends TokenGroup
                 $context->chopDown->paddingSpacesForIdentifiers = $rules->argumentLists->padIdentifiers ? $longestIdentifier : null;
             }
             $argumentsLeft = count($this->arguments);
+            $argumentListTokens = [];
             foreach ($this->arguments as $argument) {
                 $argumentsLeft--;
-                $tokens[] = new SpacesToken(strlen($context->indents));
-                $tokens[] = $argument->render($context, $rules);
+                $argumentListTokens[] = $argument->render($context, $rules);
                 if ($argumentsLeft > 0 || $rules->argumentLists->addSeparatorToLastItem) {
-                    $tokens[] = new CommaToken();
+                    $argumentListTokens[] = new CommaToken();
                 }
-                $tokens[] = new NewLineTokens();
+                $argumentListTokens[] = new NewLineTokens();
             }
+            $tokens[] = $this->insertIndentationTokens($rules, $argumentListTokens);
             $context->chopDown->paddingSpacesForTypes = null;
             $context->chopDown->paddingSpacesForIdentifiers = null;
             $rules->unindent($context);
