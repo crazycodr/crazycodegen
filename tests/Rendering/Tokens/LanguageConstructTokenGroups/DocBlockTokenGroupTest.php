@@ -77,4 +77,46 @@ class DocBlockTokenGroupTest extends TestCase
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
     }
+
+    public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceAsLongAsNeeded()
+    {
+        $token = new DocBlockTokenGroup(
+            texts: ['https://example.com/questions/49907308/url-without-spaces will chop here.'],
+        );
+
+        $rules = new RenderingRules();
+        $rules->docBlocks->lineLength = 25;
+
+        $this->assertEquals(
+            <<<EOS
+            /**
+             * https://example.com/questions/49907308/url-without-spaces
+             * will chop here.
+             */
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceButWillTakeAllIfNothingLeftAfterIt()
+    {
+        $token = new DocBlockTokenGroup(
+            texts: ['Upcoming url is too long so it will be take as a whole: https://example.com/questions/49907308/url-without-spaces'],
+        );
+
+        $rules = new RenderingRules();
+        $rules->docBlocks->lineLength = 25;
+
+        $this->assertEquals(
+            <<<EOS
+            /**
+             * Upcoming url is too long
+             * so it will be take as a
+             * whole:
+             * https://example.com/questions/49907308/url-without-spaces
+             */
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
 }

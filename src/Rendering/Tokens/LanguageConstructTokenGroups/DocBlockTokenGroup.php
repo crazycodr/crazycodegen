@@ -44,8 +44,14 @@ class DocBlockTokenGroup extends TokenGroup
                 if (strlen($text) > $rules->docBlocks->lineLength) {
                     $textSampleForCutoff = substr($text, 0, $rules->docBlocks->lineLength + 1);
                     $nextSpaceToCutAt = strrpos($textSampleForCutoff, ' ');
+                    if ($nextSpaceToCutAt === false) {
+                        $nextSpaceToCutAt = strpos($text, ' ', $rules->docBlocks->lineLength);
+                        if ($nextSpaceToCutAt === false) {
+                            $nextSpaceToCutAt = null;
+                        }
+                    }
                     $extractedText = trim(substr($text, 0, $nextSpaceToCutAt));
-                    $text = trim(substr($text, $nextSpaceToCutAt));
+                    $text = trim(substr($text, strlen($extractedText)));
                     $tokens[] = new Token(' * ');
                     $tokens[] = new Token($extractedText);
                     $tokens[] = new NewLineTokens();
