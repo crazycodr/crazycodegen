@@ -630,4 +630,39 @@ class FunctionTokenGroupTest extends TestCase
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
     }
+
+    public function testDocBlockDoesNotInterfereWithDecisionToChopDownArgumentList()
+    {
+        $token = new FunctionTokenGroup(
+            name: 'myFunction',
+            docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the function.']),
+            arguments: new ArgumentListTokenGroup(
+                arguments: [
+                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
+                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
+                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
+                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
+                ],
+            ),
+            returnType: 'int',
+        );
+
+        $rules = $this->getTestRules();
+
+        $this->assertEquals(
+            <<<EOS
+            /**
+             * This is a docblock that should be wrapped and displayed before the function.
+             */
+            function myFunction(
+                int \$longTokenThatWillContributeToWrappingArguments1,
+                int \$longTokenThatWillContributeToWrappingArguments2,
+                int \$longTokenThatWillContributeToWrappingArguments3,
+                int \$longTokenThatWillContributeToWrappingArguments4,
+            ): int {
+            }
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
 }

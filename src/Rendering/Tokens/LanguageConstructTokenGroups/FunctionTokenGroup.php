@@ -40,18 +40,29 @@ class FunctionTokenGroup extends TokenGroup
      */
     public function render(RenderContext $context, RenderingRules $rules): array
     {
+        $tokens = [];
+        if ($this->namespace) {
+            $tokens[] = $this->namespace->render($context, $rules);
+        }
+        if ($this->docBlock) {
+            $tokens[] = $this->docBlock->render($context, $rules);
+            $tokens[] = new NewLineTokens($rules->functions->newLinesAfterDocBlock);
+        }
+
         if ($rules->functions->argumentsOnDifferentLines === WrappingDecision::NEVER) {
-            return $this->renderInlineScenario($context, $rules);
+            $tokens[] = $this->renderInlineScenario($context, $rules);
         } elseif ($rules->functions->argumentsOnDifferentLines === WrappingDecision::ALWAYS) {
-            return $this->renderChopDownScenario($context, $rules);
+            $tokens[] = $this->renderChopDownScenario($context, $rules);
         } else {
             $inlineScenario = $this->renderInlineScenario($context, $rules);
             if (!$rules->exceedsAvailableSpace($context->getCurrentLine(), $this->renderTokensToString($inlineScenario))) {
-                return $inlineScenario;
+                $tokens[] = $inlineScenario;
             } else {
-                return $this->renderChopDownScenario($context, $rules);
+                $tokens[] = $this->renderChopDownScenario($context, $rules);
             }
         }
+
+        return $this->flatten($tokens);
     }
 
     /**
@@ -62,15 +73,6 @@ class FunctionTokenGroup extends TokenGroup
     public function renderInlineScenario(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->namespace) {
-            $tokens[] = $this->namespace->render($context, $rules);
-        }
-
-        if ($this->docBlock) {
-            $tokens[] = $this->docBlock->render($context, $rules);
-            $tokens[] = new NewLineTokens($rules->functions->newLinesAfterDocBlock);
-        }
-
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
         if ($this->arguments) {
             $tokens[] = $this->arguments->render($context, $rules);
@@ -180,15 +182,6 @@ class FunctionTokenGroup extends TokenGroup
     public function renderChopDownScenario(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->namespace) {
-            $tokens[] = $this->namespace->render($context, $rules);
-        }
-
-        if ($this->docBlock) {
-            $tokens[] = $this->docBlock->render($context, $rules);
-            $tokens[] = new NewLineTokens($rules->functions->newLinesAfterDocBlock);
-        }
-
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
         if ($this->arguments) {
             $tokens[] = $this->arguments->renderChopDownScenario($context, $rules);
