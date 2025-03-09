@@ -6,6 +6,7 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ExpansionToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -23,7 +24,9 @@ class ArgumentTokenGroup extends TokenGroup
         public readonly null|string|AbstractTypeTokenGroup $type = null,
         public readonly null|int|float|string|bool|Token   $defaultValue = null,
         public readonly bool                               $defaultValueIsNull = false,
-    ) {
+        public readonly bool                               $isVariadic = false,
+    )
+    {
     }
 
     /**
@@ -34,10 +37,10 @@ class ArgumentTokenGroup extends TokenGroup
     public function render(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        $tokens = array_merge($tokens, $typeTokens = $this->renderType($context, $rules));
-        $tokens = array_merge($tokens, $this->getSpacesBetweenTypesAndIdentifier($typeTokens, $context, $rules));
-        $tokens = array_merge($tokens, $identifierTokens = $this->renderIdentifier($context, $rules));
-        $tokens = array_merge($tokens, $this->renderDefaultValue($context, $rules, $identifierTokens));
+        $tokens[] = $typeTokens = $this->renderType($context, $rules);
+        $tokens[] = $this->getSpacesBetweenTypesAndIdentifier($typeTokens, $context, $rules);
+        $tokens[] = $identifierTokens = $this->renderIdentifier($context, $rules);
+        $tokens[] = $this->renderDefaultValue($context, $rules, $identifierTokens);
         return $this->flatten($tokens);
     }
 
@@ -79,7 +82,12 @@ class ArgumentTokenGroup extends TokenGroup
      */
     public function renderIdentifier(RenderContext $context, RenderingRules $rules): array
     {
-        return $this->flatten((new VariableTokenGroup($this->name))->render($context, $rules));
+        $tokens = [];
+        if ($this->isVariadic) {
+            $tokens[] = new ExpansionToken();
+        }
+        $tokens[] = (new VariableTokenGroup($this->name))->render($context, $rules);
+        return $this->flatten($tokens);
     }
 
     /**

@@ -248,4 +248,40 @@ class ArgumentTokenGroupTest extends TestCase
             $this->renderTokensToString($token->render($context, $rules)),
         );
     }
+
+    public function testWhenVariadicExpansionTokenAppearBeforeVariable()
+    {
+        $token = new ArgumentTokenGroup(
+            new IdentifierToken('reallyLongIdentifier'),
+            isVariadic: true,
+        );
+
+        $this->assertEquals(
+            '...$reallyLongIdentifier',
+            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules())),
+        );
+    }
+
+    public function testPaddingOnIdentifierTakesVariadicExpansionTokenIntoAccount()
+    {
+        $token = new ArgumentTokenGroup(
+            new IdentifierToken('foo'),
+            defaultValue: 123,
+            isVariadic: true,
+        );
+
+        $rules = new RenderingRules();
+        $rules->arguments->spacesAfterType = 1;
+        $rules->arguments->spacesAfterIdentifier = 1;
+        $rules->arguments->spacesAfterEquals = 1;
+
+        $context = new RenderContext();
+        $context->chopDown = new ChopDownPaddingContext();
+        $context->chopDown->paddingSpacesForIdentifiers = 10;
+
+        $this->assertEquals(
+            '...$foo    = 123',
+            $this->renderTokensToString($token->render($context, $rules)),
+        );
+    }
 }
