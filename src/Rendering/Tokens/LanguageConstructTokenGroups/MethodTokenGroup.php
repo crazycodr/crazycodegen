@@ -47,18 +47,24 @@ class MethodTokenGroup extends TokenGroup
      */
     public function render(RenderContext $context, RenderingRules $rules): array
     {
+        $tokens = [];
+        if ($this->docBlock) {
+            $tokens[] = $this->docBlock->render($context, $rules);
+            $tokens[] = new NewLineTokens($rules->methods->newLinesAfterDocBlock);
+        }
         if ($rules->methods->argumentsOnDifferentLines === WrappingDecision::NEVER) {
-            return $this->renderInlineScenario($context, $rules);
+            $tokens[] = $this->renderInlineScenario($context, $rules);
         } elseif ($rules->methods->argumentsOnDifferentLines === WrappingDecision::ALWAYS) {
-            return $this->renderChopDownScenario($context, $rules);
+            $tokens[] = $this->renderChopDownScenario($context, $rules);
         } else {
             $inlineScenario = $this->renderInlineScenario($context, $rules);
             if (!$rules->exceedsAvailableSpace($context->getCurrentLine(), $this->renderTokensToString($inlineScenario))) {
-                return $inlineScenario;
+                $tokens[] = $inlineScenario;
             } else {
-                return $this->renderChopDownScenario($context, $rules);
+                $tokens[] = $this->renderChopDownScenario($context, $rules);
             }
         }
+        return $this->flatten($tokens);
     }
 
     /**
@@ -69,12 +75,6 @@ class MethodTokenGroup extends TokenGroup
     public function renderInlineScenario(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-
-        if ($this->docBlock) {
-            $tokens[] = $this->docBlock->render($context, $rules);
-            $tokens[] = new NewLineTokens($rules->methods->newLinesAfterDocBlock);
-        }
-
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
         if ($this->arguments) {
             $tokens[] = $this->arguments->render($context, $rules);
@@ -226,12 +226,6 @@ class MethodTokenGroup extends TokenGroup
     public function renderChopDownScenario(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-
-        if ($this->docBlock) {
-            $tokens[] = $this->docBlock->render($context, $rules);
-            $tokens[] = new NewLineTokens($rules->methods->newLinesAfterDocBlock);
-        }
-
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
         if ($this->arguments) {
             $tokens[] = $this->arguments->renderChopDownScenario($context, $rules);

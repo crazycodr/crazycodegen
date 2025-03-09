@@ -48,7 +48,6 @@ class FunctionTokenGroup extends TokenGroup
             $tokens[] = $this->docBlock->render($context, $rules);
             $tokens[] = new NewLineTokens($rules->functions->newLinesAfterDocBlock);
         }
-
         if ($rules->functions->argumentsOnDifferentLines === WrappingDecision::NEVER) {
             $tokens[] = $this->renderInlineScenario($context, $rules);
         } elseif ($rules->functions->argumentsOnDifferentLines === WrappingDecision::ALWAYS) {
