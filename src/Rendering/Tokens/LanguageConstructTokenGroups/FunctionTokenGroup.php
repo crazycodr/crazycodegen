@@ -10,7 +10,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ColonToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\FunctionToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -46,7 +46,7 @@ class FunctionTokenGroup extends TokenGroup
         }
         if ($this->docBlock) {
             $tokens[] = $this->docBlock->render($context, $rules);
-            $tokens[] = new NewLineTokens($rules->functions->newLinesAfterDocBlock);
+            $tokens[] = new NewLinesToken($rules->functions->newLinesAfterDocBlock);
         }
         if ($rules->functions->argumentsOnDifferentLines === WrappingDecision::NEVER) {
             $tokens[] = $this->renderInlineScenario($context, $rules);
@@ -146,28 +146,28 @@ class FunctionTokenGroup extends TokenGroup
             $tokens[] = new BraceEndToken();
         } elseif (
             $rules->functions->openingBrace === BracePositionEnum::SAME_LINE
-            && $rules->functions->closingBrace === BracePositionEnum::NEXT_LINE
+            && $rules->functions->closingBrace === BracePositionEnum::DIFF_LINE
         ) {
             if ($rules->functions->spacesBeforeOpeningBrace) {
                 $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBrace);
             }
             $tokens[] = new BraceStartToken();
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
             $tokens[] = new BraceEndToken();
         } elseif (
-            $rules->functions->openingBrace === BracePositionEnum::NEXT_LINE
+            $rules->functions->openingBrace === BracePositionEnum::DIFF_LINE
             && $rules->functions->closingBrace === BracePositionEnum::SAME_LINE
         ) {
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
             $tokens[] = new BraceStartToken();
             $tokens[] = new BraceEndToken();
         } elseif (
-            $rules->functions->openingBrace === BracePositionEnum::NEXT_LINE
-            && $rules->functions->closingBrace === BracePositionEnum::NEXT_LINE
+            $rules->functions->openingBrace === BracePositionEnum::DIFF_LINE
+            && $rules->functions->closingBrace === BracePositionEnum::DIFF_LINE
         ) {
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
             $tokens[] = new BraceStartToken();
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
             $tokens[] = new BraceEndToken();
         }
         return $tokens;
@@ -203,7 +203,7 @@ class FunctionTokenGroup extends TokenGroup
             $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBrace);
         }
         $tokens[] = new BraceStartToken();
-        $tokens[] = new NewLineTokens();
+        $tokens[] = new NewLinesToken();
         $tokens[] = new BraceEndToken();
         return $tokens;
     }

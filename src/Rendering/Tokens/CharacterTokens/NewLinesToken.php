@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Rendering\Tokens\CharacterTokens;
 
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class NewLineTokens extends Token
+class NewLinesToken extends Token
 {
     public function __construct(int $times = 1)
     {

@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Rendering\Traits;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -20,7 +20,7 @@ trait TokenFunctions
     {
         $newTokens = [];
         foreach ($tokens as $token) {
-            if ($token instanceof Token && !$token instanceof NewLineTokens) {
+            if ($token instanceof Token && !$token instanceof NewLinesToken) {
                 $hasNewLines = str_contains($token->text, "\n");
                 if ($hasNewLines) {
                     $renderedToken = $token->render();
@@ -33,7 +33,7 @@ trait TokenFunctions
                         $splitTokensLeft--;
                         $newTokens[] = $splitToken;
                         if ($splitTokensLeft > 0) {
-                            $newTokens[] = new NewLineTokens();
+                            $newTokens[] = new NewLinesToken();
                         }
                     }
                 } else {
@@ -66,11 +66,11 @@ trait TokenFunctions
         $newTokens = [];
         $lineTokens = [];
         foreach ($tokens as $token) {
-            if (empty($lineTokens) && !$token instanceof NewLineTokens) {
+            if (empty($lineTokens) && !$token instanceof NewLinesToken) {
                 $newTokens[] = SpacesToken::fromString($rules->indentation);
             }
             $newTokens[] = $token;
-            if ($token instanceof NewLineTokens) {
+            if ($token instanceof NewLinesToken) {
                 $lineTokens = [];
             } else {
                 $lineTokens[] = $token;
@@ -96,23 +96,23 @@ trait TokenFunctions
                 if (!$instruction instanceof Token && !$instruction instanceof TokenGroup) {
                     continue;
                 }
-                if ($instruction instanceof NewLineTokens) {
+                if ($instruction instanceof NewLinesToken) {
                     $tokens[] = $instruction;
                 } else {
                     $tokens[] = $this->convertFlexibleTokenValueToTokens($instruction, $context, $rules);
-                    $tokens[] = new NewLineTokens();
+                    $tokens[] = new NewLinesToken();
                 }
             }
-        } elseif ($instructions instanceof NewLineTokens) {
+        } elseif ($instructions instanceof NewLinesToken) {
             $tokens[] = $instructions;
         } elseif ($instructions instanceof Token) {
             $tokens[] = $instructions;
             $tokens[] = new SemiColonToken();
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
         } elseif ($instructions instanceof TokenGroup) {
             $tokens[] = $instructions->render($context, $rules);
             $tokens[] = new SemiColonToken();
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
         }
         return $this->flatten($tokens);
     }

@@ -102,7 +102,7 @@ class ConditionTokenGroupTest extends TestCase
         );
     }
 
-    public function testOpenBraceIsOnNextLineAndSpacesRuleDisregarded()
+    public function testOpenBraceIsOnDiffLineAndSpacesRuleDisregarded()
     {
         $token = new ConditionTokenGroup(
             condition: new Token('true'),
@@ -110,7 +110,7 @@ class ConditionTokenGroupTest extends TestCase
         );
 
         $rules = $this->getTestRules();
-        $rules->conditions->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->conditions->openingBrace = BracePositionEnum::DIFF_LINE;
         $rules->conditions->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
@@ -198,8 +198,8 @@ class ConditionTokenGroupTest extends TestCase
         );
 
         $rules = $this->getTestRules();
-        $rules->conditions->openingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->conditions->keywordAfterClosingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->conditions->openingBrace = BracePositionEnum::DIFF_LINE;
+        $rules->conditions->keywordAfterClosingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
             <<<EOS

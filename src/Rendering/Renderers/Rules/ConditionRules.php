@@ -9,7 +9,7 @@ class ConditionRules
     public function __construct(
         public int               $spacesAfterKeyword = 1,
         public BracePositionEnum $openingBrace = BracePositionEnum::SAME_LINE,
-        public BracePositionEnum $keywordAfterClosingBrace = BracePositionEnum::NEXT_LINE,
+        public BracePositionEnum $keywordAfterClosingBrace = BracePositionEnum::DIFF_LINE,
         public int               $spacesBeforeOpeningBrace = 1,
         public int               $spacesAfterClosingBrace = 1,
     ) {

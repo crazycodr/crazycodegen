@@ -25,8 +25,7 @@ class ArgumentTokenGroup extends TokenGroup
         public readonly null|int|float|string|bool|Token   $defaultValue = null,
         public readonly bool                               $defaultValueIsNull = false,
         public readonly bool                               $isVariadic = false,
-    )
-    {
+    ) {
     }
 
     /**

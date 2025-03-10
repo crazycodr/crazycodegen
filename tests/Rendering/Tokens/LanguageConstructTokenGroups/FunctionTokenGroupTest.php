@@ -45,8 +45,8 @@ class FunctionTokenGroupTest extends TestCase
         $rules->argumentLists->padTypes = false;
         $rules->argumentLists->spacesAfterSeparator = 1;
         $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
-        $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::DIFF_LINE;
+        $rules->functions->openingBrace = BracePositionEnum::DIFF_LINE;
         $rules->functions->newLinesAfterDocBlock = 1;
         $rules->functions->spacesBeforeOpeningBrace = 1;
         $rules->functions->spacesAfterArguments = 0;
@@ -204,7 +204,7 @@ class FunctionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
         $rules->functions->spacesBeforeOpeningBrace = 2;
         $rules->functions->openingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
             <<<EOS
@@ -233,7 +233,7 @@ class FunctionTokenGroupTest extends TestCase
         );
     }
 
-    public function testInlineDefinitionRendersOpeningBraceOnSameLineAndClosingBraceOnNextLineAsPerConfiguration()
+    public function testInlineDefinitionRendersOpeningBraceOnSameLineAndClosingBraceOnDiffLineAsPerConfiguration()
     {
         $token = new FunctionTokenGroup(
             name: 'myFunction',
@@ -241,7 +241,7 @@ class FunctionTokenGroupTest extends TestCase
 
         $rules = $this->getTestRules();
         $rules->functions->openingBrace = BracePositionEnum::SAME_LINE;
-        $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
             <<<EOS
@@ -252,14 +252,14 @@ class FunctionTokenGroupTest extends TestCase
         );
     }
 
-    public function testInlineDefinitionRendersOpeningBraceOnNextLineWithClosingBraceOnSameLineAsPerConfiguration()
+    public function testInlineDefinitionRendersOpeningBraceOnDiffLineWithClosingBraceOnSameLineAsPerConfiguration()
     {
         $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->openingBrace = BracePositionEnum::DIFF_LINE;
         $rules->functions->closingBrace = BracePositionEnum::SAME_LINE;
 
         $this->assertEquals(
@@ -278,8 +278,8 @@ class FunctionTokenGroupTest extends TestCase
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->openingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->openingBrace = BracePositionEnum::DIFF_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
             <<<EOS
@@ -471,15 +471,15 @@ class FunctionTokenGroupTest extends TestCase
         );
     }
 
-    public function testChopDownDefinitionRendersOpeningAndClosingBracesPositionIsNotRespectedAndAlwaysSameLineNextLine()
+    public function testChopDownDefinitionRendersOpeningAndClosingBracesPositionIsNotRespectedAndAlwaysSameLineDiffLine()
     {
         $token = new FunctionTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getTestRules();
-        $rules->functions->openingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->functions->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->functions->openingBrace = BracePositionEnum::DIFF_LINE;
+        $rules->functions->closingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
             <<<EOS

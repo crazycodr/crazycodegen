@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -33,7 +33,7 @@ class DocBlockTokenGroup extends TokenGroup
             return $tokens;
         }
         $tokens[] = new Token('/**');
-        $tokens[] = new NewLineTokens();
+        $tokens[] = new NewLinesToken();
         $textsLeft = count($this->texts);
         foreach ($this->texts as $text) {
             $textsLeft--;
@@ -54,17 +54,17 @@ class DocBlockTokenGroup extends TokenGroup
                     $text = trim(substr($text, strlen($extractedText)));
                     $tokens[] = new Token(' * ');
                     $tokens[] = new Token($extractedText);
-                    $tokens[] = new NewLineTokens();
+                    $tokens[] = new NewLinesToken();
                 } else {
                     $tokens[] = new Token(' * ');
                     $tokens[] = new Token($text);
-                    $tokens[] = new NewLineTokens();
+                    $tokens[] = new NewLinesToken();
                     $text = '';
                 }
             } while (!empty($text));
             if ($textsLeft > 0) {
                 $tokens[] = new Token(' *');
-                $tokens[] = new NewLineTokens();
+                $tokens[] = new NewLinesToken();
             }
         }
         $tokens[] = new Token(' */');

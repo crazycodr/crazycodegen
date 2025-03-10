@@ -6,7 +6,7 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
@@ -32,7 +32,7 @@ class ArgumentListTokenGroup extends TokenGroup
     {
         $tokens = [];
         $tokens[] = new ParStartToken();
-        $tokens[] = new NewLineTokens();
+        $tokens[] = new NewLinesToken();
         if (!empty($this->arguments)) {
             $rules->indent($context);
             if ($rules->argumentLists->padTypes || $rules->argumentLists->padIdentifiers) {
@@ -55,7 +55,7 @@ class ArgumentListTokenGroup extends TokenGroup
                 if ($argumentsLeft > 0 || $rules->argumentLists->addSeparatorToLastItem) {
                     $argumentListTokens[] = new CommaToken();
                 }
-                $argumentListTokens[] = new NewLineTokens();
+                $argumentListTokens[] = new NewLinesToken();
             }
             $tokens[] = $this->insertIndentationTokens($rules, $argumentListTokens);
             $context->chopDown->paddingSpacesForTypes = null;

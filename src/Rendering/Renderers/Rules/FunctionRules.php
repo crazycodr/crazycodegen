@@ -10,8 +10,8 @@ class FunctionRules
     public function __construct(
         public int               $newLinesAfterDocBlock = 1,
         public WrappingDecision  $argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG,
-        public BracePositionEnum $openingBrace = BracePositionEnum::NEXT_LINE,
-        public BracePositionEnum $closingBrace = BracePositionEnum::NEXT_LINE,
+        public BracePositionEnum $openingBrace = BracePositionEnum::DIFF_LINE,
+        public BracePositionEnum $closingBrace = BracePositionEnum::DIFF_LINE,
         public int               $spacesAfterIdentifier = 0,
         public int               $spacesAfterArguments = 0,
         public int               $spacesAfterReturnColon = 1,

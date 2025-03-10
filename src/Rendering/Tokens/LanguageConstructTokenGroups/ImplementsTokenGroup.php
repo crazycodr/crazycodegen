@@ -7,7 +7,7 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ImplementsToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -92,7 +92,7 @@ class ImplementsTokenGroup extends TokenGroup
         $implementsLeft = count($this->implementations);
         foreach ($this->implementations as $implement) {
             if ($implementsLeft !== count($this->implementations)) {
-                $tokens[] = new NewLineTokens();
+                $tokens[] = new NewLinesToken();
                 $tokens[] = new SpacesToken($paddingSpaces);
             }
             $implementsLeft--;

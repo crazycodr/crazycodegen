@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Tests\Rendering\Tokens;
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassTokenGroup;
@@ -204,12 +204,12 @@ class ClassScenarioTest extends TestCase
                             condition: new Token('!isset($this->configApiClientSpyBuilder)'),
                             trueInstructions: new Token('$this->configApiClientSpyBuilder = new ConfigApiClientSpyBuilder(ConfigApiManager::getClient())'),
                         ),
-                        new NewLineTokens(),
+                        new NewLinesToken(),
                         new ConditionTokenGroup(
                             condition: new Token('$scenarioBuildingCallable'),
                             trueInstructions: new Token('$scenarioBuildingCallable($this->configApiClientSpyBuilder)'),
                         ),
-                        new NewLineTokens(),
+                        new NewLinesToken(),
                         new InstructionTokenGroup(instructions: new Token('return $this->configApiClientSpyBuilder')),
                     ],
                 ),

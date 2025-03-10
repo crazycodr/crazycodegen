@@ -55,8 +55,8 @@ class ClassTokenGroupTest extends TestCase
         $newRules->classes->implementsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
         $newRules->classes->spacesAfterImplements = 1;
         $newRules->classes->spacesAfterImplementSeparator = 1;
-        $newRules->classes->openingBrace = BracePositionEnum::NEXT_LINE;
-        $newRules->classes->closingBrace = BracePositionEnum::NEXT_LINE;
+        $newRules->classes->openingBrace = BracePositionEnum::DIFF_LINE;
+        $newRules->classes->closingBrace = BracePositionEnum::DIFF_LINE;
         $newRules->classes->spacesBeforeOpeningBrace = 1;
         $newRules->classes->newLinesAfterDocBlock = 1;
         $newRules->classes->newLinesAfterEachImport = 1;
@@ -66,8 +66,8 @@ class ClassTokenGroupTest extends TestCase
         $newRules->classes->newLinesAfterEachMethod = 2;
         $newRules->classes->newLinesAfterClosingBrace = 0;
         $newRules->methods->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
-        $newRules->methods->openingBrace = BracePositionEnum::NEXT_LINE;
-        $newRules->methods->closingBrace = BracePositionEnum::NEXT_LINE;
+        $newRules->methods->openingBrace = BracePositionEnum::DIFF_LINE;
+        $newRules->methods->closingBrace = BracePositionEnum::DIFF_LINE;
         $newRules->methods->spacesAfterAbstract = 1;
         $newRules->methods->spacesAfterVisibility = 1;
         $newRules->methods->spacesAfterStatic = 1;
@@ -419,7 +419,7 @@ class ClassTokenGroupTest extends TestCase
         );
     }
 
-    public function testImplementsIsRenderedOnNextLineIfTooLong()
+    public function testImplementsIsRenderedOnDiffLineIfTooLong()
     {
         $token = new ClassTokenGroup(
             name: 'myClass',
@@ -443,7 +443,7 @@ class ClassTokenGroupTest extends TestCase
         );
     }
 
-    public function testImplementsIsRenderedOnNextLineEvenIfNotLongEnough()
+    public function testImplementsIsRenderedOnDiffLineEvenIfNotLongEnough()
     {
         $token = new ClassTokenGroup(
             name: 'myClass',
@@ -552,7 +552,7 @@ class ClassTokenGroupTest extends TestCase
         );
     }
 
-    public function testMultipleImplementsAreNotRenderedOnIndividualLinesWhenForcedToBecauseImplementsOnNextLineIsPrevented()
+    public function testMultipleImplementsAreNotRenderedOnIndividualLinesWhenForcedToBecauseImplementsOnDiffLineIsPrevented()
     {
         $token = new ClassTokenGroup(
             name: 'myClass',
@@ -624,7 +624,7 @@ class ClassTokenGroupTest extends TestCase
         );
     }
 
-    public function testSameLineOpeningAndNextLineClosingBraceAreAfterClassNameAndOnNextLineWithExpectedSpaces()
+    public function testSameLineOpeningAndDiffLineClosingBraceAreAfterClassNameAndOnDiffLineWithExpectedSpaces()
     {
         $token = new ClassTokenGroup(
             name: 'myClass',
@@ -632,7 +632,7 @@ class ClassTokenGroupTest extends TestCase
 
         $rules = $this->getBaseTestingRules();
         $rules->classes->openingBrace = BracePositionEnum::SAME_LINE;
-        $rules->classes->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->closingBrace = BracePositionEnum::DIFF_LINE;
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
@@ -644,14 +644,14 @@ class ClassTokenGroupTest extends TestCase
         );
     }
 
-    public function testNextLineOpeningAndSameLineClosingBraceAreUnderClassNameAndNoExtraSpacesAreAdded()
+    public function testDiffLineOpeningAndSameLineClosingBraceAreUnderClassNameAndNoExtraSpacesAreAdded()
     {
         $token = new ClassTokenGroup(
             name: 'myClass',
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->classes->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->openingBrace = BracePositionEnum::DIFF_LINE;
         $rules->classes->closingBrace = BracePositionEnum::SAME_LINE;
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
@@ -664,15 +664,15 @@ class ClassTokenGroupTest extends TestCase
         );
     }
 
-    public function testNextLineOpeningAndNextLineClosingBraceAreUnderClassNameAndNoExtraSpacesAreAdded()
+    public function testDiffLineOpeningAndDiffLineClosingBraceAreUnderClassNameAndNoExtraSpacesAreAdded()
     {
         $token = new ClassTokenGroup(
             name: 'myClass',
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->classes->openingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->classes->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->openingBrace = BracePositionEnum::DIFF_LINE;
+        $rules->classes->closingBrace = BracePositionEnum::DIFF_LINE;
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
@@ -697,7 +697,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->implementsOnNextLine = WrappingDecision::ALWAYS;
         $rules->classes->implementsOnDifferentLines = WrappingDecision::ALWAYS;
         $rules->classes->openingBrace = BracePositionEnum::SAME_LINE;
-        $rules->classes->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->closingBrace = BracePositionEnum::DIFF_LINE;
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
@@ -725,7 +725,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->implementsOnNextLine = WrappingDecision::ALWAYS;
         $rules->classes->implementsOnDifferentLines = WrappingDecision::ALWAYS;
         $rules->classes->openingBrace = BracePositionEnum::SAME_LINE;
-        $rules->classes->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->classes->closingBrace = BracePositionEnum::DIFF_LINE;
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(

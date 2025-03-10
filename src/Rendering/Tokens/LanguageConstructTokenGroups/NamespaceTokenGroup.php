@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NamespaceToken;
@@ -34,7 +34,7 @@ class NamespaceTokenGroup extends TokenGroup
         $tokens[] = new SpacesToken($rules->namespaces->spacesAfterNamespace);
         $tokens[] = new NamespacePathToken($this->path);
         $tokens[] = new SemiColonToken();
-        $tokens[] = new NewLineTokens($rules->namespaces->newLinesAfterSemiColon);
+        $tokens[] = new NewLinesToken($rules->namespaces->newLinesAfterSemiColon);
         return $this->flatten($tokens);
     }
 }

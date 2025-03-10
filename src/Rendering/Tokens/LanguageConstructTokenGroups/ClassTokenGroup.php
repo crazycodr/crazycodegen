@@ -9,7 +9,7 @@ use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\AbstractToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ClassToken;
@@ -85,16 +85,16 @@ class ClassTokenGroup extends TokenGroup
                 }
             }
             if ($importsLeft > 0) {
-                $tokens[] = new NewLineTokens($rules->classes->newLinesAfterEachImport);
+                $tokens[] = new NewLinesToken($rules->classes->newLinesAfterEachImport);
             }
         }
         if (!empty($this->imports)) {
-            $tokens[] = new NewLineTokens($rules->classes->newLinesAfterAllImports);
+            $tokens[] = new NewLinesToken($rules->classes->newLinesAfterAllImports);
         }
 
         if ($this->docBlock) {
             $tokens[] = $this->docBlock->render($context, $rules);
-            $tokens[] = new NewLineTokens($rules->classes->newLinesAfterDocBlock);
+            $tokens[] = new NewLinesToken($rules->classes->newLinesAfterDocBlock);
         }
 
         $scenarios = [];
@@ -138,13 +138,13 @@ class ClassTokenGroup extends TokenGroup
         if ($rules->classes->openingBrace === BracePositionEnum::SAME_LINE) {
             $tokens[] = new SpacesToken($rules->classes->spacesBeforeOpeningBrace);
         } else {
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
             $tokens[] = SpacesToken::fromString($context->indents);
         }
         $tokens[] = new BraceStartToken();
         $rules->indent($context);
         if (!empty($this->properties) || !empty($this->methods)) {
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
         }
 
         $propertiesLeft = count($this->properties);
@@ -152,12 +152,12 @@ class ClassTokenGroup extends TokenGroup
             $propertiesLeft--;
             $tokens[] = $this->insertIndentationTokens($rules, $property->render($context, $rules));
             if ($propertiesLeft > 0) {
-                $tokens[] = new NewLineTokens($rules->classes->newLinesAfterEachProperty);
+                $tokens[] = new NewLinesToken($rules->classes->newLinesAfterEachProperty);
             }
         }
 
         if (!empty($this->properties) && !empty($this->methods)) {
-            $tokens[] = new NewLineTokens($rules->classes->newLinesAfterProperties);
+            $tokens[] = new NewLinesToken($rules->classes->newLinesAfterProperties);
         }
 
         $methodsLeft = count($this->methods);
@@ -165,17 +165,17 @@ class ClassTokenGroup extends TokenGroup
             $methodsLeft--;
             $tokens[] = $this->insertIndentationTokens($rules, $method->render($context, $rules));
             if ($methodsLeft > 0) {
-                $tokens[] = new NewLineTokens($rules->classes->newLinesAfterEachMethod);
+                $tokens[] = new NewLinesToken($rules->classes->newLinesAfterEachMethod);
             }
         }
 
         if ($rules->classes->closingBrace !== BracePositionEnum::SAME_LINE) {
             $rules->unindent($context);
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
             $tokens[] = SpacesToken::fromString($context->indents);
         }
         $tokens[] = new BraceEndToken();
-        $tokens[] = new NewLineTokens($rules->classes->newLinesAfterClosingBrace);
+        $tokens[] = new NewLinesToken($rules->classes->newLinesAfterClosingBrace);
 
         $context->importedClasses = $previousImportedClasses;
 
@@ -259,7 +259,7 @@ class ClassTokenGroup extends TokenGroup
             $scenario[] = new SpacesToken();
             $scenario[] = $extendsTokens;
         } elseif (!empty($extendsTokens)) {
-            $scenario[] = new NewLineTokens();
+            $scenario[] = new NewLinesToken();
             $rules->indent($context);
             $scenario[] = SpacesToken::fromString($context->indents);
             $scenario[] = $extendsTokens;
@@ -273,12 +273,12 @@ class ClassTokenGroup extends TokenGroup
             && $wrapIndividualImplements === WrappingDecision::NEVER
             && !empty($inlineImplementsTokens)
         ) {
-            $scenario[] = new NewLineTokens();
+            $scenario[] = new NewLinesToken();
             $rules->indent($context);
             $scenario[] = $this->insertIndentationTokens($rules, $inlineImplementsTokens);
             $rules->unindent($context);
         } elseif (!empty($chopDownImplementsTokens)) {
-            $scenario[] = new NewLineTokens();
+            $scenario[] = new NewLinesToken();
             $rules->indent($context);
             $scenario[] = $this->insertIndentationTokens($rules, $chopDownImplementsTokens);
             $rules->unindent($context);

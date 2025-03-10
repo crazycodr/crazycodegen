@@ -8,7 +8,7 @@ use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLineTokens;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
@@ -51,10 +51,10 @@ class ConditionTokenGroup extends TokenGroup
         if ($rules->conditions->openingBrace === BracePositionEnum::SAME_LINE) {
             $tokens[] = new SpacesToken($rules->conditions->spacesBeforeOpeningBrace);
         } else {
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
         }
         $tokens[] = new BraceStartToken();
-        $tokens[] = new NewLineTokens();
+        $tokens[] = new NewLinesToken();
 
         $rules->indent($context);
         $trueTokens = $this->renderInstructionsFromFlexibleTokenValue($this->trueInstructions, $context, $rules);
@@ -67,8 +67,8 @@ class ConditionTokenGroup extends TokenGroup
         if (empty($this->falseInstructions)) {
             return $this->flatten($tokens);
         }
-        if ($rules->conditions->keywordAfterClosingBrace === BracePositionEnum::NEXT_LINE) {
-            $tokens[] = new NewLineTokens();
+        if ($rules->conditions->keywordAfterClosingBrace === BracePositionEnum::DIFF_LINE) {
+            $tokens[] = new NewLinesToken();
         } else {
             $tokens[] = new SpacesToken($rules->conditions->spacesAfterClosingBrace);
         }
@@ -80,10 +80,10 @@ class ConditionTokenGroup extends TokenGroup
             if ($rules->conditions->openingBrace === BracePositionEnum::SAME_LINE) {
                 $tokens[] = new SpacesToken($rules->conditions->spacesBeforeOpeningBrace);
             } else {
-                $tokens[] = new NewLineTokens();
+                $tokens[] = new NewLinesToken();
             }
             $tokens[] = new BraceStartToken();
-            $tokens[] = new NewLineTokens();
+            $tokens[] = new NewLinesToken();
 
             $rules->indent($context);
             $falseTokens = $this->renderInstructionsFromFlexibleTokenValue($this->falseInstructions, $context, $rules);

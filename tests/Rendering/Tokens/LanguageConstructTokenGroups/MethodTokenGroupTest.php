@@ -53,8 +53,8 @@ class MethodTokenGroupTest extends TestCase
         $rules->argumentLists->padTypes = true;
         $rules->argumentLists->padIdentifiers = true;
         $rules->methods->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
-        $rules->methods->openingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->methods->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->methods->openingBrace = BracePositionEnum::DIFF_LINE;
+        $rules->methods->closingBrace = BracePositionEnum::DIFF_LINE;
         $rules->methods->spacesAfterAbstract = 1;
         $rules->methods->spacesAfterVisibility = 1;
         $rules->methods->spacesAfterStatic = 1;
@@ -319,7 +319,7 @@ class MethodTokenGroupTest extends TestCase
         );
     }
 
-    public function testInlineDefinitionRendersOpeningBraceOnSameLineAndClosingBraceOnNextLineAsPerConfiguration()
+    public function testInlineDefinitionRendersOpeningBraceOnSameLineAndClosingBraceOnDiffLineAsPerConfiguration()
     {
         $token = new MethodTokenGroup(
             name: 'myFunction',
@@ -327,7 +327,7 @@ class MethodTokenGroupTest extends TestCase
 
         $rules = $this->getBaseTestingRules();
         $rules->methods->openingBrace = BracePositionEnum::SAME_LINE;
-        $rules->methods->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->methods->closingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
             <<<EOS
@@ -338,14 +338,14 @@ class MethodTokenGroupTest extends TestCase
         );
     }
 
-    public function testInlineDefinitionRendersOpeningBraceOnNextLineWithClosingBraceOnSameLineAsPerConfiguration()
+    public function testInlineDefinitionRendersOpeningBraceOnDiffLineWithClosingBraceOnSameLineAsPerConfiguration()
     {
         $token = new MethodTokenGroup(
             name: 'myFunction',
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->methods->openingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->methods->openingBrace = BracePositionEnum::DIFF_LINE;
         $rules->methods->closingBrace = BracePositionEnum::SAME_LINE;
 
         $this->assertEquals(
@@ -364,8 +364,8 @@ class MethodTokenGroupTest extends TestCase
         );
 
         $rules = $this->getBaseTestingRules();
-        $rules->methods->openingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->methods->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->methods->openingBrace = BracePositionEnum::DIFF_LINE;
+        $rules->methods->closingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
             <<<EOS
@@ -562,7 +562,7 @@ class MethodTokenGroupTest extends TestCase
         );
     }
 
-    public function testChopDownDefinitionRendersOpeningAndClosingBracesPositionIsNotRespectedAndAlwaysSameLineNextLine()
+    public function testChopDownDefinitionRendersOpeningAndClosingBracesPositionIsNotRespectedAndAlwaysSameLineDiffLine()
     {
         $token = new MethodTokenGroup(
             name: 'myFunction',
@@ -570,8 +570,8 @@ class MethodTokenGroupTest extends TestCase
 
         $rules = $this->getBaseTestingRules();
         $rules->methods->argumentsOnDifferentLines = WrappingDecision::ALWAYS;
-        $rules->methods->openingBrace = BracePositionEnum::NEXT_LINE;
-        $rules->methods->closingBrace = BracePositionEnum::NEXT_LINE;
+        $rules->methods->openingBrace = BracePositionEnum::DIFF_LINE;
+        $rules->methods->closingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
             <<<EOS
