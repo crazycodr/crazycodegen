@@ -8,7 +8,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
+use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class PropertyTokenGroupTest extends TestCase
     public function testRendersVisibilityAndNameWithSpaces()
     {
         $token = new PropertyTokenGroup(
-            name: new IdentifierToken('foo'),
+            name: new Token('foo'),
         );
 
         $rules = $this->getTestRules();
@@ -63,7 +63,7 @@ class PropertyTokenGroupTest extends TestCase
     public function testDifferentVisibilityPropertyRendered()
     {
         $token = new PropertyTokenGroup(
-            name: new IdentifierToken('foo'),
+            name: new Token('foo'),
             visibility: VisibilityEnum::PROTECTED,
         );
 
@@ -80,7 +80,7 @@ class PropertyTokenGroupTest extends TestCase
     public function testRendersStaticModifierWithSpaces()
     {
         $token = new PropertyTokenGroup(
-            name: new IdentifierToken('foo'),
+            name: new Token('foo'),
             static: true
         );
 
@@ -98,7 +98,7 @@ class PropertyTokenGroupTest extends TestCase
     public function testRendersTypeWithSpaces()
     {
         $token = new PropertyTokenGroup(
-            name: new IdentifierToken('foo'),
+            name: new Token('foo'),
             type: 'int'
         );
 
@@ -116,7 +116,7 @@ class PropertyTokenGroupTest extends TestCase
     public function testRendersComplexTypeAsExpected()
     {
         $token = new PropertyTokenGroup(
-            name: new IdentifierToken('foo'),
+            name: new Token('foo'),
             type: new MultiTypeTokenGroup(types: ['int', 'string', 'bool'])
         );
 
@@ -133,7 +133,7 @@ class PropertyTokenGroupTest extends TestCase
     public function testDefaultValueRendersAfterNameWithExpectedSpaces()
     {
         $token = new PropertyTokenGroup(
-            name: new IdentifierToken('foo'),
+            name: new Token('foo'),
             defaultValue: 'Hello world'
         );
 
@@ -152,7 +152,7 @@ class PropertyTokenGroupTest extends TestCase
     public function testContextPaddingIsRespectedOverRules()
     {
         $token = new PropertyTokenGroup(
-            name: new IdentifierToken('foo'),
+            name: new Token('foo'),
             type: 'int',
             visibility: VisibilityEnum::PROTECTED,
             static: true,
@@ -177,7 +177,7 @@ class PropertyTokenGroupTest extends TestCase
     public function testContextPaddingRendersAtLeastOneSpaceEvenIfSmallerToNotCreateInvalidCode()
     {
         $token = new PropertyTokenGroup(
-            name: new IdentifierToken('foo'),
+            name: new Token('foo'),
             type: 'int',
             visibility: VisibilityEnum::PROTECTED,
             static: true,

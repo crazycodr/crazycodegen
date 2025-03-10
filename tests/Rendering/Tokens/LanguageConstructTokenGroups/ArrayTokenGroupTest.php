@@ -7,12 +7,9 @@ use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\PlusToken;
-use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ArrayToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArrayTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ExpressionTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\InstructionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -443,7 +440,7 @@ class ArrayTokenGroupTest extends TestCase
     public function testTokenValuesAreSimplyReused()
     {
         $token = new ArrayTokenGroup([
-            'this' => new IdentifierToken('$someDirectIdentifier'),
+            'this' => new Token('$someDirectIdentifier'),
         ]);
 
         $rules = $this->getRenderingRules();

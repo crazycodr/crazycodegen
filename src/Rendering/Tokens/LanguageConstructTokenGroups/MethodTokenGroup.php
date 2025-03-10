@@ -19,7 +19,6 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\StaticToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class MethodTokenGroup extends TokenGroup
@@ -28,7 +27,7 @@ class MethodTokenGroup extends TokenGroup
     use TokenFunctions;
 
     public function __construct(
-        public readonly string|IdentifierToken             $name,
+        public readonly string|Token                       $name,
         public readonly null|string|DocBlockTokenGroup     $docBlock = null,
         public readonly null|ArgumentListTokenGroup        $arguments = null,
         public readonly null|string|AbstractTypeTokenGroup $returnType = null,
@@ -105,8 +104,8 @@ class MethodTokenGroup extends TokenGroup
         }
         $tokens[] = new FunctionToken();
         $tokens[] = new SpacesToken($rules->methods->spacesAfterFunction);
-        if (!$this->name instanceof IdentifierToken) {
-            $tokens[] = new IdentifierToken($this->name);
+        if (!$this->name instanceof Token) {
+            $tokens[] = new Token($this->name);
         } else {
             $tokens[] = $this->name;
         }

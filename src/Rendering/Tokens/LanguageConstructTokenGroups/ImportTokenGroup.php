@@ -11,7 +11,6 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\AsToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\UseToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class ImportTokenGroup extends TokenGroup
@@ -44,7 +43,7 @@ class ImportTokenGroup extends TokenGroup
             $tokens[] = new SpacesToken($rules->imports->spacesAfterType);
             $tokens[] = new AsToken();
             $tokens[] = new SpacesToken($rules->imports->spacesAfterAs);
-            $tokens[] = new IdentifierToken($this->alias);
+            $tokens[] = new Token($this->alias);
         }
         $tokens[] = new SemiColonToken();
         return $this->flatten($tokens);

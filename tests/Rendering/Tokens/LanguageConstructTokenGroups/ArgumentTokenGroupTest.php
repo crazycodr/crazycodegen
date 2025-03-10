@@ -7,7 +7,7 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
+use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +18,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testRendersNameAsExpectedWithoutSpacesAround()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo')
+            new Token('foo')
         );
 
         $rules = new RenderingRules();
@@ -35,7 +35,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testAddsTypeInFrontOfIdentifierAndSeparatesWithSpace()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             new SingleTypeTokenGroup('int'),
         );
 
@@ -53,7 +53,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testAddsDefaultValueAfterIdentifierWithSpaceBetweenIdentifierAndEqual()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             defaultValue: 123,
         );
 
@@ -71,7 +71,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testAddsDefaultValueWithSingleQuotesIfString()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             defaultValue: 'Hello World',
         );
 
@@ -89,7 +89,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testAddsDefaultValueWithStringRepresentationIfBool()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             defaultValue: true,
         );
 
@@ -107,7 +107,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testAddsTheConfiguredSpacesBetweenTypeAndIdentifierAsPerRules()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             new SingleTypeTokenGroup('int'),
         );
 
@@ -125,7 +125,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testAddsTheConfiguredChopDownSpacesByPaddingTypeProperly()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             new SingleTypeTokenGroup('int'),
         );
 
@@ -147,7 +147,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testAddsTheConfiguredChopDownSpacesByPaddingTypeProperlyEvenIfThereIsNoType()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
         );
 
         $rules = new RenderingRules();
@@ -168,7 +168,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testAddsTheConfiguredSpacesBetweenIdentifierAndEqualsAsPerRules()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             defaultValue: 123,
         );
 
@@ -186,7 +186,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testAddsTheConfiguredChopDownSpacesByPaddingIdentifier()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             defaultValue: 123,
         );
 
@@ -208,7 +208,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testWhenTypePaddingIsLessThanTypeAtLeastOneSpaceIsAdded()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             new SingleTypeTokenGroup('reallyLongType'),
         );
 
@@ -230,7 +230,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testWhenIdentifierPaddingIsLessThanIdentifierAtLeastOneSpaceIsAdded()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('reallyLongIdentifier'),
+            new Token('reallyLongIdentifier'),
             defaultValue: 123,
         );
 
@@ -252,7 +252,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testWhenVariadicExpansionTokenAppearBeforeVariable()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('reallyLongIdentifier'),
+            new Token('reallyLongIdentifier'),
             isVariadic: true,
         );
 
@@ -265,7 +265,7 @@ class ArgumentTokenGroupTest extends TestCase
     public function testPaddingOnIdentifierTakesVariadicExpansionTokenIntoAccount()
     {
         $token = new ArgumentTokenGroup(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             defaultValue: 123,
             isVariadic: true,
         );

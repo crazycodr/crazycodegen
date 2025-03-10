@@ -15,7 +15,6 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\StaticToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class PropertyTokenGroup extends TokenGroup
@@ -24,7 +23,7 @@ class PropertyTokenGroup extends TokenGroup
     use TokenFunctions;
 
     public function __construct(
-        public readonly string|IdentifierToken             $name,
+        public readonly string|Token                       $name,
         public readonly null|string|DocBlockTokenGroup     $docBlock = null,
         public readonly null|string|AbstractTypeTokenGroup $type = null,
         public readonly VisibilityEnum                     $visibility = VisibilityEnum::PUBLIC,

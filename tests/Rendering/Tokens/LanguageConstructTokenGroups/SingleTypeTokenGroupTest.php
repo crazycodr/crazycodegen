@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
+use CrazyCodeGen\Rendering\Tokens\Token;
 use PHPUnit\Framework\TestCase;
 
 class SingleTypeTokenGroupTest extends TestCase
@@ -14,7 +14,7 @@ class SingleTypeTokenGroupTest extends TestCase
     {
         $token = new SingleTypeTokenGroup('CrazyCodeGen\\Tokens\\Token');
 
-        $this->assertEquals(new IdentifierToken('CrazyCodeGen\\Tokens\\Token'), $token->render(new RenderContext(), new RenderingRules())[0]);
+        $this->assertEquals(new Token('CrazyCodeGen\\Tokens\\Token'), $token->render(new RenderContext(), new RenderingRules())[0]);
     }
 
     public function testShortNameIsRenderedAsAnIdentifierWhenShortenIsTurnedOn()
@@ -24,7 +24,7 @@ class SingleTypeTokenGroupTest extends TestCase
         $context = new RenderContext();
         $context->importedClasses[] = 'CrazyCodeGen\\Tokens\\Token';
 
-        $this->assertEquals(new IdentifierToken('Token'), $token->render($context, new RenderingRules())[0]);
+        $this->assertEquals(new Token('Token'), $token->render($context, new RenderingRules())[0]);
     }
 
     public function testShortNameAndNamespaceAlwaysAvailableEvenWhenShortenIsOff()

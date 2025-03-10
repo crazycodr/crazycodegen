@@ -6,7 +6,7 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\DollarToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
+use CrazyCodeGen\Rendering\Tokens\Token;
 use PHPUnit\Framework\TestCase;
 
 class VariableTokenGroupTest extends TestCase
@@ -23,7 +23,7 @@ class VariableTokenGroupTest extends TestCase
 
     public function testStringNameIsTransformedIntoIdentifierAndRendered()
     {
-        $token = new VariableTokenGroup($name = new IdentifierToken('foo'));
+        $token = new VariableTokenGroup($name = new Token('foo'));
 
         $this->assertEquals(
             $name,
@@ -36,7 +36,7 @@ class VariableTokenGroupTest extends TestCase
         $token = new VariableTokenGroup('foo');
 
         $this->assertEquals(
-            new IdentifierToken('foo'),
+            new Token('foo'),
             $token->render(new RenderContext(), new RenderingRules())[1]
         );
     }

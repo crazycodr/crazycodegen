@@ -15,7 +15,6 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\FunctionToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class FunctionTokenGroup extends TokenGroup
@@ -24,7 +23,7 @@ class FunctionTokenGroup extends TokenGroup
     use TokenFunctions;
 
     public function __construct(
-        public readonly string|IdentifierToken             $name,
+        public readonly string|Token                       $name,
         public readonly null|NamespaceTokenGroup           $namespace = null,
         public readonly null|string|DocBlockTokenGroup     $docBlock = null,
         public readonly null|ArgumentListTokenGroup        $arguments = null,
@@ -92,8 +91,8 @@ class FunctionTokenGroup extends TokenGroup
     {
         $tokens[] = new FunctionToken();
         $tokens[] = new SpacesToken();
-        if (!$this->name instanceof IdentifierToken) {
-            $tokens[] = new IdentifierToken($this->name);
+        if (!$this->name instanceof Token) {
+            $tokens[] = new Token($this->name);
         } else {
             $tokens[] = $this->name;
         }

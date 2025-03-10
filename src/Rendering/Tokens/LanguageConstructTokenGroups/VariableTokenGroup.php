@@ -9,14 +9,13 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\DollarToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 
 class VariableTokenGroup extends TokenGroup
 {
     use FlattenFunction;
 
     public function __construct(
-        public readonly string|IdentifierToken $name,
+        public readonly string|Token $name,
     ) {
     }
 
@@ -30,7 +29,7 @@ class VariableTokenGroup extends TokenGroup
         $tokens = [];
         $tokens[] = new DollarToken();
         if (is_string($this->name)) {
-            $tokens[] = new IdentifierToken($this->name);
+            $tokens[] = new Token($this->name);
         } else {
             $tokens[] = $this->name;
         }

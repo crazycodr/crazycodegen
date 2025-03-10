@@ -11,7 +11,6 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
 class ArgumentTokenGroup extends TokenGroup
@@ -20,7 +19,7 @@ class ArgumentTokenGroup extends TokenGroup
     use TokenFunctions;
 
     public function __construct(
-        public readonly string|IdentifierToken             $name,
+        public readonly string|Token                       $name,
         public readonly null|string|AbstractTypeTokenGroup $type = null,
         public readonly null|int|float|string|bool|Token   $defaultValue = null,
         public readonly bool                               $defaultValueIsNull = false,
