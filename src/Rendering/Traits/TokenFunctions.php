@@ -56,27 +56,49 @@ trait TokenFunctions
     }
 
     /**
+     * @param Token[] $tokens
+     * @return bool
+     */
+    private function tokensSpanMultipleLines(array $tokens): bool
+    {
+        foreach ($tokens as $token) {
+            if ($token instanceof NewLinesToken) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param RenderingRules $rules
      * @param Token[] $tokens
+     * @param bool $skipFirstLine
      * @return Token[]
      */
-    private function insertIndentationTokens(RenderingRules $rules, array $tokens): array
+    private function insertIndentationTokens(RenderingRules $rules, array $tokens, bool $skipFirstLine = false): array
     {
         $tokens = $this->splitTokensWithNewlines($tokens);
-        $newTokens = [];
+        $tokens = $this->flatten($tokens);
+        $newTokensPerLine = [];
         $lineTokens = [];
         foreach ($tokens as $token) {
             if (empty($lineTokens) && !$token instanceof NewLinesToken) {
-                $newTokens[] = SpacesToken::fromString($rules->indentation);
+                if ($skipFirstLine === false) {
+                    $lineTokens[] = SpacesToken::fromString($rules->indentation);
+                } elseif ($skipFirstLine === true && !empty($newTokensPerLine)) {
+                    $lineTokens[] = SpacesToken::fromString($rules->indentation);
+                }
             }
-            $newTokens[] = $token;
+            $lineTokens[] = $token;
             if ($token instanceof NewLinesToken) {
+                $newTokensPerLine[] = $lineTokens;
                 $lineTokens = [];
-            } else {
-                $lineTokens[] = $token;
             }
         }
-        return $newTokens;
+        if (!empty($lineTokens)) {
+            $newTokensPerLine[] = $lineTokens;
+        }
+        return $this->flatten($newTokensPerLine);
     }
 
     /**

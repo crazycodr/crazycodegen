@@ -8,6 +8,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArrayTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ConditionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
@@ -16,7 +17,9 @@ use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ReturnInstructionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
+use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -68,7 +71,7 @@ class ClassScenarioTest extends TestCase
                     returnType: 'array',
                     static: true,
                     instructions: [
-                        new InstructionTokenGroup(instructions: new Token('return [HookBasketAdapter::class]')),
+                        new ReturnInstructionTokenGroup(new ArrayTokenGroup([new IdentifierToken('HookBasketAdapter::class')])),
                     ],
                 ),
                 new MethodTokenGroup(
@@ -81,7 +84,7 @@ class ClassScenarioTest extends TestCase
                         unionTypes: false,
                     ),
                     instructions: [
-                        new InstructionTokenGroup(instructions: new Token('return $this->mock')),
+                        new ReturnInstructionTokenGroup(new Token('$this->mock')),
                     ],
                 ),
             ]
@@ -210,7 +213,7 @@ class ClassScenarioTest extends TestCase
                             trueInstructions: new Token('$scenarioBuildingCallable($this->configApiClientSpyBuilder)'),
                         ),
                         new NewLinesToken(),
-                        new InstructionTokenGroup(instructions: new Token('return $this->configApiClientSpyBuilder')),
+                        new ReturnInstructionTokenGroup(instructions: new Token('$this->configApiClientSpyBuilder')),
                     ],
                 ),
                 new MethodTokenGroup(
@@ -218,7 +221,7 @@ class ClassScenarioTest extends TestCase
                     returnType: 'Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Auditing\Services\AuditingTrackingServiceManagerBuilder',
                     instructions: [
                         new Token('/** @noinspection PhpUnhandledExceptionInspection */'),
-                        new InstructionTokenGroup(instructions: new Token('return new AuditingTrackingServiceManagerBuilder($this->createMock(AuditingTrackingServiceManager::class))')),
+                        new ReturnInstructionTokenGroup(instructions: new Token('new AuditingTrackingServiceManagerBuilder($this->createMock(AuditingTrackingServiceManager::class))')),
                     ],
                 ),
             ]
@@ -318,9 +321,9 @@ class ClassScenarioTest extends TestCase
                     returnType: 'internal\Baskets\Models\TaxExemptionCategoryModel',
                     visibility: VisibilityEnum::PROTECTED,
                     instructions: [
-                        new InstructionTokenGroup(instructions: new Token(
+                        new ReturnInstructionTokenGroup(instructions: new Token(
                             <<<EOS
-                            return new TaxExemptionCategoryModel(
+                            new TaxExemptionCategoryModel(
                                 properties: [
                                     'identifier' => 'stub',
                                     'name' => 'stub',
@@ -336,14 +339,14 @@ class ClassScenarioTest extends TestCase
                     instructions: [
                         new InstructionTokenGroup(instructions: new Token('$this->model->identifier = \'hst\'')),
                         new InstructionTokenGroup(instructions: new Token('$this->model->name = \'HST\'')),
-                        new InstructionTokenGroup(instructions: new Token('return $this')),
+                        new ReturnInstructionTokenGroup(instructions: new Token('$this')),
                     ],
                 ),
                 new MethodTokenGroup(
                     name: 'get',
                     returnType: 'internal\Baskets\Models\TaxExemptionCategoryModel',
                     instructions: [
-                        new InstructionTokenGroup(instructions: new Token('return $this->model')),
+                        new ReturnInstructionTokenGroup(instructions: new Token('$this->model')),
                     ],
                 ),
             ]

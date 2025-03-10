@@ -166,15 +166,11 @@ class ArrayTokenGroup extends TokenGroup
             $tokens[] = new ArrayAssignToken();
             $tokens[] = new SpacesToken($rules->arrays->spacesAfterOperators);
         }
-        if (is_string($value)) {
-            $tokens[] = (new StringTokenGroup($value))->render($context, $rules);
-        } elseif (is_bool($value)) {
-            $tokens[] = new Token($value ? 'true' : 'false');
-        } elseif (is_null($value)) {
-            $tokens[] = new Token('null');
-        } else {
-            $tokens[] = new Token($value);
+        $valueTokens = $this->getTokensForValue($value, $context, $rules);
+        if ($this->tokensSpanMultipleLines($valueTokens)) {
+            $valueTokens = $this->insertIndentationTokens($rules, $valueTokens, skipFirstLine: true);
         }
+        $tokens = array_merge($tokens, $valueTokens);
         if ($addSeparator) {
             $tokens[] = new SpacesToken($rules->arrays->spacesAfterValues);
             $tokens[] = new CommaToken();
@@ -227,6 +223,31 @@ class ArrayTokenGroup extends TokenGroup
             $tokens[] = new SquareEndToken();
         } else {
             $tokens[] = new ParEndToken();
+        }
+        return $tokens;
+    }
+
+    /**
+     * @param mixed $value
+     * @param RenderContext $context
+     * @param RenderingRules $rules
+     * @return array
+     */
+    private function getTokensForValue(mixed $value, RenderContext $context, RenderingRules $rules): array
+    {
+        $tokens = [];
+        if (is_string($value)) {
+            $tokens[] = (new StringTokenGroup($value))->render($context, $rules);
+        } elseif (is_bool($value)) {
+            $tokens[] = new Token($value ? 'true' : 'false');
+        } elseif (is_null($value)) {
+            $tokens[] = new Token('null');
+        } elseif ($value instanceof TokenGroup) {
+            $tokens[] = $value->render($context, $rules);
+        } elseif ($value instanceof Token) {
+            $tokens[] = $value;
+        } else {
+            $tokens[] = new Token($value);
         }
         return $tokens;
     }

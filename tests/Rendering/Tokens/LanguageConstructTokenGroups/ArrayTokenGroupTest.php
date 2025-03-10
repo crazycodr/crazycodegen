@@ -6,7 +6,13 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\PlusToken;
+use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ArrayToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArrayTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ExpressionTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\InstructionTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\Token;
+use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -352,6 +358,128 @@ class ArrayTokenGroupTest extends TestCase
                 'this' => 1,
                 'is' => 2,
                 'short' => 3,
+            ]
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testStringValuesAreProperlyConverted()
+    {
+        $token = new ArrayTokenGroup([
+            'this' => 'is a string',
+        ]);
+
+        $rules = $this->getRenderingRules();
+        $rules->arrays->wrap = WrappingDecision::ALWAYS;
+
+        $this->assertEquals(
+            <<<EOS
+            [
+                'this' => 'is a string',
+            ]
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testBoolValuesAreProperlyConverted()
+    {
+        $token = new ArrayTokenGroup([
+            'this' => true,
+        ]);
+
+        $rules = $this->getRenderingRules();
+        $rules->arrays->wrap = WrappingDecision::ALWAYS;
+
+        $this->assertEquals(
+            <<<EOS
+            [
+                'this' => true,
+            ]
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testNullValuesAreProperlyConverted()
+    {
+        $token = new ArrayTokenGroup([
+            'this' => null,
+        ]);
+
+        $rules = $this->getRenderingRules();
+        $rules->arrays->wrap = WrappingDecision::ALWAYS;
+
+        $this->assertEquals(
+            <<<EOS
+            [
+                'this' => null,
+            ]
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testTokenGroupValuesAreRenderedIn()
+    {
+        $token = new ArrayTokenGroup([
+            'this' => new ExpressionTokenGroup([new Token(1), new PlusToken(), new Token(2)]),
+        ]);
+
+        $rules = $this->getRenderingRules();
+        $rules->arrays->wrap = WrappingDecision::ALWAYS;
+
+        $this->assertEquals(
+            <<<EOS
+            [
+                'this' => 1+2,
+            ]
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testTokenValuesAreSimplyReused()
+    {
+        $token = new ArrayTokenGroup([
+            'this' => new IdentifierToken('$someDirectIdentifier'),
+        ]);
+
+        $rules = $this->getRenderingRules();
+        $rules->arrays->wrap = WrappingDecision::ALWAYS;
+
+        $this->assertEquals(
+            <<<EOS
+            [
+                'this' => \$someDirectIdentifier,
+            ]
+            EOS,
+            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+        );
+    }
+
+    public function testNestedTokenGroupsAreProperlyIndented()
+    {
+        $token = new ArrayTokenGroup([
+            'hello' => new ArrayTokenGroup([
+                'foo' => 'bar',
+                'bar' => 'baz',
+            ]),
+            'world' => 123,
+        ]);
+
+        $rules = $this->getRenderingRules();
+        $rules->arrays->wrap = WrappingDecision::ALWAYS;
+
+        $this->assertEquals(
+            <<<EOS
+            [
+                'hello' => [
+                    'foo' => 'bar',
+                    'bar' => 'baz',
+                ],
+                'world' => 123,
             ]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
