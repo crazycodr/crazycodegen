@@ -9,10 +9,11 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 
-class InstructionTokenGroup extends TokenGroup
+class InstructionTokenGroup extends ExpressionTokenGroup
 {
     use FlattenFunction;
 
+    /** @noinspection PhpMissingParentConstructorInspection */
     public function __construct(
         /** @var Token[]|Token|TokenGroup */
         public readonly array|Token|TokenGroup $instructions,
@@ -27,19 +28,7 @@ class InstructionTokenGroup extends TokenGroup
     public function render(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->instructions instanceof TokenGroup) {
-            $tokens[] = $this->instructions->render($context, $rules);
-        } elseif ($this->instructions instanceof Token) {
-            $tokens[] = $this->instructions;
-        } else {
-            foreach ($this->instructions as $instruction) {
-                if ($instruction instanceof TokenGroup) {
-                    $tokens[] = $instruction->render($context, $rules);
-                } else {
-                    $tokens[] = $instruction;
-                }
-            }
-        }
+        $tokens = array_merge($tokens, parent::render($context, $rules));
         $tokens[] = new SemiColonToken();
         return $this->flatten($tokens);
     }

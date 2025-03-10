@@ -16,8 +16,11 @@ use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\InstructionTokenG
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyAccessTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ReturnInstructionTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ThisVariableTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\UserLandTokens\IdentifierToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -63,7 +66,11 @@ class ClassScenarioTest extends TestCase
                         ]
                     ),
                     instructions: [
-                        new InstructionTokenGroup(instructions: new Token('$this->mock = $mock')),
+                        new InstructionTokenGroup(instructions: [
+                            new PropertyAccessTokenGroup(new ThisVariableTokenGroup(), 'mock'),
+                            new Token(' = '),
+                            new VariableTokenGroup('mock')
+                        ]),
                     ],
                 ),
                 new MethodTokenGroup(
@@ -84,7 +91,9 @@ class ClassScenarioTest extends TestCase
                         unionTypes: false,
                     ),
                     instructions: [
-                        new ReturnInstructionTokenGroup(new Token('$this->mock')),
+                        new ReturnInstructionTokenGroup(
+                            new PropertyAccessTokenGroup(new ThisVariableTokenGroup(), 'mock')
+                        ),
                     ],
                 ),
             ]
@@ -175,16 +184,25 @@ class ClassScenarioTest extends TestCase
                             condition: new Token('!ConfigApiManager::getClient() instanceof ConfigApiClient'),
                             trueInstructions: new Token('ConfigApiManager::setClient(null)'),
                         ),
-                        new InstructionTokenGroup(instructions: new Token('$this->configApiClientBackup = ConfigApiManager::getClient()')),
+                        new InstructionTokenGroup(instructions: [
+                            new PropertyAccessTokenGroup(new ThisVariableTokenGroup(), 'configApiClientBackup'),
+                            new Token(' = ConfigApiManager::getClient()')
+                        ]),
                         new InstructionTokenGroup(instructions: new Token('ConfigApiManager::setClient(null)')),
-                        new InstructionTokenGroup(instructions: new Token('$this->configApiClientSpyBuilder = new ConfigApiClientSpyBuilder(ConfigApiManager::getClient())')),
+                        new InstructionTokenGroup(instructions: [
+                            new PropertyAccessTokenGroup(new ThisVariableTokenGroup(), 'configApiClientSpyBuilder'),
+                            new Token(' = new ConfigApiClientSpyBuilder(ConfigApiManager::getClient())')
+                        ]),
                     ],
                 ),
                 new MethodTokenGroup(
                     name: 'tearDown',
                     returnType: 'void',
                     instructions: [
-                        new InstructionTokenGroup(instructions: new Token('$this->configApiClientSpyBuilder->getService()->validateMandateExpectations($this)')),
+                        new InstructionTokenGroup(instructions: [
+                            new PropertyAccessTokenGroup(new ThisVariableTokenGroup(), 'configApiClientSpyBuilder'),
+                            new Token('->getService()->validateMandateExpectations($this)')
+                        ]),
                         new InstructionTokenGroup(instructions: new Token('ConfigApiManager::setClient($this->configApiClientBackup)')),
                         new InstructionTokenGroup(instructions: new Token('parent::tearDown()')),
                     ],
@@ -205,15 +223,24 @@ class ClassScenarioTest extends TestCase
                     instructions: [
                         new ConditionTokenGroup(
                             condition: new Token('!isset($this->configApiClientSpyBuilder)'),
-                            trueInstructions: new Token('$this->configApiClientSpyBuilder = new ConfigApiClientSpyBuilder(ConfigApiManager::getClient())'),
+                            trueInstructions: [
+                                new InstructionTokenGroup(
+                                    instructions: [
+                                        new PropertyAccessTokenGroup(new ThisVariableTokenGroup(), 'configApiClientSpyBuilder'),
+                                        new Token(' = new ConfigApiClientSpyBuilder(ConfigApiManager::getClient())'),
+                                    ]
+                                )
+                            ],
                         ),
                         new NewLinesToken(),
                         new ConditionTokenGroup(
-                            condition: new Token('$scenarioBuildingCallable'),
+                            condition: new VariableTokenGroup('scenarioBuildingCallable'),
                             trueInstructions: new Token('$scenarioBuildingCallable($this->configApiClientSpyBuilder)'),
                         ),
                         new NewLinesToken(),
-                        new ReturnInstructionTokenGroup(instructions: new Token('$this->configApiClientSpyBuilder')),
+                        new ReturnInstructionTokenGroup(instructions: [
+                            new PropertyAccessTokenGroup(new ThisVariableTokenGroup(), 'configApiClientSpyBuilder')
+                        ]),
                     ],
                 ),
                 new MethodTokenGroup(
@@ -337,16 +364,24 @@ class ClassScenarioTest extends TestCase
                     name: 'hstExemption',
                     returnType: 'static',
                     instructions: [
-                        new InstructionTokenGroup(instructions: new Token('$this->model->identifier = \'hst\'')),
-                        new InstructionTokenGroup(instructions: new Token('$this->model->name = \'HST\'')),
-                        new ReturnInstructionTokenGroup(instructions: new Token('$this')),
+                        new InstructionTokenGroup(instructions: [
+                            new PropertyAccessTokenGroup(new ThisVariableTokenGroup(), 'model'),
+                            new Token('->identifier = \'hst\''),
+                        ]),
+                        new InstructionTokenGroup(instructions: [
+                            new PropertyAccessTokenGroup(new ThisVariableTokenGroup(), 'model'),
+                            new Token('->name = \'HST\''),
+                        ]),
+                        new ReturnInstructionTokenGroup(instructions: new ThisVariableTokenGroup()),
                     ],
                 ),
                 new MethodTokenGroup(
                     name: 'get',
                     returnType: 'internal\Baskets\Models\TaxExemptionCategoryModel',
                     instructions: [
-                        new ReturnInstructionTokenGroup(instructions: new Token('$this->model')),
+                        new ReturnInstructionTokenGroup(instructions: [
+                            new PropertyAccessTokenGroup(new ThisVariableTokenGroup(), 'model')
+                        ]),
                     ],
                 ),
             ]

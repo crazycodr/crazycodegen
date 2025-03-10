@@ -14,7 +14,7 @@ class ExpressionTokenGroup extends TokenGroup
 
     public function __construct(
         /** @var Token[]|Token|TokenGroup */
-        public readonly array|Token|TokenGroup $expressions,
+        public readonly array|Token|TokenGroup $instructions,
     ) {
     }
 
@@ -26,12 +26,12 @@ class ExpressionTokenGroup extends TokenGroup
     public function render(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->expressions instanceof TokenGroup) {
-            $tokens[] = $this->expressions->render($context, $rules);
-        } elseif ($this->expressions instanceof Token) {
-            $tokens[] = $this->expressions;
+        if ($this->instructions instanceof TokenGroup) {
+            $tokens[] = $this->instructions->render($context, $rules);
+        } elseif ($this->instructions instanceof Token) {
+            $tokens[] = $this->instructions;
         } else {
-            foreach ($this->expressions as $instruction) {
+            foreach ($this->instructions as $instruction) {
                 if ($instruction instanceof TokenGroup) {
                     $tokens[] = $instruction->render($context, $rules);
                 } else {
