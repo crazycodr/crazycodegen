@@ -3,10 +3,11 @@
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\IsStaticAccessContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class SingleTypeTokenGroup extends AbstractTypeTokenGroup
+class SingleTypeTokenGroup extends AbstractTypeTokenGroup implements IsStaticAccessContext
 {
     private null|string $namespace = null;
     private string $shortName;
@@ -46,5 +47,10 @@ class SingleTypeTokenGroup extends AbstractTypeTokenGroup
     public function getNamespace(): null|string
     {
         return $this->namespace;
+    }
+
+    public function isStaticAccessContext(): bool
+    {
+        return true;
     }
 }

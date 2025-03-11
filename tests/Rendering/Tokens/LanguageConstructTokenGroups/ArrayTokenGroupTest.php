@@ -25,7 +25,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->useShortForm = false;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             array(1, 2, 3)
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -39,7 +39,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules = $this->getRenderingRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [1, 2, 3]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -53,7 +53,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules = $this->getRenderingRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [0 => 1, 2 => 2, 3 => 3]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -67,7 +67,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules = $this->getRenderingRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [0 => 1, 2 => 2, 'hello' => 3]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -81,7 +81,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules = $this->getRenderingRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [0 => 1, 2 => 2, 'hello' => 3]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -96,7 +96,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->spacesAfterIdentifiers = 3;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             ['hello'   => 1, 'world'   => 2, 'foo'   => 3]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -111,7 +111,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->spacesAfterOperators = 3;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             ['hello' =>   1, 'world' =>   2, 'foo' =>   3]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -126,7 +126,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->spacesAfterValues = 3;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             ['hello' => 1   , 'world' => 2   , 'foo' => 3]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -141,7 +141,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->spacesAfterSeparators = 3;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             ['hello' => 1,   'world' => 2,   'foo' => 3]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -161,7 +161,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->wrap = WrappingDecision::IF_TOO_LONG;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'thisIsAPrettyLongKey' => 1,
                 'thisAlsoContributesToWrapping' => 2,
@@ -184,7 +184,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->wrap = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'this' => 1,
                 'is' => 2,
@@ -208,7 +208,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->wrap = WrappingDecision::NEVER;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             ['thisIsAPrettyLongKey' => 1, 'thisAlsoContributesToWrapping' => 2, 'shortButWraps' => 3]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -229,7 +229,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->closingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             ['this' => 1,
                 'is' => 2,
                 'short' => 3,
@@ -253,7 +253,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->closingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'this' => 1,
                 'is' => 2,
@@ -278,7 +278,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->closingBrace = BracePositionEnum::SAME_LINE;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'this' => 1,
                 'is' => 2,
@@ -303,7 +303,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->addSeparatorToLastItem = true;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'this' => 1,
                 'is' => 2,
@@ -327,7 +327,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->addSeparatorToLastItem = false;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'this' => 1,
                 'is' => 2,
@@ -350,7 +350,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->wrap = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'this' => 1,
                 'is' => 2,
@@ -371,7 +371,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->wrap = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'this' => 'is a string',
             ]
@@ -390,7 +390,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->wrap = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'this' => true,
             ]
@@ -409,7 +409,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->wrap = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'this' => null,
             ]
@@ -428,7 +428,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->wrap = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'this' => 1+2,
             ]
@@ -447,9 +447,9 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->wrap = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
-                'this' => \$someDirectIdentifier,
+                'this' => $someDirectIdentifier,
             ]
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -470,7 +470,7 @@ class ArrayTokenGroupTest extends TestCase
         $rules->arrays->wrap = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             [
                 'hello' => [
                     'foo' => 'bar',

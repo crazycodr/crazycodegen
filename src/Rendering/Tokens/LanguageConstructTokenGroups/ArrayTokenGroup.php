@@ -6,6 +6,8 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
+use CrazyCodeGen\Rendering\Renderers\RendersChopDownVersion;
+use CrazyCodeGen\Rendering\Renderers\RendersInlineVersion;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ArrayAssignToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
@@ -20,7 +22,7 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ArrayTokenGroup extends TokenGroup
+class ArrayTokenGroup extends TokenGroup implements RendersInlineVersion, RendersChopDownVersion
 {
     use FlattenFunction;
     use TokenFunctions;

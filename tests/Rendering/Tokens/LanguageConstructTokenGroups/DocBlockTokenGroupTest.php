@@ -28,7 +28,7 @@ class DocBlockTokenGroupTest extends TestCase
         );
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             /**
              */
             EOS,
@@ -43,7 +43,7 @@ class DocBlockTokenGroupTest extends TestCase
         );
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             /**
              * Hello
              *
@@ -66,7 +66,7 @@ class DocBlockTokenGroupTest extends TestCase
         $rules->docBlocks->lineLength = 25;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             /**
              * Hello world, i love
              * programming and this
@@ -88,7 +88,7 @@ class DocBlockTokenGroupTest extends TestCase
         $rules->docBlocks->lineLength = 25;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             /**
              * https://example.com/questions/49907308/url-without-spaces
              * will chop here.
@@ -108,7 +108,7 @@ class DocBlockTokenGroupTest extends TestCase
         $rules->docBlocks->lineLength = 25;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             /**
              * Upcoming url is too long
              * so it will be take as a

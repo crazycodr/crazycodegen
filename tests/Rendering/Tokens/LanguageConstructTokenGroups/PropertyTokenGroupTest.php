@@ -26,8 +26,8 @@ class PropertyTokenGroupTest extends TestCase
         $rules->properties->spacesAfterVisibility = 4;
 
         $this->assertEquals(
-            <<<EOS
-            public    \$foo;
+            <<<'EOS'
+            public    $foo;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
@@ -53,8 +53,8 @@ class PropertyTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
 
         $this->assertEquals(
-            <<<EOS
-            public \$foo;
+            <<<'EOS'
+            public $foo;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
@@ -70,8 +70,8 @@ class PropertyTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
 
         $this->assertEquals(
-            <<<EOS
-            protected \$foo;
+            <<<'EOS'
+            protected $foo;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
@@ -88,8 +88,8 @@ class PropertyTokenGroupTest extends TestCase
         $rules->properties->spacesAfterStatic = 4;
 
         $this->assertEquals(
-            <<<EOS
-            public static    \$foo;
+            <<<'EOS'
+            public static    $foo;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
@@ -106,8 +106,8 @@ class PropertyTokenGroupTest extends TestCase
         $rules->properties->spacesAfterType = 4;
 
         $this->assertEquals(
-            <<<EOS
-            public int    \$foo;
+            <<<'EOS'
+            public int    $foo;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
@@ -123,8 +123,8 @@ class PropertyTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
 
         $this->assertEquals(
-            <<<EOS
-            public int|string|bool \$foo;
+            <<<'EOS'
+            public int|string|bool $foo;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
@@ -142,8 +142,8 @@ class PropertyTokenGroupTest extends TestCase
         $rules->properties->spacesAfterEquals = 4;
 
         $this->assertEquals(
-            <<<EOS
-            public \$foo    =    'Hello world';
+            <<<'EOS'
+            public $foo    =    'Hello world';
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );
@@ -167,8 +167,8 @@ class PropertyTokenGroupTest extends TestCase
         $context->chopDown->paddingSpacesForIdentifiers = 12;
 
         $this->assertEquals(
-            <<<EOS
-            protected static    int        \$foo        = 'Hello world';
+            <<<'EOS'
+            protected static    int        $foo        = 'Hello world';
             EOS,
             $this->renderTokensToString($token->render($context, $rules))
         );
@@ -192,8 +192,8 @@ class PropertyTokenGroupTest extends TestCase
         $context->chopDown->paddingSpacesForIdentifiers = 3;
 
         $this->assertEquals(
-            <<<EOS
-            protected static int \$foo = 'Hello world';
+            <<<'EOS'
+            protected static int $foo = 'Hello world';
             EOS,
             $this->renderTokensToString($token->render($context, $rules))
         );
@@ -211,14 +211,14 @@ class PropertyTokenGroupTest extends TestCase
         $rules->properties->newLinesAfterDocBlock = 3;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             /**
              * This is a docblock that should be
              * wrapped and displayed before the prop.
              */
             
             
-            public \$prop1;
+            public $prop1;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
         );

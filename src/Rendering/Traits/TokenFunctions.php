@@ -71,6 +71,22 @@ trait TokenFunctions
 
     /**
      * @param RenderingRules $rules
+     * @param int $customSize
+     * @param Token[] $tokens
+     * @param bool $skipFirstLine
+     * @return Token[]
+     */
+    private function insertCustomIndentationTokens(RenderingRules $rules, int $customSize, array $tokens, bool $skipFirstLine = false): array
+    {
+        $backupIndentationToken = $rules->indentation;
+        $rules->indentation = str_repeat(' ', $customSize);
+        $tokens = $this->insertIndentationTokens($rules, $tokens, $skipFirstLine);
+        $rules->indentation = $backupIndentationToken;
+        return $tokens;
+    }
+
+    /**
+     * @param RenderingRules $rules
      * @param Token[] $tokens
      * @param bool $skipFirstLine
      * @return Token[]

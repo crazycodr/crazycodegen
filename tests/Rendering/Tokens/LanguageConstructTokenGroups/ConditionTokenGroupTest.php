@@ -30,7 +30,7 @@ class ConditionTokenGroupTest extends TestCase
         $rules->conditions->spacesAfterKeyword = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             if    (true) {
                 true;
             }
@@ -72,7 +72,7 @@ class ConditionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             if (1 === (1*3)) {
                 true;
             }
@@ -93,7 +93,7 @@ class ConditionTokenGroupTest extends TestCase
         $rules->conditions->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             if (true)    {
                 true;
             }
@@ -114,7 +114,7 @@ class ConditionTokenGroupTest extends TestCase
         $rules->conditions->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             if (true)
             {
                 true;
@@ -157,7 +157,7 @@ class ConditionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             if (true) {
                 1 === (1*3);
                 return 1;
@@ -178,7 +178,7 @@ class ConditionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             if (true) {
                 true;
             } else {
@@ -202,7 +202,7 @@ class ConditionTokenGroupTest extends TestCase
         $rules->conditions->keywordAfterClosingBrace = BracePositionEnum::DIFF_LINE;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             if (true)
             {
                 true;
@@ -239,7 +239,7 @@ class ConditionTokenGroupTest extends TestCase
         $rules = $this->getTestRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             if (true) {
                 0;
             } elseif (1===2) {

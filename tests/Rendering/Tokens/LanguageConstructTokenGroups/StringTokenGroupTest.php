@@ -17,7 +17,7 @@ class StringTokenGroupTest extends TestCase
         $token = new StringTokenGroup('Hello world');
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             'Hello world'
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -29,7 +29,7 @@ class StringTokenGroupTest extends TestCase
         $token = new StringTokenGroup('Hello world can\'t be escaped');
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             'Hello world can\'t be escaped'
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))

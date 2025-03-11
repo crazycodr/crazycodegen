@@ -32,7 +32,7 @@ class ClassTokenGroupTest extends TestCase
         $rules = $this->getBaseTestingRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
             {
             }
@@ -93,7 +93,7 @@ class ClassTokenGroupTest extends TestCase
         $rules = $this->getBaseTestingRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
             {
             }
@@ -112,7 +112,7 @@ class ClassTokenGroupTest extends TestCase
         $rules = $this->getBaseTestingRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             abstract class myClass
             {
             }
@@ -131,7 +131,7 @@ class ClassTokenGroupTest extends TestCase
         $rules = $this->getBaseTestingRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             namespace CrazyCodeGen\Tests;
             
             class myClass
@@ -157,7 +157,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->newLinesAfterAllImports = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             use CrazyCodeGen\Tests\Tests1;
             
             
@@ -210,16 +210,16 @@ class ClassTokenGroupTest extends TestCase
         $rules = $this->getBaseTestingRules();
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             use CrazyCodeGen\Tests\Test1;
             use CrazyCodeGen\Tests\Test2;
             
             class myClass
             {
-                public Test1 \$prop1;
-                public int|Test2 \$prop2;
+                public Test1 $prop1;
+                public int|Test2 $prop2;
             
-                public function method1(Test2 \$arg1): Test1
+                public function method1(Test2 $arg1): Test1
                 {
                 }
             }
@@ -240,7 +240,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->newLinesAfterDocBlock = 3;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             /**
              * This is a docblock that should be
              * wrapped and displayed before the class
@@ -268,7 +268,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->extendsOnNextLine = WrappingDecision::NEVER;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass extends CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit
             {
             }
@@ -289,7 +289,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->extendsOnNextLine = WrappingDecision::IF_TOO_LONG;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 extends CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit
             {
@@ -310,7 +310,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->extendsOnNextLine = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 extends CrazyCodeGen\Tests
             {
@@ -335,7 +335,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplementSeparator = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass implements    CrazyCodeGen\Tests
             {
             }
@@ -360,7 +360,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplementSeparator = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass implements    CrazyCodeGen\Tests1,    CrazyCodeGen\Tests2
             {
             }
@@ -386,7 +386,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplementSeparator = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 implements    CrazyCodeGen\Tests1,
                               CrazyCodeGen\Tests2
@@ -410,7 +410,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->implementsOnNextLine = WrappingDecision::NEVER;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass implements CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit
             {
             }
@@ -433,7 +433,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 implements CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit
             {
@@ -457,7 +457,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->implementsOnNextLine = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 implements CrazyCodeGen\Tests
             {
@@ -485,7 +485,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->implementsOnDifferentLines = WrappingDecision::NEVER;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 implements CrazyCodeGen\Tests\Test1, CrazyCodeGen\Tests\Test2, CrazyCodeGen\Tests\Test3, CrazyCodeGen\Tests\Test4
             {
@@ -513,7 +513,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->implementsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 implements CrazyCodeGen\Tests\Test1,
                            CrazyCodeGen\Tests\Test2,
@@ -541,7 +541,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->implementsOnDifferentLines = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 implements CrazyCodeGen\Tests\Test1,
                            CrazyCodeGen\Tests\Test2
@@ -567,7 +567,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->implementsOnDifferentLines = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass implements CrazyCodeGen\Tests\Test1, CrazyCodeGen\Tests\Test2
             {
             }
@@ -593,7 +593,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->implementsOnDifferentLines = WrappingDecision::ALWAYS;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 extends CrazyCodeGen\Tests\Test1
                 implements CrazyCodeGen\Tests\Test2,
@@ -617,7 +617,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass    {}
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -636,7 +636,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass    {
             }
             EOS,
@@ -656,7 +656,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
             {}
             EOS,
@@ -676,7 +676,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
             {
             }
@@ -701,7 +701,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 extends CrazyCodeGen\Tests\Test1    {
             }
@@ -729,7 +729,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->spacesBeforeOpeningBrace = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
                 implements CrazyCodeGen\Tests\Test1,
                            CrazyCodeGen\Tests\Test2    {
@@ -754,16 +754,16 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->newLinesAfterEachProperty = 3;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
             {
-                public \$prop1;
+                public $prop1;
             
             
-                public \$prop2;
+                public $prop2;
             
             
-                public \$prop3;
+                public $prop3;
             }
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -785,7 +785,7 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->newLinesAfterEachMethod = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
             {
                 public function method1()
@@ -825,10 +825,10 @@ class ClassTokenGroupTest extends TestCase
         $rules->classes->newLinesAfterProperties = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             class myClass
             {
-                public \$prop1;
+                public $prop1;
             
             
             

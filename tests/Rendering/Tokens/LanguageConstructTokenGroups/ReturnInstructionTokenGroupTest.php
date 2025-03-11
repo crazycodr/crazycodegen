@@ -18,8 +18,8 @@ class ReturnInstructionTokenGroupTest extends TestCase
         $token = new ReturnInstructionTokenGroup(new VariableTokenGroup('foo'));
 
         $this->assertEquals(
-            <<<EOS
-            return \$foo;
+            <<<'EOS'
+            return $foo;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
         );

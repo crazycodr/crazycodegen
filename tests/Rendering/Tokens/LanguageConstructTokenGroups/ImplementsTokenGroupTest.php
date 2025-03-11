@@ -46,8 +46,8 @@ class ImplementsTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplementSeparator = 1;
 
         $this->assertEquals(
-            <<<EOS
-            implements \\JsonSerializable, \\ArrayAccess
+            <<<'EOS'
+            implements \JsonSerializable, \ArrayAccess
             EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
@@ -66,8 +66,8 @@ class ImplementsTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplementSeparator = 1;
 
         $this->assertEquals(
-            <<<EOS
-            implements  \\JsonSerializable, \\ArrayAccess
+            <<<'EOS'
+            implements  \JsonSerializable, \ArrayAccess
             EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
@@ -86,8 +86,8 @@ class ImplementsTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplementSeparator = 2;
 
         $this->assertEquals(
-            <<<EOS
-            implements \\JsonSerializable,  \\ArrayAccess
+            <<<'EOS'
+            implements \JsonSerializable,  \ArrayAccess
             EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );
@@ -106,9 +106,9 @@ class ImplementsTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplementSeparator = 2;
 
         $this->assertEquals(
-            <<<EOS
-            implements \\JsonSerializable,
-                       \\ArrayAccess
+            <<<'EOS'
+            implements \JsonSerializable,
+                       \ArrayAccess
             EOS,
             $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), $rules))
         );
@@ -127,9 +127,9 @@ class ImplementsTokenGroupTest extends TestCase
         $rules->classes->spacesAfterImplementSeparator = 1;
 
         $this->assertEquals(
-            <<<EOS
-            implements    \\JsonSerializable,
-                          \\ArrayAccess
+            <<<'EOS'
+            implements    \JsonSerializable,
+                          \ArrayAccess
             EOS,
             $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), $rules))
         );

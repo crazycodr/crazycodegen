@@ -4,6 +4,8 @@ namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
+use CrazyCodeGen\Rendering\Renderers\RendersChopDownVersion;
+use CrazyCodeGen\Rendering\Renderers\RendersInlineVersion;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
@@ -14,7 +16,7 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ArgumentListTokenGroup extends TokenGroup
+class ArgumentListTokenGroup extends TokenGroup implements RendersInlineVersion, RendersChopdownVersion
 {
     use FlattenFunction;
     use TokenFunctions;

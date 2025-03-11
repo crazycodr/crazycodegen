@@ -23,7 +23,7 @@ class InstructionTokenGroupTest extends TestCase
         );
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             1;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -37,7 +37,7 @@ class InstructionTokenGroupTest extends TestCase
         );
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             int;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -51,7 +51,7 @@ class InstructionTokenGroupTest extends TestCase
         );
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             1,2;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
@@ -65,7 +65,7 @@ class InstructionTokenGroupTest extends TestCase
         );
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             1 string;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))

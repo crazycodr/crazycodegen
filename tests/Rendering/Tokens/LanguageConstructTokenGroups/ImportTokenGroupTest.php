@@ -20,7 +20,7 @@ class ImportTokenGroupTest extends TestCase
         $rules->imports->spacesAfterUse = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             use    CrazyCodeGen\Tests;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))
@@ -36,7 +36,7 @@ class ImportTokenGroupTest extends TestCase
         $rules->imports->spacesAfterAs = 4;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             use CrazyCodeGen\Tests    as    tests;
             EOS,
             $this->renderTokensToString($token->render(new RenderContext(), $rules))

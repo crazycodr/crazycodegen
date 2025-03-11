@@ -75,11 +75,11 @@ class ArgumentListTokenGroupTest extends TestCase
         $rules->argumentLists->addSeparatorToLastItem = false;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             (
-                \$foo,
-                \$bar,
-                \$baz
+                $foo,
+                $bar,
+                $baz
             )
             EOS,
             $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), $rules))
@@ -103,11 +103,11 @@ class ArgumentListTokenGroupTest extends TestCase
         $rules->argumentLists->addSeparatorToLastItem = true;
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             (
-                \$foo,
-                \$bar,
-                \$baz,
+                $foo,
+                $bar,
+                $baz,
             )
             EOS,
             $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), $rules))
@@ -136,11 +136,11 @@ class ArgumentListTokenGroupTest extends TestCase
         $context->chopDown->paddingSpacesForIdentifiers = strlen('$longerVarName');
 
         $this->assertEquals(
-            <<<EOS
+            <<<'EOS'
             (
-                string            \$foo           = 'Hello world',
-                string|bool|float \$bar,
-                                  \$longerVarName = 1,
+                string            $foo           = 'Hello world',
+                string|bool|float $bar,
+                                  $longerVarName = 1,
             )
             EOS,
             $this->renderTokensToString($token->renderChopDownScenario($context, $rules))
