@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
@@ -21,19 +21,19 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class MethodTokenGroup extends TokenGroup
+class MethodDefinition extends TokenGroup
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
         public string                                               $name,
-        public null|string|array|DocBlockTokenGroup                 $docBlock = null,
+        public null|string|array|DocBlockDefinition                 $docBlock = null,
         public bool                                                 $abstract = false,
         public VisibilityEnum                                       $visibility = VisibilityEnum::PUBLIC,
         public bool                                                 $static = false,
-        public null|ParameterListTokenGroup                         $parameters = null,
-        public null|string|SingleTypeTokenGroup|MultiTypeTokenGroup $returnType = null,
+        public null|ParameterListDefinition                         $parameters = null,
+        public null|string|SingleTypeDefinition|MultiTypeDefinition $returnType = null,
         /** @var Token|TokenGroup|Token[]|TokenGroup[] $instructions */
         public array|Token|TokenGroup                               $instructions = [],
     )
@@ -43,16 +43,16 @@ class MethodTokenGroup extends TokenGroup
     }
 
     /**
-     * @param string|string[]|DocBlockTokenGroup $docBlock
+     * @param string|string[]|DocBlockDefinition $docBlock
      * @return $this
      */
-    public function setDocBlock(null|string|array|DocBlockTokenGroup $docBlock): self
+    public function setDocBlock(null|string|array|DocBlockDefinition $docBlock): self
     {
         if (is_string($docBlock)) {
-            $docBlock = new DocBlockTokenGroup([$docBlock]);
+            $docBlock = new DocBlockDefinition([$docBlock]);
         } elseif (is_array($docBlock)) {
             $docBlock = array_filter($docBlock, fn($value) => is_string($value));
-            $docBlock = new DocBlockTokenGroup($docBlock);
+            $docBlock = new DocBlockDefinition($docBlock);
         }
         $this->docBlock = $docBlock;
         return $this;
@@ -76,13 +76,13 @@ class MethodTokenGroup extends TokenGroup
         return $this;
     }
 
-    public function addParameter(string|ParameterTokenGroup $parameter): self
+    public function addParameter(string|ParameterDefinition $parameter): self
     {
         if ($this->parameters === null) {
-            $this->parameters = new ParameterListTokenGroup();
+            $this->parameters = new ParameterListDefinition();
         }
         if (is_string($parameter)) {
-            $parameter = new ParameterTokenGroup($parameter);
+            $parameter = new ParameterDefinition($parameter);
         }
         $this->parameters->parameters[] = $parameter;
         return $this;
@@ -90,16 +90,16 @@ class MethodTokenGroup extends TokenGroup
 
     public function addParameterExploded(
         string                                               $name,
-        null|string|SingleTypeTokenGroup|MultiTypeTokenGroup $type,
+        null|string|SingleTypeDefinition|MultiTypeDefinition $type,
         null|int|float|string|bool|Token                     $defaultValue = null,
         bool                                                 $defaultValueIsNull = false,
         bool                                                 $isVariadic = false,
     ): self
     {
         if ($this->parameters === null) {
-            $this->parameters = new ParameterListTokenGroup();
+            $this->parameters = new ParameterListDefinition();
         }
-        $this->parameters->parameters[] = new ParameterTokenGroup(
+        $this->parameters->parameters[] = new ParameterDefinition(
             $name,
             $type,
             $defaultValue,
@@ -109,10 +109,10 @@ class MethodTokenGroup extends TokenGroup
         return $this;
     }
 
-    public function setReturnType(null|string|SingleTypeTokenGroup|MultiTypeTokenGroup $type): self
+    public function setReturnType(null|string|SingleTypeDefinition|MultiTypeDefinition $type): self
     {
         if (is_string($type)) {
-            $type = new SingleTypeTokenGroup($type);
+            $type = new SingleTypeDefinition($type);
         }
         $this->returnType = $type;
         return $this;
@@ -163,7 +163,7 @@ class MethodTokenGroup extends TokenGroup
         if ($this->parameters) {
             $tokens[] = $this->parameters->render($context, $rules);
         } else {
-            $tokens[] = (new ParameterListTokenGroup())->render($context, $rules);
+            $tokens[] = (new ParameterListDefinition())->render($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
         $tokens = $this->addInlineBraceTokensAndInstructions($context, $rules, $tokens);
@@ -211,7 +211,7 @@ class MethodTokenGroup extends TokenGroup
                 $tokens[] = new SpacesToken($rules->methods->spacesAfterReturnColon);
             }
             if (is_string($this->returnType)) {
-                $tokens[] = (new SingleTypeTokenGroup($this->returnType))->render($context, $rules);
+                $tokens[] = (new SingleTypeDefinition($this->returnType))->render($context, $rules);
             } else {
                 $tokens[] = $this->returnType->render($context, $rules);
             }
@@ -310,7 +310,7 @@ class MethodTokenGroup extends TokenGroup
         if ($this->parameters) {
             $tokens[] = $this->parameters->renderChopDownScenario($context, $rules);
         } else {
-            $tokens[] = (new ParameterListTokenGroup())->renderChopDownScenario($context, $rules);
+            $tokens[] = (new ParameterListDefinition())->renderChopDownScenario($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
         $tokens = $this->addChopDownBraceTokensAndInstructions($context, $rules, $tokens);

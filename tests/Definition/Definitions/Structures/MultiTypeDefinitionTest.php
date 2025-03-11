@@ -1,23 +1,23 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class MultiTypeTokenGroupTest extends TestCase
+class MultiTypeDefinitionTest extends TestCase
 {
     use TokenFunctions;
 
     public function testTypesAreJoinedWithPipeWhenUnionIsTrueByDefault()
     {
-        $token = new MultiTypeTokenGroup([
-            new SingleTypeTokenGroup('string'),
-            new SingleTypeTokenGroup('int'),
+        $token = new MultiTypeDefinition([
+            new SingleTypeDefinition('string'),
+            new SingleTypeDefinition('int'),
         ]);
 
         $this->assertEquals(
@@ -30,10 +30,10 @@ class MultiTypeTokenGroupTest extends TestCase
 
     public function testTypesAreJoinedWithAmpersandWhenUnionIsFalse()
     {
-        $token = new MultiTypeTokenGroup(
+        $token = new MultiTypeDefinition(
             [
-                new SingleTypeTokenGroup('string'),
-                new SingleTypeTokenGroup('int'),
+                new SingleTypeDefinition('string'),
+                new SingleTypeDefinition('int'),
             ],
             unionTypes: false
         );
@@ -48,7 +48,7 @@ class MultiTypeTokenGroupTest extends TestCase
 
     public function testStringTypesAreConvertedToSingleTypeTokenGroupsAndRendered()
     {
-        $token = new MultiTypeTokenGroup(['string', 'int']);
+        $token = new MultiTypeDefinition(['string', 'int']);
 
         $this->assertEquals(
             <<<'EOS'
@@ -60,7 +60,7 @@ class MultiTypeTokenGroupTest extends TestCase
 
     public function testParenthesesAreAddedAroundTokensWhenNestedIsTurnedOn()
     {
-        $token = new MultiTypeTokenGroup(['string', 'int'], nestedTypes: true);
+        $token = new MultiTypeDefinition(['string', 'int'], nestedTypes: true);
 
         $this->assertEquals(
             <<<'EOS'
@@ -72,10 +72,10 @@ class MultiTypeTokenGroupTest extends TestCase
 
     public function testIfInnerTypeIsMultiTypeItGetsRenderedAtTheCorrectPlaceAndAllParenthesesAreRendered()
     {
-        $token = new MultiTypeTokenGroup(
+        $token = new MultiTypeDefinition(
             [
-                new MultiTypeTokenGroup(['int', 'float'], nestedTypes: true),
-                new MultiTypeTokenGroup(['string', 'bool'], nestedTypes: true),
+                new MultiTypeDefinition(['int', 'float'], nestedTypes: true),
+                new MultiTypeDefinition(['string', 'bool'], nestedTypes: true),
             ],
             unionTypes: false,
             nestedTypes: true,

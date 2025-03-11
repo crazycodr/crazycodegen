@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -13,13 +13,13 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ImportTokenGroup extends TokenGroup
+class ImportDefinition extends TokenGroup
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        public string|SingleTypeTokenGroup $type,
+        public string|SingleTypeDefinition $type,
         public null|string                 $alias = null,
     ) {
     }
@@ -35,7 +35,7 @@ class ImportTokenGroup extends TokenGroup
         $tokens[] = new UseToken();
         $tokens[] = new SpacesToken($rules->imports->spacesAfterUse);
         if (is_string($this->type)) {
-            $tokens[] = (new SingleTypeTokenGroup($this->type))->render($context, $rules);
+            $tokens[] = (new SingleTypeDefinition($this->type))->render($context, $rules);
         } else {
             $tokens[] = $this->type->render($context, $rules);
         }

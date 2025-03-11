@@ -3,6 +3,11 @@
 namespace CrazyCodeGen\Tests\Rendering\Tokens;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
+use CrazyCodeGen\Definition\Definitions\Structures\ClassDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\MethodDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
@@ -11,17 +16,12 @@ use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArrayTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\AssignInstructionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ChainTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassReferenceTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ConditionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionCallTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\InstructionTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NewInstanceTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParentRefTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ReturnInstructionTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\StringTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ThisRefTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
@@ -35,32 +35,32 @@ class ClassScenarioTest extends TestCase
 
     public function testAbilityToGenerateTestBuilderClassFromPreviousInternalFramework()
     {
-        $baseMockBuilderType = new SingleTypeTokenGroup('Internal\TestFramework\MockingFramework\Builders\BaseMockBuilder');
-        $mockObjectType = new SingleTypeTokenGroup('PHPUnit\Framework\MockObject\MockObject');
-        $hookBasketAdapterType = new SingleTypeTokenGroup('internal\Baskets\Adapters\HookBasketAdapter');
-        $mockedHookBasketAdapterType = new MultiTypeTokenGroup(
+        $baseMockBuilderType = new SingleTypeDefinition('Internal\TestFramework\MockingFramework\Builders\BaseMockBuilder');
+        $mockObjectType = new SingleTypeDefinition('PHPUnit\Framework\MockObject\MockObject');
+        $hookBasketAdapterType = new SingleTypeDefinition('internal\Baskets\Adapters\HookBasketAdapter');
+        $mockedHookBasketAdapterType = new MultiTypeDefinition(
             types: [$hookBasketAdapterType, $mockObjectType],
             unionTypes: false,
         );
 
-        $constructor = (new MethodTokenGroup(name: '__construct'))
+        $constructor = (new MethodDefinition(name: '__construct'))
             ->addParameterExploded('mock', $mockedHookBasketAdapterType)
             ->addInstruction(new AssignInstructionTokenGroup(
                 subject: new ChainTokenGroup(chain: [new ThisRefTokenGroup(), 'mock']),
                 value: new VariableTokenGroup('mock'),
             ));
-        $getMockedClassesMethod = (new MethodTokenGroup('getMockedClasses'))
+        $getMockedClassesMethod = (new MethodDefinition('getMockedClasses'))
             ->setReturnType('array')
             ->setStatic(true)
             ->addInstruction(new ReturnInstructionTokenGroup(
                 new ArrayTokenGroup([new ClassReferenceTokenGroup('HookBasketAdapter')])
             ));
-        $getServiceMethod = (new MethodTokenGroup('getService'))
+        $getServiceMethod = (new MethodDefinition('getService'))
             ->setReturnType($mockedHookBasketAdapterType)
             ->addInstruction(new ReturnInstructionTokenGroup(
                 new ChainTokenGroup(chain: [new ThisRefTokenGroup(), 'mock'])
             ));
-        $classDef = (new ClassTokenGroup(name: 'HookBasketAdapterBuilder'))
+        $classDef = (new ClassDefinition(name: 'HookBasketAdapterBuilder'))
             ->setNamespace('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Baskets\Adapters')
             ->addImport($mockObjectType)
             ->addImport($baseMockBuilderType)
@@ -119,14 +119,14 @@ class ClassScenarioTest extends TestCase
 
     public function testAbilityToGenerateTestHelperFromPreviousInternalFramework()
     {
-        $testCaseType = new SingleTypeTokenGroup('PHPUnit\Framework\TestCase');
-        $serviceBuilderType = new SingleTypeTokenGroup('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Auditing\Services\AuditingTrackingServiceManagerBuilder');
-        $configApiSpyBuilderType = new SingleTypeTokenGroup('Internal\TestFramework\MockingFramework\MockHelpers\ConfigApiClient\ConfigApiClientSpyBuilder');
-        $configApiClientType = new SingleTypeTokenGroup('ConfigApi\ConfigApiClient');
-        $trackingServiceManagerType = new SingleTypeTokenGroup('internal\Auditing\Services\AuditingTrackingServiceManager');
-        $configApiManagerType = new SingleTypeTokenGroup('internal\managers\ConfigApiManager');
+        $testCaseType = new SingleTypeDefinition('PHPUnit\Framework\TestCase');
+        $serviceBuilderType = new SingleTypeDefinition('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Auditing\Services\AuditingTrackingServiceManagerBuilder');
+        $configApiSpyBuilderType = new SingleTypeDefinition('Internal\TestFramework\MockingFramework\MockHelpers\ConfigApiClient\ConfigApiClientSpyBuilder');
+        $configApiClientType = new SingleTypeDefinition('ConfigApi\ConfigApiClient');
+        $trackingServiceManagerType = new SingleTypeDefinition('internal\Auditing\Services\AuditingTrackingServiceManager');
+        $configApiManagerType = new SingleTypeDefinition('internal\managers\ConfigApiManager');
 
-        $setUpMethod = (new MethodTokenGroup('setUp'))
+        $setUpMethod = (new MethodDefinition('setUp'))
             ->setReturnType('void')
             ->addInstruction(new InstructionTokenGroup([
                 new ChainTokenGroup([
@@ -166,12 +166,12 @@ class ClassScenarioTest extends TestCase
                     ],
                 ),
             ));
-        $tearDownMethod = (new MethodTokenGroup('tearDown'))
+        $tearDownMethod = (new MethodDefinition('tearDown'))
             ->setReturnType('void')
             ->addInstruction(new InstructionTokenGroup([
                 new ChainTokenGroup([
                     new ThisRefTokenGroup(),
-                    new PropertyTokenGroup(name: 'configApiClientSpyBuilder'),
+                    new PropertyDefinition(name: 'configApiClientSpyBuilder'),
                     new FunctionCallTokenGroup(name: 'getService'),
                     new FunctionCallTokenGroup(
                         name: 'validateMandateExpectations',
@@ -188,7 +188,7 @@ class ClassScenarioTest extends TestCase
                     arguments: [
                         new ChainTokenGroup([
                             new ThisRefTokenGroup(),
-                            new PropertyTokenGroup('configApiClientBackup'),
+                            new PropertyDefinition('configApiClientBackup'),
                         ]),
                     ],
                 ),
@@ -197,9 +197,9 @@ class ClassScenarioTest extends TestCase
                 new ParentRefTokenGroup(),
                 new FunctionCallTokenGroup('tearDown'),
             ])));
-        $getConfigApiSpyBuilderMethod = (new MethodTokenGroup('getConfigApiClientSpyBuilder'))
+        $getConfigApiSpyBuilderMethod = (new MethodDefinition('getConfigApiClientSpyBuilder'))
             ->setVisibility(VisibilityEnum::PROTECTED)
-            ->addParameterExploded('scenarioBuildingCallable', new MultiTypeTokenGroup(types: ['null', 'callable']), defaultValueIsNull: true)
+            ->addParameterExploded('scenarioBuildingCallable', new MultiTypeDefinition(types: ['null', 'callable']), defaultValueIsNull: true)
             ->setReturnType($configApiSpyBuilderType)
             ->addInstruction(new ConditionTokenGroup(
                 condition: new Token('!isset($this->configApiClientSpyBuilder)'),
@@ -226,7 +226,7 @@ class ClassScenarioTest extends TestCase
                     arguments: [
                         new ChainTokenGroup(chain: [
                             new ThisRefTokenGroup(),
-                            new PropertyTokenGroup(name: 'configApiClientSpyBuilder'),
+                            new PropertyDefinition(name: 'configApiClientSpyBuilder'),
                         ]),
                     ],
                 ),
@@ -235,7 +235,7 @@ class ClassScenarioTest extends TestCase
             ->addInstruction(new ReturnInstructionTokenGroup(instructions: [
                 new ChainTokenGroup(chain: [new ThisRefTokenGroup(), 'configApiClientSpyBuilder'])
             ]));
-        $getAuditingTrackingServiceManagerBuilderMethod = (new MethodTokenGroup('getAuditingTrackingServiceManagerBuilder'))
+        $getAuditingTrackingServiceManagerBuilderMethod = (new MethodDefinition('getAuditingTrackingServiceManagerBuilder'))
             ->setReturnType($serviceBuilderType)
             ->addInstruction(new Token('/** @noinspection PhpUnhandledExceptionInspection */'))
             ->addInstruction(new ReturnInstructionTokenGroup(instructions: [
@@ -249,17 +249,17 @@ class ClassScenarioTest extends TestCase
                     ]
                 ),
             ]));
-        $configApiClientSpyBuilderProperty = new PropertyTokenGroup(
+        $configApiClientSpyBuilderProperty = new PropertyDefinition(
             name: 'configApiClientSpyBuilder',
             type: $configApiSpyBuilderType,
             visibility: VisibilityEnum::PROTECTED,
         );
-        $configApiClientBackupProperty = new PropertyTokenGroup(
+        $configApiClientBackupProperty = new PropertyDefinition(
             name: 'configApiClientBackup',
             type: $configApiClientType,
             visibility: VisibilityEnum::PROTECTED,
         );
-        $classDef = (new ClassTokenGroup('FinalizeTrackingOnRequestEndSubscriberTestHelpers'))
+        $classDef = (new ClassDefinition('FinalizeTrackingOnRequestEndSubscriberTestHelpers'))
             ->setNamespace('Internal\Tests\Auditing\Subscribers\TestHelpers')
             ->addImport($testCaseType)
             ->addImport($serviceBuilderType)
@@ -353,10 +353,10 @@ class ClassScenarioTest extends TestCase
 
     public function testAbilityToGenerateModelHelperFromPreviousInternalFramework()
     {
-        $baseModelBuilderType = new SingleTypeTokenGroup('Internal\TestFramework\MockingFramework\Builders\BaseModelBuilder');
-        $taxExemptionCategoryModelType = new SingleTypeTokenGroup('internal\Baskets\Models\TaxExemptionCategoryModel');
+        $baseModelBuilderType = new SingleTypeDefinition('Internal\TestFramework\MockingFramework\Builders\BaseModelBuilder');
+        $taxExemptionCategoryModelType = new SingleTypeDefinition('internal\Baskets\Models\TaxExemptionCategoryModel');
 
-        $createModelMethod = (new MethodTokenGroup('createModel'))
+        $createModelMethod = (new MethodDefinition('createModel'))
             ->setVisibility(VisibilityEnum::PROTECTED)
             ->setReturnType($taxExemptionCategoryModelType)
             ->addInstruction(new ReturnInstructionTokenGroup([
@@ -368,7 +368,7 @@ class ClassScenarioTest extends TestCase
                     ]),
                 ),
             ]));
-        $hstExemptionMethod = (new MethodTokenGroup('hstExemption'))
+        $hstExemptionMethod = (new MethodDefinition('hstExemption'))
             ->setReturnType('static')
             ->addInstruction(new AssignInstructionTokenGroup(
                 subject: new ChainTokenGroup([
@@ -387,12 +387,12 @@ class ClassScenarioTest extends TestCase
                 value: new StringTokenGroup('HST'),
             ))
             ->addInstruction(new ReturnInstructionTokenGroup(new ThisRefTokenGroup()));
-        $getMethod = (new MethodTokenGroup('get'))
+        $getMethod = (new MethodDefinition('get'))
             ->setReturnType($taxExemptionCategoryModelType)
             ->addInstruction(new ReturnInstructionTokenGroup([
                 new ChainTokenGroup([new ThisRefTokenGroup(), 'model'])
             ]));
-        $classDef = (new ClassTokenGroup('TaxExemptionCategoryModelBuilder'))
+        $classDef = (new ClassDefinition('TaxExemptionCategoryModelBuilder'))
             ->setNamespace('Internal\TestFramework\MockingFramework\Builders\ModelBuilders\InternalApi\Baskets\Models')
             ->addImport($baseModelBuilderType)
             ->addImport($taxExemptionCategoryModelType)

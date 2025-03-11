@@ -2,10 +2,10 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
+use CrazyCodeGen\Definition\Definitions\Structures\MethodDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArrayTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionCallTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -47,7 +47,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testInlineFunctionConvertedToTokenWhenMethodTokenGroupPassedIn()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
         );
 
         $this->assertEquals(
@@ -61,7 +61,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testInlineRendersStringArgumentAsSingleToken()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: 1,
         );
 
@@ -76,7 +76,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testInlineRendersTokenArgumentAsSingleToken()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: new Token(1),
         );
 
@@ -91,7 +91,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testInlineRendersTokenGroupArgumentAsExpected()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: new VariableTokenGroup('bar'),
         );
 
@@ -106,7 +106,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testInlineRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: [new Token(1), new Token(2), new Token(3)],
         );
 
@@ -121,7 +121,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: [new VariableTokenGroup('bar'), new VariableTokenGroup('baz')],
         );
 
@@ -136,7 +136,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: [new ArrayTokenGroup([1, 2, 3]), new VariableTokenGroup('baz')],
         );
 
@@ -179,7 +179,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testChopDownFunctionConvertedToTokenWhenMethodTokenGroupPassedIn()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
         );
 
         $this->assertEquals(
@@ -193,7 +193,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testChopDownRendersStringArgumentAsSingleToken()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: 1,
         );
 
@@ -210,7 +210,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testChopDownRendersTokenArgumentAsSingleToken()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: new Token(1),
         );
 
@@ -227,7 +227,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testChopDownRendersTokenGroupArgumentAsExpected()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: new VariableTokenGroup('bar'),
         );
 
@@ -244,7 +244,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testChopDownRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: [new Token(1), new Token(2), new Token(3)],
         );
 
@@ -263,7 +263,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: [new VariableTokenGroup('bar'), new VariableTokenGroup('baz')],
         );
 
@@ -281,7 +281,7 @@ class FunctionCallTokenGroupTest extends TestCase
     public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheChopDownVersions()
     {
         $token = new FunctionCallTokenGroup(
-            name: new MethodTokenGroup(name: 'setUp'),
+            name: new MethodDefinition(name: 'setUp'),
             arguments: [new ArrayTokenGroup([1, 2, 3]), new VariableTokenGroup('baz')],
         );
 

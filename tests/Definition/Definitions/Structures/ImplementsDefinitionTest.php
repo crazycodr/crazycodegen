@@ -1,23 +1,23 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Definition\Definitions\Structures\ImplementsDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\ClassRules;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImplementsTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ImplementsTokenGroupTest extends TestCase
+class ImplementsDefinitionTest extends TestCase
 {
     use TokenFunctions;
 
     public function testInlineScenarioRendersImplementsKeyword()
     {
-        $token = new ImplementsTokenGroup(
+        $token = new ImplementsDefinition(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -35,8 +35,8 @@ class ImplementsTokenGroupTest extends TestCase
 
     public function testInlineScenarioRendersEachImplementationUsingSingleTypeTokenGroupOrOriginal()
     {
-        $token = new ImplementsTokenGroup(
-            implementations: ['\\JsonSerializable', new SingleTypeTokenGroup('\\ArrayAccess')],
+        $token = new ImplementsDefinition(
+            implementations: ['\\JsonSerializable', new SingleTypeDefinition('\\ArrayAccess')],
         );
 
         $rules = new RenderingRules();
@@ -55,7 +55,7 @@ class ImplementsTokenGroupTest extends TestCase
 
     public function testInlineScenarioAddsConfiguredSpacesBetweenImplementsAndFirstItem()
     {
-        $token = new ImplementsTokenGroup(
+        $token = new ImplementsDefinition(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -75,7 +75,7 @@ class ImplementsTokenGroupTest extends TestCase
 
     public function testInlineScenarioAddsConfiguredSpacesAfterEachImplementsExceptLastOne()
     {
-        $token = new ImplementsTokenGroup(
+        $token = new ImplementsDefinition(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -95,7 +95,7 @@ class ImplementsTokenGroupTest extends TestCase
 
     public function testChopDownScenarioRendersImplementsKeywordAndFirstItemOnSameLine()
     {
-        $token = new ImplementsTokenGroup(
+        $token = new ImplementsDefinition(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -116,7 +116,7 @@ class ImplementsTokenGroupTest extends TestCase
 
     public function testChopDownScenarioRendersConfiguredSpacesAfterImplementsAddPadsAccordingly()
     {
-        $token = new ImplementsTokenGroup(
+        $token = new ImplementsDefinition(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 

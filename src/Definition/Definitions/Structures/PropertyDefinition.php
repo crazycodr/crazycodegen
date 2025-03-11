@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
@@ -13,23 +13,25 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\StaticToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\StringTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class PropertyTokenGroup extends TokenGroup
+class PropertyDefinition extends TokenGroup
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        public string|Token                       $name,
-        public null|string|DocBlockTokenGroup     $docBlock = null,
-        public null|string|AbstractTypeTokenGroup $type = null,
-        public VisibilityEnum                     $visibility = VisibilityEnum::PUBLIC,
-        public bool                               $static = false,
-        public null|int|float|string|bool|Token   $defaultValue = null,
-        public bool                               $defaultValueIsNull = false,
+        public string|Token                                         $name,
+        public null|string|DocBlockDefinition                       $docBlock = null,
+        public null|string|SingleTypeDefinition|MultiTypeDefinition $type = null,
+        public VisibilityEnum                                       $visibility = VisibilityEnum::PUBLIC,
+        public bool                                                 $static = false,
+        public null|int|float|string|bool|Token                     $defaultValue = null,
+        public bool                                                 $defaultValueIsNull = false,
     ) {
     }
 
@@ -117,7 +119,7 @@ class PropertyTokenGroup extends TokenGroup
     {
         $tokens = [];
         if (is_string($this->type)) {
-            $tokens[] = $tokensToPad = (new SingleTypeTokenGroup(type: $this->type))->render($context, $rules);
+            $tokens[] = $tokensToPad = (new SingleTypeDefinition(type: $this->type))->render($context, $rules);
             $tokens[] = new SpacesToken($this->calculatePaddingOrGetRuleSpaces(
                 $tokensToPad,
                 $context->chopDown?->paddingSpacesForTypes,

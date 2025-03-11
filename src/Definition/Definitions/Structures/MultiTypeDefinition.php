@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -11,21 +11,22 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\PipeToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
+use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 
-class MultiTypeTokenGroup extends AbstractTypeTokenGroup
+class MultiTypeDefinition extends TokenGroup
 {
     use FlattenFunction;
 
     public function __construct(
-        /** @var string[]|AbstractTypeTokenGroup[] $types */
+        /** @var string[]|SingleTypeDefinition[]|MultiTypeDefinition[] $types */
         public array $types,
         public bool  $unionTypes = true,
         public bool  $nestedTypes = false,
     ) {
         foreach ($this->types as $typeIndex => $type) {
             if (is_string($type)) {
-                $this->types[$typeIndex] = new SingleTypeTokenGroup($type);
-            } elseif (!$type instanceof SingleTypeTokenGroup && !$type instanceof MultiTypeTokenGroup) {
+                $this->types[$typeIndex] = new SingleTypeDefinition($type);
+            } elseif (!$type instanceof SingleTypeDefinition && !$type instanceof MultiTypeDefinition) {
                 unset($this->types[$typeIndex]);
             }
         }
@@ -52,7 +53,7 @@ class MultiTypeTokenGroup extends AbstractTypeTokenGroup
                 }
             }
             if (is_string($type)) {
-                $tokens[] = (new SingleTypeTokenGroup($type))->render($context, $rules);
+                $tokens[] = (new SingleTypeDefinition($type))->render($context, $rules);
             } else {
                 $tokens[] = $type->render($context, $rules);
             }
@@ -66,15 +67,15 @@ class MultiTypeTokenGroup extends AbstractTypeTokenGroup
     }
 
     /**
-     * @return SingleTypeTokenGroup[]
+     * @return SingleTypeDefinition[]
      */
     public function getAllTypes(): array
     {
         $types = [];
         foreach ($this->types as $type) {
-            if ($type instanceof SingleTypeTokenGroup) {
+            if ($type instanceof SingleTypeDefinition) {
                 $types[] = $type;
-            } elseif ($type instanceof MultiTypeTokenGroup) {
+            } elseif ($type instanceof MultiTypeDefinition) {
                 $types = array_merge($types, $type->getAllTypes());
             }
         }

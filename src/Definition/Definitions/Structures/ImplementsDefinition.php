@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -14,13 +14,13 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ImplementsTokenGroup extends TokenGroup
+class ImplementsDefinition extends TokenGroup
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        /** @var string[]|SingleTypeTokenGroup[] $implementations */
+        /** @var string[]|SingleTypeDefinition[] $implementations */
         public array $implementations,
     ) {
     }
@@ -61,8 +61,8 @@ class ImplementsTokenGroup extends TokenGroup
         $implementsLeft = count($this->implementations);
         foreach ($this->implementations as $implement) {
             $implementsLeft--;
-            if (!$implement instanceof SingleTypeTokenGroup) {
-                $tokens[] = (new SingleTypeTokenGroup($implement))->render($context, $rules);
+            if (!$implement instanceof SingleTypeDefinition) {
+                $tokens[] = (new SingleTypeDefinition($implement))->render($context, $rules);
             } else {
                 $tokens[] = $implement->render($context, $rules);
             }
@@ -96,8 +96,8 @@ class ImplementsTokenGroup extends TokenGroup
                 $tokens[] = new SpacesToken($paddingSpaces);
             }
             $implementsLeft--;
-            if (!$implement instanceof SingleTypeTokenGroup) {
-                $tokens[] = (new SingleTypeTokenGroup($implement))->render($context, $rules);
+            if (!$implement instanceof SingleTypeDefinition) {
+                $tokens[] = (new SingleTypeDefinition($implement))->render($context, $rules);
             } else {
                 $tokens[] = $implement->render($context, $rules);
             }

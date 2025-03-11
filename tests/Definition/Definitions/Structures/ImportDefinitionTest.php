@@ -1,20 +1,20 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Definition\Definitions\Structures\ImportDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImportTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ImportTokenGroupTest extends TestCase
+class ImportDefinitionTest extends TestCase
 {
     use TokenFunctions;
 
     public function testImportRendersUseTypeAndSemiColonWithConfiguredSpaces()
     {
-        $token = new ImportTokenGroup('CrazyCodeGen\\Tests');
+        $token = new ImportDefinition('CrazyCodeGen\\Tests');
 
         $rules = new RenderingRules();
         $rules->imports->spacesAfterUse = 4;
@@ -29,7 +29,7 @@ class ImportTokenGroupTest extends TestCase
 
     public function testAliasIsAddedWithProperSpacing()
     {
-        $token = new ImportTokenGroup('CrazyCodeGen\\Tests', 'tests');
+        $token = new ImportDefinition('CrazyCodeGen\\Tests', 'tests');
 
         $rules = new RenderingRules();
         $rules->imports->spacesAfterType = 4;

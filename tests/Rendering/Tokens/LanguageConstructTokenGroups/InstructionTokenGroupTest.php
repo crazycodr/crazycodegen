@@ -2,12 +2,12 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\InstructionTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +33,7 @@ class InstructionTokenGroupTest extends TestCase
     public function testTokenGroupIsRenderedWithTrailingSemiColon()
     {
         $token = new InstructionTokenGroup(
-            new SingleTypeTokenGroup('int'),
+            new SingleTypeDefinition('int'),
         );
 
         $this->assertEquals(
@@ -61,7 +61,7 @@ class InstructionTokenGroupTest extends TestCase
     public function testMixOfTokensAndTokenGroupsIsRenderedWithTrailingSemiColon()
     {
         $token = new InstructionTokenGroup(
-            [new Token(1), new SpacesToken(), new SingleTypeTokenGroup('string')],
+            [new Token(1), new SpacesToken(), new SingleTypeDefinition('string')],
         );
 
         $this->assertEquals(

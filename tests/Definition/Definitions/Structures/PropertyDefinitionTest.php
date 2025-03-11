@@ -1,24 +1,24 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
+use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class PropertyTokenGroupTest extends TestCase
+class PropertyDefinitionTest extends TestCase
 {
     use TokenFunctions;
 
     public function testRendersVisibilityAndNameWithSpaces()
     {
-        $token = new PropertyTokenGroup(
+        $token = new PropertyDefinition(
             name: new Token('foo'),
         );
 
@@ -46,7 +46,7 @@ class PropertyTokenGroupTest extends TestCase
 
     public function testRendersNameFromStringAsExpected()
     {
-        $token = new PropertyTokenGroup(
+        $token = new PropertyDefinition(
             name: 'foo',
         );
 
@@ -62,7 +62,7 @@ class PropertyTokenGroupTest extends TestCase
 
     public function testDifferentVisibilityPropertyRendered()
     {
-        $token = new PropertyTokenGroup(
+        $token = new PropertyDefinition(
             name: new Token('foo'),
             visibility: VisibilityEnum::PROTECTED,
         );
@@ -79,7 +79,7 @@ class PropertyTokenGroupTest extends TestCase
 
     public function testRendersStaticModifierWithSpaces()
     {
-        $token = new PropertyTokenGroup(
+        $token = new PropertyDefinition(
             name: new Token('foo'),
             static: true
         );
@@ -97,7 +97,7 @@ class PropertyTokenGroupTest extends TestCase
 
     public function testRendersTypeWithSpaces()
     {
-        $token = new PropertyTokenGroup(
+        $token = new PropertyDefinition(
             name: new Token('foo'),
             type: 'int'
         );
@@ -115,9 +115,9 @@ class PropertyTokenGroupTest extends TestCase
 
     public function testRendersComplexTypeAsExpected()
     {
-        $token = new PropertyTokenGroup(
+        $token = new PropertyDefinition(
             name: new Token('foo'),
-            type: new MultiTypeTokenGroup(types: ['int', 'string', 'bool'])
+            type: new MultiTypeDefinition(types: ['int', 'string', 'bool'])
         );
 
         $rules = $this->getTestRules();
@@ -132,7 +132,7 @@ class PropertyTokenGroupTest extends TestCase
 
     public function testDefaultValueRendersAfterNameWithExpectedSpaces()
     {
-        $token = new PropertyTokenGroup(
+        $token = new PropertyDefinition(
             name: new Token('foo'),
             defaultValue: 'Hello world'
         );
@@ -151,7 +151,7 @@ class PropertyTokenGroupTest extends TestCase
 
     public function testContextPaddingIsRespectedOverRules()
     {
-        $token = new PropertyTokenGroup(
+        $token = new PropertyDefinition(
             name: new Token('foo'),
             type: 'int',
             visibility: VisibilityEnum::PROTECTED,
@@ -176,7 +176,7 @@ class PropertyTokenGroupTest extends TestCase
 
     public function testContextPaddingRendersAtLeastOneSpaceEvenIfSmallerToNotCreateInvalidCode()
     {
-        $token = new PropertyTokenGroup(
+        $token = new PropertyDefinition(
             name: new Token('foo'),
             type: 'int',
             visibility: VisibilityEnum::PROTECTED,
@@ -201,9 +201,9 @@ class PropertyTokenGroupTest extends TestCase
 
     public function testDocBlockIsProperlyRendered()
     {
-        $token = new PropertyTokenGroup(
+        $token = new PropertyDefinition(
             name: 'prop1',
-            docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the prop.']),
+            docBlock: new DocBlockDefinition(['This is a docblock that should be wrapped and displayed before the prop.']),
         );
 
         $rules = $this->getTestRules();

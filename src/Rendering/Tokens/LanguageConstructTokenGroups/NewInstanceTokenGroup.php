@@ -3,6 +3,8 @@
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Definitions\Structures\ClassDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\RendersChopDownVersion;
 use CrazyCodeGen\Rendering\Renderers\RendersInlineVersion;
@@ -23,14 +25,14 @@ class NewInstanceTokenGroup extends TokenGroup implements RendersInlineVersion, 
     use TokenFunctions;
 
     public function __construct(
-        public string|Token|TokenGroup|ClassTokenGroup $class,
+        public string|Token|TokenGroup|SingleTypeDefinition|ClassDefinition $class,
         /** @var Token[]|TokenGroup[]|Token|TokenGroup $arguments */
-        public string|array|Token|TokenGroup             $arguments = [],
+        public string|array|Token|TokenGroup                                $arguments = [],
     ) {
         if (is_string($this->class)) {
             $this->class = new Token($this->class);
-        } elseif ($this->class instanceof ClassTokenGroup) {
-            $this->class = new SingleTypeTokenGroup($this->class->namespace->path . '\\' . $this->class->name);
+        } elseif ($this->class instanceof ClassDefinition) {
+            $this->class = new SingleTypeDefinition($this->class->namespace->path . '\\' . $this->class->name);
         }
         if (is_string($this->arguments)) {
             $this->arguments = new Token($this->arguments);

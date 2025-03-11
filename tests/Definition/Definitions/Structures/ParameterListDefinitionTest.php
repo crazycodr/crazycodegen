@@ -1,26 +1,26 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\ArgumentListRules;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterListTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ArgumentListTokenGroupTest extends TestCase
+class ParameterListDefinitionTest extends TestCase
 {
     use TokenFunctions;
 
     public function testInlineScenarioHasStartAndEndParenthesisAndTokensFromArgumentAndNoTrailingComma()
     {
-        $token = new ParameterListTokenGroup(
+        $token = new ParameterListDefinition(
             [
-                new ParameterTokenGroup('foo'),
+                new ParameterDefinition('foo'),
             ],
         );
 
@@ -38,11 +38,11 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testInlineScenarioHasCommaAndSpaceAfterEachArgumentExceptLast()
     {
-        $token = new ParameterListTokenGroup(
+        $token = new ParameterListDefinition(
             [
-                new ParameterTokenGroup('foo'),
-                new ParameterTokenGroup('bar'),
-                new ParameterTokenGroup('baz'),
+                new ParameterDefinition('foo'),
+                new ParameterDefinition('bar'),
+                new ParameterDefinition('baz'),
             ],
         );
 
@@ -60,11 +60,11 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testChopDownScenarioHasIndentsForEachArgumentAndCommaAfterEachButNoSpacesExceptLastWhenConfiguredAsSo()
     {
-        $token = new ParameterListTokenGroup(
+        $token = new ParameterListDefinition(
             [
-                new ParameterTokenGroup('foo'),
-                new ParameterTokenGroup('bar'),
-                new ParameterTokenGroup('baz'),
+                new ParameterDefinition('foo'),
+                new ParameterDefinition('bar'),
+                new ParameterDefinition('baz'),
             ],
         );
 
@@ -88,11 +88,11 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testChopDownScenarioHasIndentsForEachArgumentAndCommaAfterEachEventTheLastWhenConfiguredAsSo()
     {
-        $token = new ParameterListTokenGroup(
+        $token = new ParameterListDefinition(
             [
-                new ParameterTokenGroup('foo'),
-                new ParameterTokenGroup('bar'),
-                new ParameterTokenGroup('baz'),
+                new ParameterDefinition('foo'),
+                new ParameterDefinition('bar'),
+                new ParameterDefinition('baz'),
             ],
         );
 
@@ -116,11 +116,11 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testChopDownPadsTypesAndIdentifiersToAlignAllComponentsProperlyEvenIfTypeOrDefaultValueIsNotPresent()
     {
-        $token = new ParameterListTokenGroup(
+        $token = new ParameterListDefinition(
             [
-                new ParameterTokenGroup('foo', type: 'string', defaultValue: 'Hello world'),
-                new ParameterTokenGroup('bar', type: new MultiTypeTokenGroup(['string', 'bool', 'float'])),
-                new ParameterTokenGroup('longerVarName', defaultValue: 1),
+                new ParameterDefinition('foo', type: 'string', defaultValue: 'Hello world'),
+                new ParameterDefinition('bar', type: new MultiTypeDefinition(['string', 'bool', 'float'])),
+                new ParameterDefinition('longerVarName', defaultValue: 1),
             ],
         );
 
@@ -149,9 +149,9 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testRenderReturnsInlineScenario(): void
     {
-        $token = new ParameterListTokenGroup(
+        $token = new ParameterListDefinition(
             [
-                new ParameterTokenGroup('foo'),
+                new ParameterDefinition('foo'),
             ],
         );
 

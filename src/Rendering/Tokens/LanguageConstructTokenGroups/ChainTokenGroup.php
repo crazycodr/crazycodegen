@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\IsStaticAccessContext;
 use CrazyCodeGen\Rendering\Renderers\RendersChopDownVersion;
@@ -33,7 +34,7 @@ class ChainTokenGroup extends TokenGroup implements RendersInlineVersion, Render
         foreach ($this->chain as $chainItemIndex => $chainItem) {
             if (is_string($chainItem)) {
                 $this->chain[$chainItemIndex] = new Token($chainItem);
-            } elseif ($chainItem instanceof PropertyTokenGroup) {
+            } elseif ($chainItem instanceof PropertyDefinition) {
                 $this->chain[$chainItemIndex] = new Token($chainItem->name);
             }
         }

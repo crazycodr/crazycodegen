@@ -1,31 +1,31 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Definition\Definitions\Structures\ClassDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ImportDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\MethodDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterListTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImportTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ClassTokenGroupTest extends TestCase
+class ClassDefinitionTest extends TestCase
 {
     use TokenFunctions;
 
     public function testFunctionKeywordIsRendered()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
         );
 
@@ -86,7 +86,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testClassNameIsRendered()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
         );
 
@@ -104,7 +104,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testAbstractKeywordIsRendered()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             abstract: true,
         );
@@ -123,9 +123,9 @@ class ClassTokenGroupTest extends TestCase
 
     public function testNamespaceIsRendered()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
-            namespace: new NamespaceTokenGroup('CrazyCodeGen\\Tests'),
+            namespace: new NamespaceDefinition('CrazyCodeGen\\Tests'),
         );
 
         $rules = $this->getBaseTestingRules();
@@ -144,10 +144,10 @@ class ClassTokenGroupTest extends TestCase
 
     public function testStringsAreConvertedToImportTokenGroupsAndAreRenderedWithProperLinesBetweenThemAndAfterBlock()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             imports: [
-                new ImportTokenGroup('CrazyCodeGen\\Tests\\Tests1'),
+                new ImportDefinition('CrazyCodeGen\\Tests\\Tests1'),
                 'CrazyCodeGen\\Tests\\Test2',
             ]
         );
@@ -175,28 +175,28 @@ class ClassTokenGroupTest extends TestCase
 
     public function testImportsShortenTheTypesEvenIfSpecifiedAsStrings()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             imports: [
-                new ImportTokenGroup('CrazyCodeGen\\Tests\\Test1'),
+                new ImportDefinition('CrazyCodeGen\\Tests\\Test1'),
                 'CrazyCodeGen\\Tests\\Test2',
             ],
             properties: [
-                new PropertyTokenGroup(
+                new PropertyDefinition(
                     name: 'prop1',
-                    type: new SingleTypeTokenGroup(type: 'CrazyCodeGen\\Tests\\Test1'),
+                    type: new SingleTypeDefinition(type: 'CrazyCodeGen\\Tests\\Test1'),
                 ),
-                new PropertyTokenGroup(
+                new PropertyDefinition(
                     name: 'prop2',
-                    type: new MultiTypeTokenGroup(types: ['int', 'CrazyCodeGen\\Tests\\Test2']),
+                    type: new MultiTypeDefinition(types: ['int', 'CrazyCodeGen\\Tests\\Test2']),
                 ),
             ],
             methods: [
-                new MethodTokenGroup(
+                new MethodDefinition(
                     name: 'method1',
-                    parameters: new ParameterListTokenGroup(
+                    parameters: new ParameterListDefinition(
                         parameters: [
-                            new ParameterTokenGroup(
+                            new ParameterDefinition(
                                 name: 'arg1',
                                 type: 'CrazyCodeGen\\Tests\\Test2',
                             )
@@ -230,9 +230,9 @@ class ClassTokenGroupTest extends TestCase
 
     public function testDocBlockIsProperlyRendered()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
-            docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the class declaration.']),
+            docBlock: new DocBlockDefinition(['This is a docblock that should be wrapped and displayed before the class declaration.']),
         );
 
         $rules = $this->getBaseTestingRules();
@@ -258,7 +258,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testExtendsIsRenderedInlineEvenIfTooLong()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
         );
@@ -279,7 +279,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testExtendsIsRenderedOnNewLineWhenTooLongAndExtendsIsTabbedIn()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
         );
@@ -301,7 +301,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testExtendsIsRenderedOnNewLineWhenForcedToWrapAndIsTabbedInEvenIfNotLongEnough()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests',
         );
@@ -322,7 +322,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testSpacesBetweenImplementsAndFirstTypeIsRespected()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests',
@@ -346,7 +346,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testSpacesBetweenImplementTypesOnSameLineAreRespected()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests1',
@@ -371,7 +371,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testSpacesBetweenImplementsAndTypesAreTakenIntoPaddingAccountWhenOnMultipleLines()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests1',
@@ -399,7 +399,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testImplementsIsRenderedOnSameLineEvenIfTooLong()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
@@ -421,7 +421,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testImplementsIsRenderedOnDiffLineIfTooLong()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
@@ -445,7 +445,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testImplementsIsRenderedOnDiffLineEvenIfNotLongEnough()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests',
@@ -469,7 +469,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testMultipleImplementsAreRenderedOnSameLineEvenIfTooLong()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -497,7 +497,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testMultipleImplementsAreRenderedOnIndividualLinesIfTheyAreTooLongInTotalAndAreProperlyIndented()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -528,7 +528,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testMultipleImplementsAreRenderedOnIndividualLinesWhenForcedToEvenIfNotLongEnough()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -554,7 +554,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testMultipleImplementsAreNotRenderedOnIndividualLinesWhenForcedToBecauseImplementsOnDiffLineIsPrevented()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -578,7 +578,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testCombinationOfExtendsAndImplementsWithForcedWrappingAllGoOnDifferentLines()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\Test1',
             implements: [
@@ -607,7 +607,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testSameLineOpeningAndClosingBraceAreAfterClassNameWithExpectedSpaces()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
         );
 
@@ -626,7 +626,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testSameLineOpeningAndDiffLineClosingBraceAreAfterClassNameAndOnDiffLineWithExpectedSpaces()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
         );
 
@@ -646,7 +646,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testDiffLineOpeningAndSameLineClosingBraceAreUnderClassNameAndNoExtraSpacesAreAdded()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
         );
 
@@ -666,7 +666,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testDiffLineOpeningAndDiffLineClosingBraceAreUnderClassNameAndNoExtraSpacesAreAdded()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
         );
 
@@ -687,7 +687,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testSameLineOpeningBraceEndsUpAfterExtendsWithProperSpacing()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\Test1',
         );
@@ -712,7 +712,7 @@ class ClassTokenGroupTest extends TestCase
 
     public function testSameLineOpeningBraceEndsUpAfterImplementsWithProperSpacing()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -741,12 +741,12 @@ class ClassTokenGroupTest extends TestCase
 
     public function testPropertiesAreRenderedWithNewLinesBetweenThemAsExpected()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             properties: [
-                new PropertyTokenGroup(name: 'prop1'),
-                new PropertyTokenGroup(name: 'prop2'),
-                new PropertyTokenGroup(name: 'prop3'),
+                new PropertyDefinition(name: 'prop1'),
+                new PropertyDefinition(name: 'prop2'),
+                new PropertyDefinition(name: 'prop3'),
             ]
         );
 
@@ -772,12 +772,12 @@ class ClassTokenGroupTest extends TestCase
 
     public function testMethodsAreRenderedWithNewLinesBetweenThemAsConfigured()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             methods: [
-                new MethodTokenGroup(name: 'method1'),
-                new MethodTokenGroup(name: 'method2'),
-                new MethodTokenGroup(name: 'method3'),
+                new MethodDefinition(name: 'method1'),
+                new MethodDefinition(name: 'method2'),
+                new MethodDefinition(name: 'method3'),
             ]
         );
 
@@ -811,13 +811,13 @@ class ClassTokenGroupTest extends TestCase
 
     public function testLinesBetweenPropertiesAndMethodsAreRespected()
     {
-        $token = new ClassTokenGroup(
+        $token = new ClassDefinition(
             name: 'myClass',
             properties: [
-                new PropertyTokenGroup(name: 'prop1'),
+                new PropertyDefinition(name: 'prop1'),
             ],
             methods: [
-                new MethodTokenGroup(name: 'method1'),
+                new MethodDefinition(name: 'method1'),
             ]
         );
 

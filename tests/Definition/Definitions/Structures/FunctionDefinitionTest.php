@@ -1,25 +1,25 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\FunctionDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterListTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class FunctionTokenGroupTest extends TestCase
+class FunctionDefinitionTest extends TestCase
 {
     use TokenFunctions;
 
     public function testInlineDefinitionRendersFunctionKeyword()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -57,7 +57,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersNameOfFunction()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -75,7 +75,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersNoSpaceBetweenNameAndArgumentList()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -93,7 +93,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersSpacesBetweenNameAndArgumentListAsPerRules()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -112,13 +112,13 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersArgumentListInlineAsExpectedBetweenParentheses()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
-            arguments: new ParameterListTokenGroup(
+            arguments: new ParameterListDefinition(
                 parameters: [
-                    new ParameterTokenGroup(name: 'foo'),
-                    new ParameterTokenGroup(name: 'bar', type: 'int'),
-                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDefinition(name: 'foo'),
+                    new ParameterDefinition(name: 'bar', type: 'int'),
+                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -137,7 +137,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenListAndReturnColonAsPerRules()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -157,7 +157,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenReturnColonAndTypeAsPerRules()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -177,7 +177,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenTypeAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -197,7 +197,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceAfterArgumentListWithSpacesBetweenListAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -217,7 +217,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningAndClosingBraceOnSameLineAsPerConfiguration()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -235,7 +235,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceOnSameLineAndClosingBraceOnDiffLineAsPerConfiguration()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -254,7 +254,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceOnDiffLineWithClosingBraceOnSameLineAsPerConfiguration()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -273,7 +273,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningAndClosingBracesOnSeparateLinesAsPerConfiguration()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -293,7 +293,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersFunctionKeyword()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -311,7 +311,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersNameOfFunction()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -329,7 +329,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersNoSpaceBetweenNameAndArgumentList()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -347,7 +347,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersSpacesBetweenNameAndArgumentListAsPerRules()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -366,13 +366,13 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersArgumentListChopDownAsExpectedBetweenParentheses()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
-            arguments: new ParameterListTokenGroup(
+            arguments: new ParameterListDefinition(
                 parameters: [
-                    new ParameterTokenGroup(name: 'foo'),
-                    new ParameterTokenGroup(name: 'bar', type: 'int'),
-                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDefinition(name: 'foo'),
+                    new ParameterDefinition(name: 'bar', type: 'int'),
+                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -394,7 +394,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenListAndReturnColonAsPerRules()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -414,7 +414,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenReturnColonAndTypeAsPerRules()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -434,7 +434,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenTypeAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -454,7 +454,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersOpeningBraceAfterArgumentListWithSpacesBetweenListAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -473,7 +473,7 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testChopDownDefinitionRendersOpeningAndClosingBracesPositionIsNotRespectedAndAlwaysSameLineDiffLine()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
         );
 
@@ -493,13 +493,13 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testRenderReturnsTheInlineVersionIfArgumentsOnDifferentLinesIsNeverWrap()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
-            arguments: new ParameterListTokenGroup(
+            arguments: new ParameterListDefinition(
                 parameters: [
-                    new ParameterTokenGroup(name: 'foo'),
-                    new ParameterTokenGroup(name: 'bar', type: 'int'),
-                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDefinition(name: 'foo'),
+                    new ParameterDefinition(name: 'bar', type: 'int'),
+                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -520,13 +520,13 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testRenderReturnsTheInlineVersionIfArgumentsOnDifferentLinesChopIfTooLongButItStillFits()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
-            arguments: new ParameterListTokenGroup(
+            arguments: new ParameterListDefinition(
                 parameters: [
-                    new ParameterTokenGroup(name: 'foo'),
-                    new ParameterTokenGroup(name: 'bar', type: 'int'),
-                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDefinition(name: 'foo'),
+                    new ParameterDefinition(name: 'bar', type: 'int'),
+                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -546,13 +546,13 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testRenderReturnsTheChopDownVersionIfArgumentsOnDifferentLinesChopIfTooLongAndItDoesNotFit()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
-            arguments: new ParameterListTokenGroup(
+            arguments: new ParameterListDefinition(
                 parameters: [
-                    new ParameterTokenGroup(name: 'foo'),
-                    new ParameterTokenGroup(name: 'bar', type: 'int'),
-                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDefinition(name: 'foo'),
+                    new ParameterDefinition(name: 'bar', type: 'int'),
+                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -576,13 +576,13 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testRenderReturnsTheChopDownVersionEvenIfArgumentsWouldFitButConfigurationForcesIt()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
-            arguments: new ParameterListTokenGroup(
+            arguments: new ParameterListDefinition(
                 parameters: [
-                    new ParameterTokenGroup(name: 'foo'),
-                    new ParameterTokenGroup(name: 'bar', type: 'int'),
-                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDefinition(name: 'foo'),
+                    new ParameterDefinition(name: 'bar', type: 'int'),
+                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -605,9 +605,9 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testDocBlockIsProperlyRendered()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
-            docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the function declaration.']),
+            docBlock: new DocBlockDefinition(['This is a docblock that should be wrapped and displayed before the function declaration.']),
         );
 
         $rules = $this->getTestRules();
@@ -633,15 +633,15 @@ class FunctionTokenGroupTest extends TestCase
 
     public function testDocBlockDoesNotInterfereWithDecisionToChopDownArgumentList()
     {
-        $token = new FunctionTokenGroup(
+        $token = new FunctionDefinition(
             name: 'myFunction',
-            docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the function.']),
-            arguments: new ParameterListTokenGroup(
+            docBlock: new DocBlockDefinition(['This is a docblock that should be wrapped and displayed before the function.']),
+            arguments: new ParameterListDefinition(
                 parameters: [
-                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
-                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
-                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
-                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
+                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
+                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
+                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
+                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
                 ],
             ),
             returnType: 'int',

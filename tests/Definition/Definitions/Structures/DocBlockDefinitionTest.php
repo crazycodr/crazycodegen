@@ -1,20 +1,20 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class DocBlockTokenGroupTest extends TestCase
+class DocBlockDefinitionTest extends TestCase
 {
     use TokenFunctions;
 
     public function testEmptyDocBlockIsNotRendered()
     {
-        $token = new DocBlockTokenGroup(
+        $token = new DocBlockDefinition(
             texts: [],
         );
 
@@ -23,7 +23,7 @@ class DocBlockTokenGroupTest extends TestCase
 
     public function testEmptyTextsAreIgnoredButCanStillGenerateEmptyDocBlock()
     {
-        $token = new DocBlockTokenGroup(
+        $token = new DocBlockDefinition(
             texts: ['', ''],
         );
 
@@ -38,7 +38,7 @@ class DocBlockTokenGroupTest extends TestCase
 
     public function testTextsAreGeneratedWithEmptyLineBetweenThemAndEmptyLineDoesNotFeatureTrailingSpace()
     {
-        $token = new DocBlockTokenGroup(
+        $token = new DocBlockDefinition(
             texts: ['Hello', 'World', 'Foo'],
         );
 
@@ -58,7 +58,7 @@ class DocBlockTokenGroupTest extends TestCase
 
     public function testLongTextsAreWrappedBasedOnLineLengthAndSplitsOnSpacesOnlyAndExtraSpacesAreTrimmedOnSplit()
     {
-        $token = new DocBlockTokenGroup(
+        $token = new DocBlockDefinition(
             texts: ['Hello world, i love programming and this automatically wraps on 25 characters.'],
         );
 
@@ -80,7 +80,7 @@ class DocBlockTokenGroupTest extends TestCase
 
     public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceAsLongAsNeeded()
     {
-        $token = new DocBlockTokenGroup(
+        $token = new DocBlockDefinition(
             texts: ['https://example.com/questions/49907308/url-without-spaces will chop here.'],
         );
 
@@ -100,7 +100,7 @@ class DocBlockTokenGroupTest extends TestCase
 
     public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceButWillTakeAllIfNothingLeftAfterIt()
     {
-        $token = new DocBlockTokenGroup(
+        $token = new DocBlockDefinition(
             texts: ['Upcoming url is too long so it will be take as a whole: https://example.com/questions/49907308/url-without-spaces'],
         );
 

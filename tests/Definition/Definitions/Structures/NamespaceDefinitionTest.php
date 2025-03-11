@@ -1,20 +1,20 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class NamespaceTokenGroupTest extends TestCase
+class NamespaceDefinitionTest extends TestCase
 {
     use TokenFunctions;
 
     public function testNamespaceKeywordAndPathAndSemiColonAreRendered()
     {
-        $token = new NamespaceTokenGroup('CrazyCodeGen\\Tests');
+        $token = new NamespaceDefinition('CrazyCodeGen\\Tests');
 
         $rules = new RenderingRules();
         $rules->namespaces->spacesAfterNamespace = 1;
@@ -30,7 +30,7 @@ class NamespaceTokenGroupTest extends TestCase
 
     public function testSpacesBetweenKeywordAndPathAreRespected()
     {
-        $token = new NamespaceTokenGroup('CrazyCodeGen\\Tests');
+        $token = new NamespaceDefinition('CrazyCodeGen\\Tests');
 
         $rules = new RenderingRules();
         $rules->namespaces->spacesAfterNamespace = 4;
@@ -46,7 +46,7 @@ class NamespaceTokenGroupTest extends TestCase
 
     public function testLinesAfterNamespaceDeclarationIsRespected()
     {
-        $token = new NamespaceTokenGroup('CrazyCodeGen\\Tests');
+        $token = new NamespaceDefinition('CrazyCodeGen\\Tests');
 
         $rules = new RenderingRules();
         $rules->namespaces->spacesAfterNamespace = 1;

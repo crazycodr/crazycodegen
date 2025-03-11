@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -16,13 +16,13 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ParameterListTokenGroup extends TokenGroup implements RendersInlineVersion, RendersChopdownVersion
+class ParameterListDefinition extends TokenGroup implements RendersInlineVersion, RendersChopdownVersion
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        /** @var ParameterTokenGroup[] $parameters */
+        /** @var ParameterDefinition[] $parameters */
         public array $parameters = [],
     ) {
     }

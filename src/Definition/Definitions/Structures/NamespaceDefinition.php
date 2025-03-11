@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -12,7 +12,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NamespaceToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 
-class NamespaceTokenGroup extends TokenGroup
+class NamespaceDefinition extends TokenGroup
 {
     use FlattenFunction;
 

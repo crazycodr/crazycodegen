@@ -1,13 +1,14 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\IsStaticAccessContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
+use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 
-class SingleTypeTokenGroup extends AbstractTypeTokenGroup implements IsStaticAccessContext
+class SingleTypeDefinition extends TokenGroup implements IsStaticAccessContext
 {
     private null|string $namespace = null;
     private string $shortName;

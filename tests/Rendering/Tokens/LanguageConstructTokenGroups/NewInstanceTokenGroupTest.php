@@ -2,20 +2,14 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
+use CrazyCodeGen\Definition\Definitions\Structures\ClassDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\ArgumentListRules;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterListTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArrayTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NamespaceTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NewInstanceTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
-use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -54,7 +48,7 @@ class NewInstanceTokenGroupTest extends TestCase
     public function testInlineClassTokenGroupGetConvertedToSimpleClassName()
     {
         $token = new NewInstanceTokenGroup(
-            class: new ClassTokenGroup(name: 'foo', namespace: new NamespaceTokenGroup('CrazyCodeGen\Tests')),
+            class: new ClassDefinition(name: 'foo', namespace: new NamespaceDefinition('CrazyCodeGen\Tests')),
         );
 
         $this->assertEquals(
@@ -68,7 +62,7 @@ class NewInstanceTokenGroupTest extends TestCase
     public function testInlineClassTokenGroupGetShortNameRenderedWhenClassIsImportedInContext()
     {
         $token = new NewInstanceTokenGroup(
-            class: new ClassTokenGroup(name: 'foo', namespace: new NamespaceTokenGroup('CrazyCodeGen\Tests')),
+            class: new ClassDefinition(name: 'foo', namespace: new NamespaceDefinition('CrazyCodeGen\Tests')),
         );
 
         $context = new RenderContext();
@@ -203,7 +197,7 @@ class NewInstanceTokenGroupTest extends TestCase
     public function testChopDownClassTokenGroupGetConvertedToSimpleClassName()
     {
         $token = new NewInstanceTokenGroup(
-            class: new ClassTokenGroup(name: 'foo', namespace: new NamespaceTokenGroup('CrazyCodeGen\Tests')),
+            class: new ClassDefinition(name: 'foo', namespace: new NamespaceDefinition('CrazyCodeGen\Tests')),
         );
 
         $this->assertEquals(
@@ -217,7 +211,7 @@ class NewInstanceTokenGroupTest extends TestCase
     public function testChopDownClassTokenGroupGetShortNameRenderedWhenClassIsImportedInContext()
     {
         $token = new NewInstanceTokenGroup(
-            class: new ClassTokenGroup(name: 'foo', namespace: new NamespaceTokenGroup('CrazyCodeGen\Tests')),
+            class: new ClassDefinition(name: 'foo', namespace: new NamespaceDefinition('CrazyCodeGen\Tests')),
         );
 
         $context = new RenderContext();

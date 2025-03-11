@@ -2,12 +2,12 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ExpressionTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\SingleTypeTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +33,7 @@ class ExpressionTokenGroupTest extends TestCase
     public function testTokenGroupIsRenderedAsExpected()
     {
         $token = new ExpressionTokenGroup(
-            new SingleTypeTokenGroup('int'),
+            new SingleTypeDefinition('int'),
         );
 
         $this->assertEquals(
@@ -61,7 +61,7 @@ class ExpressionTokenGroupTest extends TestCase
     public function testMixOfTokensAndTokenGroupsIsRendered()
     {
         $token = new ExpressionTokenGroup(
-            [new Token(1), new SpacesToken(), new SingleTypeTokenGroup('string')],
+            [new Token(1), new SpacesToken(), new SingleTypeDefinition('string')],
         );
 
         $this->assertEquals(

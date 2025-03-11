@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -17,19 +17,20 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class FunctionTokenGroup extends TokenGroup
+class FunctionDefinition extends TokenGroup
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        public string|Token                       $name,
-        public null|NamespaceTokenGroup           $namespace = null,
-        public null|string|DocBlockTokenGroup     $docBlock = null,
-        public null|ParameterListTokenGroup       $arguments = null,
-        public null|string|AbstractTypeTokenGroup $returnType = null,
-        public null|array                         $bodyInstructions = null,
-    ) {
+        public string|Token                                         $name,
+        public null|NamespaceDefinition                             $namespace = null,
+        public null|string|DocBlockDefinition                       $docBlock = null,
+        public null|ParameterListDefinition                         $arguments = null,
+        public null|string|SingleTypeDefinition|MultiTypeDefinition $returnType = null,
+        public null|array                                           $bodyInstructions = null,
+    )
+    {
     }
 
     /**
@@ -75,7 +76,7 @@ class FunctionTokenGroup extends TokenGroup
         if ($this->arguments) {
             $tokens[] = $this->arguments->render($context, $rules);
         } else {
-            $tokens[] = (new ParameterListTokenGroup())->render($context, $rules);
+            $tokens[] = (new ParameterListDefinition())->render($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
         $tokens = $this->addInlineBraceTokens($rules, $tokens);
@@ -119,7 +120,7 @@ class FunctionTokenGroup extends TokenGroup
                 $tokens[] = new SpacesToken($rules->functions->spacesAfterReturnColon);
             }
             if (is_string($this->returnType)) {
-                $tokens[] = (new SingleTypeTokenGroup($this->returnType))->render($context, $rules);
+                $tokens[] = (new SingleTypeDefinition($this->returnType))->render($context, $rules);
             } else {
                 $tokens[] = $this->returnType->render($context, $rules);
             }
@@ -184,7 +185,7 @@ class FunctionTokenGroup extends TokenGroup
         if ($this->arguments) {
             $tokens[] = $this->arguments->renderChopDownScenario($context, $rules);
         } else {
-            $tokens[] = (new ParameterListTokenGroup())->renderChopDownScenario($context, $rules);
+            $tokens[] = (new ParameterListDefinition())->renderChopDownScenario($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
         $tokens = $this->addChopDownBraceTokens($rules, $tokens);

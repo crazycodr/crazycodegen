@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -9,21 +9,23 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ExpansionToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\StringTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ParameterTokenGroup extends TokenGroup
+class ParameterDefinition extends TokenGroup
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        public string|Token                       $name,
-        public null|string|AbstractTypeTokenGroup $type = null,
-        public null|int|float|string|bool|Token   $defaultValue = null,
-        public bool                               $defaultValueIsNull = false,
-        public bool                               $isVariadic = false,
+        public string|Token                                         $name,
+        public null|string|SingleTypeDefinition|MultiTypeDefinition $type = null,
+        public null|int|float|string|bool|Token                     $defaultValue = null,
+        public bool                                                 $defaultValueIsNull = false,
+        public bool                                                 $isVariadic = false,
     ) {
     }
 
@@ -49,7 +51,7 @@ class ParameterTokenGroup extends TokenGroup
     {
         $tokens = [];
         if (is_string($this->type)) {
-            $tokens[] = (new SingleTypeTokenGroup(type: $this->type))->render($context, $rules);
+            $tokens[] = (new SingleTypeDefinition(type: $this->type))->render($context, $rules);
         } elseif (!is_null($this->type)) {
             $tokens[] = $this->type->render($context, $rules);
         }

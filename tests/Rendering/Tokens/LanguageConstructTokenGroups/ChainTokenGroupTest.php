@@ -2,12 +2,12 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionCallTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ChainTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionCallTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParentRefTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\PropertyTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ThisRefTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -102,7 +102,7 @@ class ChainTokenGroupTest extends TestCase
     {
         $token = new ChainTokenGroup(
             chain: [
-                new PropertyTokenGroup(name: 'foo', type: 'int'),
+                new PropertyDefinition(name: 'foo', type: 'int'),
             ],
         );
 
@@ -119,8 +119,8 @@ class ChainTokenGroupTest extends TestCase
         $token = new ChainTokenGroup(
             chain: [
                 new ThisRefTokenGroup(),
-                new PropertyTokenGroup(name: 'foo', type: 'int'),
-                new PropertyTokenGroup(name: 'bar', type: 'int'),
+                new PropertyDefinition(name: 'foo', type: 'int'),
+                new PropertyDefinition(name: 'bar', type: 'int'),
             ],
         );
 
@@ -138,7 +138,7 @@ class ChainTokenGroupTest extends TestCase
             chain: [
                 new ParentRefTokenGroup(),
                 new FunctionCallTokenGroup(name: 'setUp'),
-                new PropertyTokenGroup(name: 'bar', type: 'int'),
+                new PropertyDefinition(name: 'bar', type: 'int'),
             ],
         );
 
@@ -236,7 +236,7 @@ class ChainTokenGroupTest extends TestCase
     {
         $token = new ChainTokenGroup(
             chain: [
-                new PropertyTokenGroup(name: 'foo', type: 'int'),
+                new PropertyDefinition(name: 'foo', type: 'int'),
             ],
         );
 
@@ -253,8 +253,8 @@ class ChainTokenGroupTest extends TestCase
         $token = new ChainTokenGroup(
             chain: [
                 new ThisRefTokenGroup(),
-                new PropertyTokenGroup(name: 'foo', type: 'int'),
-                new PropertyTokenGroup(name: 'bar', type: 'int'),
+                new PropertyDefinition(name: 'foo', type: 'int'),
+                new PropertyDefinition(name: 'bar', type: 'int'),
             ],
         );
 
@@ -273,7 +273,7 @@ class ChainTokenGroupTest extends TestCase
             chain: [
                 new ParentRefTokenGroup(),
                 new FunctionCallTokenGroup(name: 'setUp'),
-                new PropertyTokenGroup(name: 'bar', type: 'int'),
+                new PropertyDefinition(name: 'bar', type: 'int'),
             ],
         );
 

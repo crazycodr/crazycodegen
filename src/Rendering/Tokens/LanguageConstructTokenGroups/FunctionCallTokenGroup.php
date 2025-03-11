@@ -3,6 +3,8 @@
 namespace CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Definitions\Structures\FunctionDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\MethodDefinition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\RendersChopDownVersion;
 use CrazyCodeGen\Rendering\Renderers\RendersInlineVersion;
@@ -22,15 +24,15 @@ class FunctionCallTokenGroup extends TokenGroup implements RendersInlineVersion,
     use TokenFunctions;
 
     public function __construct(
-        public string|Token|TokenGroup|FunctionTokenGroup|MethodTokenGroup $name,
+        public string|Token|TokenGroup|FunctionDefinition|MethodDefinition $name,
         /** @var Token[]|TokenGroup[]|Token|TokenGroup $arguments */
         public string|array|Token|TokenGroup                               $arguments = [],
     ) {
         if (is_string($this->name)) {
             $this->name = new Token($this->name);
-        } elseif ($this->name instanceof FunctionTokenGroup) {
+        } elseif ($this->name instanceof FunctionDefinition) {
             $this->name = new Token($this->name->name);
-        } elseif ($this->name instanceof MethodTokenGroup) {
+        } elseif ($this->name instanceof MethodDefinition) {
             $this->name = new Token($this->name->name);
         }
         if (is_string($this->arguments)) {
