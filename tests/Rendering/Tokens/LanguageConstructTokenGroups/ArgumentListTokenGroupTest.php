@@ -6,8 +6,8 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\ArgumentListRules;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterListTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MultiTypeTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -18,17 +18,17 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testInlineScenarioHasStartAndEndParenthesisAndTokensFromArgumentAndNoTrailingComma()
     {
-        $token = new ArgumentListTokenGroup(
+        $token = new ParameterListTokenGroup(
             [
-                new ArgumentTokenGroup('foo'),
+                new ParameterTokenGroup('foo'),
             ],
         );
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentLists = new ArgumentListRules();
-        $rules->argumentLists->spacesAfterSeparator = 1;
-        $rules->argumentLists->addSeparatorToLastItem = true;
+        $rules->parameterLists = new ArgumentListRules();
+        $rules->parameterLists->spacesAfterSeparator = 1;
+        $rules->parameterLists->addSeparatorToLastItem = true;
 
         $this->assertEquals(
             '($foo)',
@@ -38,19 +38,19 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testInlineScenarioHasCommaAndSpaceAfterEachArgumentExceptLast()
     {
-        $token = new ArgumentListTokenGroup(
+        $token = new ParameterListTokenGroup(
             [
-                new ArgumentTokenGroup('foo'),
-                new ArgumentTokenGroup('bar'),
-                new ArgumentTokenGroup('baz'),
+                new ParameterTokenGroup('foo'),
+                new ParameterTokenGroup('bar'),
+                new ParameterTokenGroup('baz'),
             ],
         );
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentLists = new ArgumentListRules();
-        $rules->argumentLists->spacesAfterSeparator = 1;
-        $rules->argumentLists->addSeparatorToLastItem = true;
+        $rules->parameterLists = new ArgumentListRules();
+        $rules->parameterLists->spacesAfterSeparator = 1;
+        $rules->parameterLists->addSeparatorToLastItem = true;
 
         $this->assertEquals(
             '($foo, $bar, $baz)',
@@ -60,19 +60,19 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testChopDownScenarioHasIndentsForEachArgumentAndCommaAfterEachButNoSpacesExceptLastWhenConfiguredAsSo()
     {
-        $token = new ArgumentListTokenGroup(
+        $token = new ParameterListTokenGroup(
             [
-                new ArgumentTokenGroup('foo'),
-                new ArgumentTokenGroup('bar'),
-                new ArgumentTokenGroup('baz'),
+                new ParameterTokenGroup('foo'),
+                new ParameterTokenGroup('bar'),
+                new ParameterTokenGroup('baz'),
             ],
         );
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentLists = new ArgumentListRules();
-        $rules->argumentLists->spacesAfterSeparator = 1;
-        $rules->argumentLists->addSeparatorToLastItem = false;
+        $rules->parameterLists = new ArgumentListRules();
+        $rules->parameterLists->spacesAfterSeparator = 1;
+        $rules->parameterLists->addSeparatorToLastItem = false;
 
         $this->assertEquals(
             <<<'EOS'
@@ -88,19 +88,19 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testChopDownScenarioHasIndentsForEachArgumentAndCommaAfterEachEventTheLastWhenConfiguredAsSo()
     {
-        $token = new ArgumentListTokenGroup(
+        $token = new ParameterListTokenGroup(
             [
-                new ArgumentTokenGroup('foo'),
-                new ArgumentTokenGroup('bar'),
-                new ArgumentTokenGroup('baz'),
+                new ParameterTokenGroup('foo'),
+                new ParameterTokenGroup('bar'),
+                new ParameterTokenGroup('baz'),
             ],
         );
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentLists = new ArgumentListRules();
-        $rules->argumentLists->spacesAfterSeparator = 1;
-        $rules->argumentLists->addSeparatorToLastItem = true;
+        $rules->parameterLists = new ArgumentListRules();
+        $rules->parameterLists->spacesAfterSeparator = 1;
+        $rules->parameterLists->addSeparatorToLastItem = true;
 
         $this->assertEquals(
             <<<'EOS'
@@ -116,19 +116,19 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testChopDownPadsTypesAndIdentifiersToAlignAllComponentsProperlyEvenIfTypeOrDefaultValueIsNotPresent()
     {
-        $token = new ArgumentListTokenGroup(
+        $token = new ParameterListTokenGroup(
             [
-                new ArgumentTokenGroup('foo', type: 'string', defaultValue: 'Hello world'),
-                new ArgumentTokenGroup('bar', type: new MultiTypeTokenGroup(['string', 'bool', 'float'])),
-                new ArgumentTokenGroup('longerVarName', defaultValue: 1),
+                new ParameterTokenGroup('foo', type: 'string', defaultValue: 'Hello world'),
+                new ParameterTokenGroup('bar', type: new MultiTypeTokenGroup(['string', 'bool', 'float'])),
+                new ParameterTokenGroup('longerVarName', defaultValue: 1),
             ],
         );
 
         $rules = new RenderingRules();
         $rules->indentation = '    ';
-        $rules->argumentLists = new ArgumentListRules();
-        $rules->argumentLists->spacesAfterSeparator = 1;
-        $rules->argumentLists->addSeparatorToLastItem = true;
+        $rules->parameterLists = new ArgumentListRules();
+        $rules->parameterLists->spacesAfterSeparator = 1;
+        $rules->parameterLists->addSeparatorToLastItem = true;
 
         $context = new RenderContext();
         $context->chopDown = new ChopDownPaddingContext();
@@ -149,9 +149,9 @@ class ArgumentListTokenGroupTest extends TestCase
 
     public function testRenderReturnsInlineScenario(): void
     {
-        $token = new ArgumentListTokenGroup(
+        $token = new ParameterListTokenGroup(
             [
-                new ArgumentTokenGroup('foo'),
+                new ParameterTokenGroup('foo'),
             ],
         );
 

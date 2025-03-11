@@ -27,15 +27,15 @@ class MethodTokenGroup extends TokenGroup
     use TokenFunctions;
 
     public function __construct(
-        public readonly string|Token                       $name,
-        public readonly null|string|DocBlockTokenGroup     $docBlock = null,
-        public readonly null|ArgumentListTokenGroup        $arguments = null,
-        public readonly null|string|AbstractTypeTokenGroup $returnType = null,
-        public readonly bool                               $abstract = false,
-        public readonly VisibilityEnum                     $visibility = VisibilityEnum::PUBLIC,
-        public readonly bool                               $static = false,
+        public string|Token                       $name,
+        public null|string|DocBlockTokenGroup     $docBlock = null,
+        public null|ParameterListTokenGroup       $arguments = null,
+        public null|string|AbstractTypeTokenGroup $returnType = null,
+        public bool                               $abstract = false,
+        public VisibilityEnum                     $visibility = VisibilityEnum::PUBLIC,
+        public bool                               $static = false,
         /** @var array<Token|TokenGroup>|Token|TokenGroup $instructions */
-        public readonly array|Token|TokenGroup             $instructions = [],
+        public array|Token|TokenGroup             $instructions = [],
     ) {
     }
 
@@ -78,7 +78,7 @@ class MethodTokenGroup extends TokenGroup
         if ($this->arguments) {
             $tokens[] = $this->arguments->render($context, $rules);
         } else {
-            $tokens[] = (new ArgumentListTokenGroup())->render($context, $rules);
+            $tokens[] = (new ParameterListTokenGroup())->render($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
         $tokens = $this->addInlineBraceTokensAndInstructions($context, $rules, $tokens);
@@ -229,7 +229,7 @@ class MethodTokenGroup extends TokenGroup
         if ($this->arguments) {
             $tokens[] = $this->arguments->renderChopDownScenario($context, $rules);
         } else {
-            $tokens[] = (new ArgumentListTokenGroup())->renderChopDownScenario($context, $rules);
+            $tokens[] = (new ParameterListTokenGroup())->renderChopDownScenario($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
         $tokens = $this->addChopDownBraceTokensAndInstructions($context, $rules, $tokens);

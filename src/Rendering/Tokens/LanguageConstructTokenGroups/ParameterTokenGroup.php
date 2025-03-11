@@ -13,17 +13,17 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ArgumentTokenGroup extends TokenGroup
+class ParameterTokenGroup extends TokenGroup
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        public readonly string|Token                       $name,
-        public readonly null|string|AbstractTypeTokenGroup $type = null,
-        public readonly null|int|float|string|bool|Token   $defaultValue = null,
-        public readonly bool                               $defaultValueIsNull = false,
-        public readonly bool                               $isVariadic = false,
+        public string|Token                       $name,
+        public null|string|AbstractTypeTokenGroup $type = null,
+        public null|int|float|string|bool|Token   $defaultValue = null,
+        public bool                               $defaultValueIsNull = false,
+        public bool                               $isVariadic = false,
     ) {
     }
 
@@ -68,7 +68,7 @@ class ArgumentTokenGroup extends TokenGroup
             $tokensAsString = $this->renderTokensToString($typesTokens);
             $spacesToAdd = max(0, $context->chopDown->paddingSpacesForTypes - strlen($tokensAsString)) + 1;
         } elseif (!empty($typesTokens)) {
-            $spacesToAdd = $rules->arguments->spacesAfterType;
+            $spacesToAdd = $rules->parameters->spacesAfterType;
         } else {
             return [];
         }
@@ -129,7 +129,7 @@ class ArgumentTokenGroup extends TokenGroup
             $tokensAsString = $this->renderTokensToString($identifierTokens);
             $spacesToAdd = max(0, $context->chopDown->paddingSpacesForIdentifiers - strlen($tokensAsString)) + 1;
         } elseif (!empty($identifierTokens)) {
-            $spacesToAdd = $rules->arguments->spacesAfterIdentifier;
+            $spacesToAdd = $rules->parameters->spacesAfterIdentifier;
         } else {
             return [];
         }
@@ -142,6 +142,6 @@ class ArgumentTokenGroup extends TokenGroup
      */
     private function getSpacesBetweenEqualsAndValue(RenderingRules $rules): array
     {
-        return [new SpacesToken($rules->arguments->spacesAfterEquals)];
+        return [new SpacesToken($rules->parameters->spacesAfterEquals)];
     }
 }

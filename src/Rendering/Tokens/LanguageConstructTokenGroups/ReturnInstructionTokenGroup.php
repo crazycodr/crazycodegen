@@ -17,7 +17,7 @@ class ReturnInstructionTokenGroup extends InstructionTokenGroup
     /** @noinspection PhpMissingParentConstructorInspection */
     public function __construct(
         /** @var Token[]|Token|TokenGroup */
-        public readonly array|Token|TokenGroup $instructions,
+        public array|Token|TokenGroup $instructions,
     ) {
     }
 

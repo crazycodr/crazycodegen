@@ -24,19 +24,19 @@ class ClassTokenGroup extends TokenGroup
     use TokenFunctions;
 
     public function __construct(
-        public readonly string|Token                       $name,
-        public readonly null|NamespaceTokenGroup           $namespace = null,
+        public string|Token                       $name,
+        public null|NamespaceTokenGroup           $namespace = null,
         /** @var string[]|ImportTokenGroup[] $imports */
-        public readonly array                              $imports = [],
-        public readonly null|string|DocBlockTokenGroup     $docBlock = null,
-        public readonly bool                               $abstract = false,
-        public readonly null|string|AbstractTypeTokenGroup $extends = null,
+        public array                              $imports = [],
+        public null|string|DocBlockTokenGroup     $docBlock = null,
+        public bool                               $abstract = false,
+        public null|string|AbstractTypeTokenGroup $extends = null,
         /** @var string[]|AbstractTypeTokenGroup[] $implements */
-        public readonly array                              $implements = [],
+        public array                              $implements = [],
         /** @var PropertyTokenGroup[] $properties */
-        public readonly array                              $properties = [],
+        public array                              $properties = [],
         /** @var MethodTokenGroup[] $methods */
-        public readonly array                              $methods = [],
+        public array                              $methods = [],
     ) {
     }
 

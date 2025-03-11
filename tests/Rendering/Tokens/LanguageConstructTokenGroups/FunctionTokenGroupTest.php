@@ -6,8 +6,8 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterListTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -40,10 +40,10 @@ class FunctionTokenGroupTest extends TestCase
         $rules = new RenderingRules();
         $rules->lineLength = 120;
         $rules->docBlocks->lineLength = 80;
-        $rules->argumentLists->addSeparatorToLastItem = true;
-        $rules->argumentLists->padIdentifiers = false;
-        $rules->argumentLists->padTypes = false;
-        $rules->argumentLists->spacesAfterSeparator = 1;
+        $rules->parameterLists->addSeparatorToLastItem = true;
+        $rules->parameterLists->padIdentifiers = false;
+        $rules->parameterLists->padTypes = false;
+        $rules->parameterLists->spacesAfterSeparator = 1;
         $rules->functions->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
         $rules->functions->closingBrace = BracePositionEnum::DIFF_LINE;
         $rules->functions->openingBrace = BracePositionEnum::DIFF_LINE;
@@ -114,11 +114,11 @@ class FunctionTokenGroupTest extends TestCase
     {
         $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -368,11 +368,11 @@ class FunctionTokenGroupTest extends TestCase
     {
         $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -495,11 +495,11 @@ class FunctionTokenGroupTest extends TestCase
     {
         $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -522,11 +522,11 @@ class FunctionTokenGroupTest extends TestCase
     {
         $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -548,11 +548,11 @@ class FunctionTokenGroupTest extends TestCase
     {
         $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -578,11 +578,11 @@ class FunctionTokenGroupTest extends TestCase
     {
         $token = new FunctionTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -636,12 +636,12 @@ class FunctionTokenGroupTest extends TestCase
         $token = new FunctionTokenGroup(
             name: 'myFunction',
             docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the function.']),
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
-                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
-                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
-                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
+                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
+                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
+                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
                 ],
             ),
             returnType: 'int',

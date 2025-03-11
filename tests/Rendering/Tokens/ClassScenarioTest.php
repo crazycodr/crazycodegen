@@ -7,8 +7,8 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterListTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArrayTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\AssignInstructionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassReferenceTokenGroup;
@@ -58,9 +58,9 @@ class ClassScenarioTest extends TestCase
             methods: [
                 new MethodTokenGroup(
                     name: '__construct',
-                    arguments: new ArgumentListTokenGroup(
-                        arguments: [
-                            new ArgumentTokenGroup(
+                    arguments: new ParameterListTokenGroup(
+                        parameters: [
+                            new ParameterTokenGroup(
                                 name: 'mock',
                                 type: new MultiTypeTokenGroup(
                                     types: [
@@ -280,9 +280,9 @@ class ClassScenarioTest extends TestCase
                 ),
                 new MethodTokenGroup(
                     name: 'getConfigApiClientSpyBuilder',
-                    arguments: new ArgumentListTokenGroup(
-                        arguments: [
-                            new ArgumentTokenGroup(
+                    arguments: new ParameterListTokenGroup(
+                        parameters: [
+                            new ParameterTokenGroup(
                                 name: 'scenarioBuildingCallable',
                                 type: new MultiTypeTokenGroup(types: ['null', 'callable']),
                                 defaultValueIsNull: true,

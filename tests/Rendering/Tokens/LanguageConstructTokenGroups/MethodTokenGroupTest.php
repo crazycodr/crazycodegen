@@ -11,8 +11,8 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\AsteriskToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterListTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\InstructionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\MethodTokenGroup;
@@ -48,10 +48,10 @@ class MethodTokenGroupTest extends TestCase
     {
         $rules = new RenderingRules();
         $rules->lineLength = 120;
-        $rules->argumentLists->spacesAfterSeparator = 1;
-        $rules->argumentLists->addSeparatorToLastItem = true;
-        $rules->argumentLists->padTypes = true;
-        $rules->argumentLists->padIdentifiers = true;
+        $rules->parameterLists->spacesAfterSeparator = 1;
+        $rules->parameterLists->addSeparatorToLastItem = true;
+        $rules->parameterLists->padTypes = true;
+        $rules->parameterLists->padIdentifiers = true;
         $rules->methods->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
         $rules->methods->openingBrace = BracePositionEnum::DIFF_LINE;
         $rules->methods->closingBrace = BracePositionEnum::DIFF_LINE;
@@ -201,11 +201,11 @@ class MethodTokenGroupTest extends TestCase
     {
         $token = new MethodTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -454,11 +454,11 @@ class MethodTokenGroupTest extends TestCase
     {
         $token = new MethodTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -587,11 +587,11 @@ class MethodTokenGroupTest extends TestCase
     {
         $token = new MethodTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -613,11 +613,11 @@ class MethodTokenGroupTest extends TestCase
     {
         $token = new MethodTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -638,11 +638,11 @@ class MethodTokenGroupTest extends TestCase
     {
         $token = new MethodTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -667,11 +667,11 @@ class MethodTokenGroupTest extends TestCase
     {
         $token = new MethodTokenGroup(
             name: 'myFunction',
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'foo'),
-                    new ArgumentTokenGroup(name: 'bar', type: 'int'),
-                    new ArgumentTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'foo'),
+                    new ParameterTokenGroup(name: 'bar', type: 'int'),
+                    new ParameterTokenGroup(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -769,12 +769,12 @@ class MethodTokenGroupTest extends TestCase
         $token = new MethodTokenGroup(
             name: 'myFunction',
             docBlock: new DocBlockTokenGroup(['This is a docblock that should be wrapped and displayed before the function.']),
-            arguments: new ArgumentListTokenGroup(
-                arguments: [
-                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
-                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
-                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
-                    new ArgumentTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
+            arguments: new ParameterListTokenGroup(
+                parameters: [
+                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
+                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
+                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
+                    new ParameterTokenGroup(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
                 ],
             ),
             returnType: 'int',

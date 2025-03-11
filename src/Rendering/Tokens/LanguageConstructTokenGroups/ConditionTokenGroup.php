@@ -25,11 +25,11 @@ class ConditionTokenGroup extends TokenGroup
 
     public function __construct(
         /** @var array<Token|TokenGroup>|Token|TokenGroup $condition */
-        public readonly array|Token|TokenGroup $condition,
+        public array|Token|TokenGroup $condition,
         /** @var array<Token|TokenGroup>|Token|TokenGroup $trueInstructions */
-        public readonly array|Token|TokenGroup $trueInstructions,
+        public array|Token|TokenGroup $trueInstructions,
         /** @var array<Token|TokenGroup>|Token|TokenGroup $falseInstructions */
-        public readonly array|Token|TokenGroup $falseInstructions = [],
+        public array|Token|TokenGroup $falseInstructions = [],
     ) {
     }
 

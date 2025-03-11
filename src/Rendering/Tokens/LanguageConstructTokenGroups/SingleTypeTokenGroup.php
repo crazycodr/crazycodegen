@@ -13,7 +13,7 @@ class SingleTypeTokenGroup extends AbstractTypeTokenGroup implements IsStaticAcc
     private string $shortName;
 
     public function __construct(
-        public readonly string $type,
+        public string $type,
     ) {
         if (str_contains($type, '\\')) {
             $this->namespace = substr($type, 0, strrpos($type, '\\'));

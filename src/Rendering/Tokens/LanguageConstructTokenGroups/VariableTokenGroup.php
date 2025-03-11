@@ -15,7 +15,7 @@ class VariableTokenGroup extends TokenGroup
     use FlattenFunction;
 
     public function __construct(
-        public readonly string|Token $name,
+        public string|Token $name,
     ) {
     }
 

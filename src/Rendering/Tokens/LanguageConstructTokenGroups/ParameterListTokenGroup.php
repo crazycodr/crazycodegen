@@ -16,14 +16,14 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ArgumentListTokenGroup extends TokenGroup implements RendersInlineVersion, RendersChopdownVersion
+class ParameterListTokenGroup extends TokenGroup implements RendersInlineVersion, RendersChopdownVersion
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        /** @var ArgumentTokenGroup[] $arguments */
-        public array $arguments = [],
+        /** @var ParameterTokenGroup[] $parameters */
+        public array $parameters = [],
     ) {
     }
 
@@ -35,31 +35,31 @@ class ArgumentListTokenGroup extends TokenGroup implements RendersInlineVersion,
         $tokens = [];
         $tokens[] = new ParStartToken();
         $tokens[] = new NewLinesToken();
-        if (!empty($this->arguments)) {
+        if (!empty($this->parameters)) {
             $rules->indent($context);
-            if ($rules->argumentLists->padTypes || $rules->argumentLists->padIdentifiers) {
+            if ($rules->parameterLists->padTypes || $rules->parameterLists->padIdentifiers) {
                 $types = [];
                 $identifiers = [];
-                foreach ($this->arguments as $argument) {
-                    $types[] = $argument->renderType($context, $rules);
-                    $identifiers[] = $argument->renderIdentifier($context, $rules);
+                foreach ($this->parameters as $parameter) {
+                    $types[] = $parameter->renderType($context, $rules);
+                    $identifiers[] = $parameter->renderIdentifier($context, $rules);
                 }
                 $longestType = max(array_map(fn (array $tokens) => strlen($this->renderTokensToString($tokens)), $types));
                 $longestIdentifier = max(array_map(fn (array $tokens) => strlen($this->renderTokensToString($tokens)), $identifiers));
-                $context->chopDown->paddingSpacesForTypes = $rules->argumentLists->padTypes ? $longestType : null;
-                $context->chopDown->paddingSpacesForIdentifiers = $rules->argumentLists->padIdentifiers ? $longestIdentifier : null;
+                $context->chopDown->paddingSpacesForTypes = $rules->parameterLists->padTypes ? $longestType : null;
+                $context->chopDown->paddingSpacesForIdentifiers = $rules->parameterLists->padIdentifiers ? $longestIdentifier : null;
             }
-            $argumentsLeft = count($this->arguments);
-            $argumentListTokens = [];
-            foreach ($this->arguments as $argument) {
-                $argumentsLeft--;
-                $argumentListTokens[] = $argument->render($context, $rules);
-                if ($argumentsLeft > 0 || $rules->argumentLists->addSeparatorToLastItem) {
-                    $argumentListTokens[] = new CommaToken();
+            $parametersLeft = count($this->parameters);
+            $parameterListTokens = [];
+            foreach ($this->parameters as $parameter) {
+                $parametersLeft--;
+                $parameterListTokens[] = $parameter->render($context, $rules);
+                if ($parametersLeft > 0 || $rules->parameterLists->addSeparatorToLastItem) {
+                    $parameterListTokens[] = new CommaToken();
                 }
-                $argumentListTokens[] = new NewLinesToken();
+                $parameterListTokens[] = new NewLinesToken();
             }
-            $tokens[] = $this->insertIndentationTokens($rules, $argumentListTokens);
+            $tokens[] = $this->insertIndentationTokens($rules, $parameterListTokens);
             $context->chopDown->paddingSpacesForTypes = null;
             $context->chopDown->paddingSpacesForIdentifiers = null;
             $rules->unindent($context);
@@ -85,11 +85,11 @@ class ArgumentListTokenGroup extends TokenGroup implements RendersInlineVersion,
     {
         $tokens = [];
         $tokens[] = new ParStartToken();
-        $argumentsLeft = count($this->arguments);
-        foreach ($this->arguments as $argument) {
-            $argumentsLeft--;
-            $tokens[] = $argument->render($context, $rules);
-            if ($argumentsLeft > 0) {
+        $parametersLeft = count($this->parameters);
+        foreach ($this->parameters as $parameter) {
+            $parametersLeft--;
+            $tokens[] = $parameter->render($context, $rules);
+            if ($parametersLeft > 0) {
                 $tokens[] = new CommaToken();
                 $tokens[] = new SpacesToken();
             }

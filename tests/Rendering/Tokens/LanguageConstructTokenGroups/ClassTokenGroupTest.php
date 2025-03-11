@@ -6,8 +6,8 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentListTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArgumentTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterListTokenGroup;
+use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParameterTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ClassTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\DocBlockTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ImportTokenGroup;
@@ -46,10 +46,10 @@ class ClassTokenGroupTest extends TestCase
         $newRules = new RenderingRules();
         $newRules->lineLength = 120;
         $newRules->docBlocks->lineLength = 80;
-        $newRules->argumentLists->spacesAfterSeparator = 1;
-        $newRules->argumentLists->addSeparatorToLastItem = true;
-        $newRules->argumentLists->padTypes = true;
-        $newRules->argumentLists->padIdentifiers = true;
+        $newRules->parameterLists->spacesAfterSeparator = 1;
+        $newRules->parameterLists->addSeparatorToLastItem = true;
+        $newRules->parameterLists->padTypes = true;
+        $newRules->parameterLists->padIdentifiers = true;
         $newRules->classes->extendsOnNextLine = WrappingDecision::IF_TOO_LONG;
         $newRules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
         $newRules->classes->implementsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
@@ -194,9 +194,9 @@ class ClassTokenGroupTest extends TestCase
             methods: [
                 new MethodTokenGroup(
                     name: 'method1',
-                    arguments: new ArgumentListTokenGroup(
-                        arguments: [
-                            new ArgumentTokenGroup(
+                    arguments: new ParameterListTokenGroup(
+                        parameters: [
+                            new ParameterTokenGroup(
                                 name: 'arg1',
                                 type: 'CrazyCodeGen\\Tests\\Test2',
                             )

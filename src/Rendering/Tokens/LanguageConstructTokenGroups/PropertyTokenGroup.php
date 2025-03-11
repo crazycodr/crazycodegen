@@ -23,13 +23,13 @@ class PropertyTokenGroup extends TokenGroup
     use TokenFunctions;
 
     public function __construct(
-        public readonly string|Token                       $name,
-        public readonly null|string|DocBlockTokenGroup     $docBlock = null,
-        public readonly null|string|AbstractTypeTokenGroup $type = null,
-        public readonly VisibilityEnum                     $visibility = VisibilityEnum::PUBLIC,
-        public readonly bool                               $static = false,
-        public readonly null|int|float|string|bool|Token   $defaultValue = null,
-        public readonly bool                               $defaultValueIsNull = false,
+        public string|Token                       $name,
+        public null|string|DocBlockTokenGroup     $docBlock = null,
+        public null|string|AbstractTypeTokenGroup $type = null,
+        public VisibilityEnum                     $visibility = VisibilityEnum::PUBLIC,
+        public bool                               $static = false,
+        public null|int|float|string|bool|Token   $defaultValue = null,
+        public bool                               $defaultValueIsNull = false,
     ) {
     }
 

@@ -23,12 +23,12 @@ class FunctionTokenGroup extends TokenGroup
     use TokenFunctions;
 
     public function __construct(
-        public readonly string|Token                       $name,
-        public readonly null|NamespaceTokenGroup           $namespace = null,
-        public readonly null|string|DocBlockTokenGroup     $docBlock = null,
-        public readonly null|ArgumentListTokenGroup        $arguments = null,
-        public readonly null|string|AbstractTypeTokenGroup $returnType = null,
-        public readonly null|array                         $bodyInstructions = null,
+        public string|Token                       $name,
+        public null|NamespaceTokenGroup           $namespace = null,
+        public null|string|DocBlockTokenGroup     $docBlock = null,
+        public null|ParameterListTokenGroup       $arguments = null,
+        public null|string|AbstractTypeTokenGroup $returnType = null,
+        public null|array                         $bodyInstructions = null,
     ) {
     }
 
@@ -75,7 +75,7 @@ class FunctionTokenGroup extends TokenGroup
         if ($this->arguments) {
             $tokens[] = $this->arguments->render($context, $rules);
         } else {
-            $tokens[] = (new ArgumentListTokenGroup())->render($context, $rules);
+            $tokens[] = (new ParameterListTokenGroup())->render($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
         $tokens = $this->addInlineBraceTokens($rules, $tokens);
@@ -184,7 +184,7 @@ class FunctionTokenGroup extends TokenGroup
         if ($this->arguments) {
             $tokens[] = $this->arguments->renderChopDownScenario($context, $rules);
         } else {
-            $tokens[] = (new ArgumentListTokenGroup())->renderChopDownScenario($context, $rules);
+            $tokens[] = (new ParameterListTokenGroup())->renderChopDownScenario($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
         $tokens = $this->addChopDownBraceTokens($rules, $tokens);

@@ -17,7 +17,7 @@ class DocBlockTokenGroup extends TokenGroup
 
     public function __construct(
         /** @var string[] $texts */
-        public readonly array $texts,
+        public array $texts,
     ) {
     }
 

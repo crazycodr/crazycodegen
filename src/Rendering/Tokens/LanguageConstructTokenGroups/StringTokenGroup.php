@@ -11,7 +11,7 @@ use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 class StringTokenGroup extends TokenGroup
 {
     public function __construct(
-        public readonly string $value,
+        public string $value,
     ) {
     }
 
