@@ -194,7 +194,7 @@ class ClassTokenGroupTest extends TestCase
             methods: [
                 new MethodTokenGroup(
                     name: 'method1',
-                    arguments: new ParameterListTokenGroup(
+                    parameters: new ParameterListTokenGroup(
                         parameters: [
                             new ParameterTokenGroup(
                                 name: 'arg1',

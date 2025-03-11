@@ -22,6 +22,13 @@ class MultiTypeTokenGroup extends AbstractTypeTokenGroup
         public bool  $unionTypes = true,
         public bool  $nestedTypes = false,
     ) {
+        foreach ($this->types as $typeIndex => $type) {
+            if (is_string($type)) {
+                $this->types[$typeIndex] = new SingleTypeTokenGroup($type);
+            } elseif (!$type instanceof SingleTypeTokenGroup && !$type instanceof MultiTypeTokenGroup) {
+                unset($this->types[$typeIndex]);
+            }
+        }
     }
 
     /**
@@ -56,5 +63,21 @@ class MultiTypeTokenGroup extends AbstractTypeTokenGroup
         }
         $tokens[] = new SpacesToken($context->argumentDefinitionTypePaddingSize);
         return $this->flatten($tokens);
+    }
+
+    /**
+     * @return SingleTypeTokenGroup[]
+     */
+    public function getAllTypes(): array
+    {
+        $types = [];
+        foreach ($this->types as $type) {
+            if ($type instanceof SingleTypeTokenGroup) {
+                $types[] = $type;
+            } elseif ($type instanceof MultiTypeTokenGroup) {
+                $types = array_merge($types, $type->getAllTypes());
+            }
+        }
+        return $types;
     }
 }

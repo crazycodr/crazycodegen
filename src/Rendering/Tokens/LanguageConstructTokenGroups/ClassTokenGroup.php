@@ -24,20 +24,125 @@ class ClassTokenGroup extends TokenGroup
     use TokenFunctions;
 
     public function __construct(
-        public string|Token                       $name,
-        public null|NamespaceTokenGroup           $namespace = null,
-        /** @var string[]|ImportTokenGroup[] $imports */
-        public array                              $imports = [],
-        public null|string|DocBlockTokenGroup     $docBlock = null,
-        public bool                               $abstract = false,
-        public null|string|AbstractTypeTokenGroup $extends = null,
-        /** @var string[]|AbstractTypeTokenGroup[] $implements */
-        public array                              $implements = [],
-        /** @var PropertyTokenGroup[] $properties */
-        public array                              $properties = [],
+        public string                               $name,
+        public null|string|NamespaceTokenGroup      $namespace = null,
+        /** @var string[]|SingleTypeTokenGroup[]|MultiTypeTokenGroup[]|ImportTokenGroup[] $imports */
+        public array                                $imports = [],
+        public null|string|array|DocBlockTokenGroup $docBlock = null,
+        public bool                                 $abstract = false,
+        public null|string|SingleTypeTokenGroup     $extends = null,
+        /** @var string[]|SingleTypeTokenGroup[] $implements */
+        public array                                $implements = [],
+        /** @var string[]|PropertyTokenGroup[] $properties */
+        public array                                $properties = [],
         /** @var MethodTokenGroup[] $methods */
-        public array                              $methods = [],
-    ) {
+        public array                                $methods = [],
+    )
+    {
+        $this->setNamespace($namespace);
+        foreach ($this->imports as $importIndex => $import) {
+            if (is_string($import)) {
+                $this->imports[$importIndex] = new ImportTokenGroup($import);
+            } elseif ($import instanceof SingleTypeTokenGroup) {
+                $this->imports[$importIndex] = new ImportTokenGroup($import->type);
+            } elseif ($import instanceof MultiTypeTokenGroup) {
+                foreach ($import->getAllTypes() as $type) {
+                    $this->imports[] = new ImportTokenGroup($type);
+                }
+                unset($this->imports[$importIndex]);
+            } elseif (!$import instanceof ImportTokenGroup) {
+                unset($this->imports[$importIndex]);
+            }
+        }
+        $this->setDocBlock($docBlock);
+        $this->setExtends($extends);
+        foreach ($this->implements as $implementIndex => $implement) {
+            if (is_string($implement)) {
+                $this->implements[$implementIndex] = new SingleTypeTokenGroup($implement);
+            } elseif (!$implement instanceof SingleTypeTokenGroup) {
+                unset($this->implements[$implementIndex]);
+            }
+        }
+        foreach ($this->properties as $propertyIndex => $property) {
+            if (is_string($property)) {
+                $this->properties[$propertyIndex] = new PropertyTokenGroup($property);
+            } elseif (!$property instanceof PropertyTokenGroup) {
+                unset($this->properties[$propertyIndex]);
+            }
+        }
+        foreach ($this->methods as $methodIndex => $method) {
+            if (is_string($method)) {
+                $this->methods[$methodIndex] = new MethodTokenGroup($method);
+            } elseif (!$method instanceof MethodTokenGroup) {
+                unset($this->methods[$methodIndex]);
+            }
+        }
+    }
+
+    public function setNamespace(null|string|NamespaceTokenGroup $namespace): self
+    {
+        if (is_string($namespace)) {
+            $namespace = new NamespaceTokenGroup($namespace);
+        }
+        $this->namespace = $namespace;
+        return $this;
+    }
+
+    public function addImport(string|SingleTypeTokenGroup|MultiTypeTokenGroup|ImportTokenGroup $import): self
+    {
+        if (is_string($import)) {
+            $this->imports[] = new ImportTokenGroup($import);
+        } elseif ($import instanceof SingleTypeTokenGroup) {
+            $this->imports[] = new ImportTokenGroup($import->type);
+        } elseif ($import instanceof MultiTypeTokenGroup) {
+            foreach ($import->getAllTypes() as $type) {
+                $this->imports[] = new ImportTokenGroup($type);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @param string|string[]|DocBlockTokenGroup $docBlock
+     * @return $this
+     */
+    public function setDocBlock(null|string|array|DocBlockTokenGroup $docBlock): self
+    {
+        if (is_string($docBlock)) {
+            $docBlock = new DocBlockTokenGroup([$docBlock]);
+        } elseif (is_array($docBlock)) {
+            $docBlock = array_filter($docBlock, fn($value) => is_string($value));
+            $docBlock = new DocBlockTokenGroup($docBlock);
+        }
+        $this->docBlock = $docBlock;
+        return $this;
+    }
+
+    public function setExtends(null|string|SingleTypeTokenGroup $extends): self
+    {
+        if (is_string($extends)) {
+            $extends = new SingleTypeTokenGroup($extends);
+        }
+        $this->extends = $extends;
+        return $this;
+    }
+
+    public function addProperty(string|PropertyTokenGroup $property): self
+    {
+        if (is_string($property)) {
+            $property = new PropertyTokenGroup($property);
+        }
+        $this->properties[] = $property;
+        return $this;
+    }
+
+    public function addMethod(string|MethodTokenGroup $method): self
+    {
+        if (is_string($method)) {
+            $method = new MethodTokenGroup($method);
+        }
+        $this->methods[] = $method;
+        return $this;
     }
 
     /**
@@ -49,11 +154,7 @@ class ClassTokenGroup extends TokenGroup
         if ($this->extends) {
             $tokens[] = new ExtendsToken();
             $tokens[] = new SpacesToken();
-            if (!$this->extends instanceof AbstractTypeTokenGroup) {
-                $tokens[] = (new SingleTypeTokenGroup($this->extends))->render($context, $rules);
-            } else {
-                $tokens[] = $this->extends->render($context, $rules);
-            }
+            $tokens[] = $this->extends->render($context, $rules);
         }
         return $this->flatten($tokens);
     }
@@ -74,14 +175,9 @@ class ClassTokenGroup extends TokenGroup
         $importsLeft = count($this->imports);
         foreach ($this->imports as $import) {
             $importsLeft--;
-            if (is_string($import)) {
-                $tokens[] = (new ImportTokenGroup($import))->render($context, $rules);
-                $context->importedClasses[] = $import;
-            } else {
-                $tokens[] = $import->render($context, $rules);
-                if (!$import->alias) {
-                    $context->importedClasses[] = $import->type;
-                }
+            $tokens[] = $import->render($context, $rules);
+            if (!$import->alias) {
+                $context->importedClasses[] = $import->type;
             }
             if ($importsLeft > 0) {
                 $tokens[] = new NewLinesToken($rules->classes->newLinesAfterEachImport);
@@ -248,7 +344,8 @@ class ClassTokenGroup extends TokenGroup
         WrappingDecision $wrapIndividualImplements,
         RenderContext    $context,
         RenderingRules   $rules,
-    ): array {
+    ): array
+    {
         $scenario = [];
         $scenario[] = $this->getDeclarationTokens();
         $extendsTokens = $this->getExtendsTokens($context, $rules);
@@ -297,11 +394,7 @@ class ClassTokenGroup extends TokenGroup
         }
         $tokens[] = new ClassToken();
         $tokens[] = new SpacesToken();
-        if (!$this->name instanceof Token) {
-            $tokens[] = new Token($this->name);
-        } else {
-            $tokens[] = $this->name;
-        }
+        $tokens[] = new Token($this->name);
         return $this->flatten($tokens);
     }
 

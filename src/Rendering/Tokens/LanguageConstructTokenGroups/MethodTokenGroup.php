@@ -27,16 +27,101 @@ class MethodTokenGroup extends TokenGroup
     use TokenFunctions;
 
     public function __construct(
-        public string|Token                       $name,
-        public null|string|DocBlockTokenGroup     $docBlock = null,
-        public null|ParameterListTokenGroup       $arguments = null,
-        public null|string|AbstractTypeTokenGroup $returnType = null,
-        public bool                               $abstract = false,
-        public VisibilityEnum                     $visibility = VisibilityEnum::PUBLIC,
-        public bool                               $static = false,
-        /** @var array<Token|TokenGroup>|Token|TokenGroup $instructions */
-        public array|Token|TokenGroup             $instructions = [],
-    ) {
+        public string                                               $name,
+        public null|string|array|DocBlockTokenGroup                 $docBlock = null,
+        public bool                                                 $abstract = false,
+        public VisibilityEnum                                       $visibility = VisibilityEnum::PUBLIC,
+        public bool                                                 $static = false,
+        public null|ParameterListTokenGroup                         $parameters = null,
+        public null|string|SingleTypeTokenGroup|MultiTypeTokenGroup $returnType = null,
+        /** @var Token|TokenGroup|Token[]|TokenGroup[] $instructions */
+        public array|Token|TokenGroup                               $instructions = [],
+    )
+    {
+        $this->setDocBlock($docBlock);
+        $this->setReturnType($returnType);
+    }
+
+    /**
+     * @param string|string[]|DocBlockTokenGroup $docBlock
+     * @return $this
+     */
+    public function setDocBlock(null|string|array|DocBlockTokenGroup $docBlock): self
+    {
+        if (is_string($docBlock)) {
+            $docBlock = new DocBlockTokenGroup([$docBlock]);
+        } elseif (is_array($docBlock)) {
+            $docBlock = array_filter($docBlock, fn($value) => is_string($value));
+            $docBlock = new DocBlockTokenGroup($docBlock);
+        }
+        $this->docBlock = $docBlock;
+        return $this;
+    }
+
+    public function setAbstract(bool $isAbstract): self
+    {
+        $this->abstract = $isAbstract;
+        return $this;
+    }
+
+    public function setVisibility(VisibilityEnum $visibility): self
+    {
+        $this->visibility = $visibility;
+        return $this;
+    }
+
+    public function setStatic(bool $isStatic): self
+    {
+        $this->static = $isStatic;
+        return $this;
+    }
+
+    public function addParameter(string|ParameterTokenGroup $parameter): self
+    {
+        if ($this->parameters === null) {
+            $this->parameters = new ParameterListTokenGroup();
+        }
+        if (is_string($parameter)) {
+            $parameter = new ParameterTokenGroup($parameter);
+        }
+        $this->parameters->parameters[] = $parameter;
+        return $this;
+    }
+
+    public function addParameterExploded(
+        string                                               $name,
+        null|string|SingleTypeTokenGroup|MultiTypeTokenGroup $type,
+        null|int|float|string|bool|Token                     $defaultValue = null,
+        bool                                                 $defaultValueIsNull = false,
+        bool                                                 $isVariadic = false,
+    ): self
+    {
+        if ($this->parameters === null) {
+            $this->parameters = new ParameterListTokenGroup();
+        }
+        $this->parameters->parameters[] = new ParameterTokenGroup(
+            $name,
+            $type,
+            $defaultValue,
+            $defaultValueIsNull,
+            $isVariadic,
+        );
+        return $this;
+    }
+
+    public function setReturnType(null|string|SingleTypeTokenGroup|MultiTypeTokenGroup $type): self
+    {
+        if (is_string($type)) {
+            $type = new SingleTypeTokenGroup($type);
+        }
+        $this->returnType = $type;
+        return $this;
+    }
+
+    public function addInstruction(Token|TokenGroup $instruction): self
+    {
+        $this->instructions[] = $instruction;
+        return $this;
     }
 
     /**
@@ -75,8 +160,8 @@ class MethodTokenGroup extends TokenGroup
     {
         $tokens = [];
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
-        if ($this->arguments) {
-            $tokens[] = $this->arguments->render($context, $rules);
+        if ($this->parameters) {
+            $tokens[] = $this->parameters->render($context, $rules);
         } else {
             $tokens[] = (new ParameterListTokenGroup())->render($context, $rules);
         }
@@ -104,11 +189,7 @@ class MethodTokenGroup extends TokenGroup
         }
         $tokens[] = new FunctionToken();
         $tokens[] = new SpacesToken($rules->methods->spacesAfterFunction);
-        if (!$this->name instanceof Token) {
-            $tokens[] = new Token($this->name);
-        } else {
-            $tokens[] = $this->name;
-        }
+        $tokens[] = new Token($this->name);
         $tokens[] = new SpacesToken($rules->methods->spacesAfterIdentifier);
         return $tokens;
     }
@@ -226,8 +307,8 @@ class MethodTokenGroup extends TokenGroup
     {
         $tokens = [];
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
-        if ($this->arguments) {
-            $tokens[] = $this->arguments->renderChopDownScenario($context, $rules);
+        if ($this->parameters) {
+            $tokens[] = $this->parameters->renderChopDownScenario($context, $rules);
         } else {
             $tokens[] = (new ParameterListTokenGroup())->renderChopDownScenario($context, $rules);
         }

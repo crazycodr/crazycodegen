@@ -11,7 +11,6 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NamespaceToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Tokens\TokenGroup;
-use CrazyCodeGen\Rendering\Tokens\UserLandTokens\NamespacePathToken;
 
 class NamespaceTokenGroup extends TokenGroup
 {
@@ -32,7 +31,7 @@ class NamespaceTokenGroup extends TokenGroup
         $tokens = [];
         $tokens[] = new NamespaceToken();
         $tokens[] = new SpacesToken($rules->namespaces->spacesAfterNamespace);
-        $tokens[] = new NamespacePathToken($this->path);
+        $tokens[] = new Token($this->path);
         $tokens[] = new SemiColonToken();
         $tokens[] = new NewLinesToken($rules->namespaces->newLinesAfterSemiColon);
         return $this->flatten($tokens);
