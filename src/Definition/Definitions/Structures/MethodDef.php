@@ -38,8 +38,7 @@ class MethodDef extends Tokenizes
         public null|string|SingleTypeDef|MultiTypeDef $returnType = null,
         /** @var Token|Tokenizes|Token[]|Tokenizes[] $instructions */
         public array|Token|Tokenizes                  $instructions = [],
-    )
-    {
+    ) {
         $this->setDocBlock($docBlock);
         $this->setReturnType($returnType);
     }
@@ -53,7 +52,7 @@ class MethodDef extends Tokenizes
         if (is_string($docBlock)) {
             $docBlock = new DocBlockDef([$docBlock]);
         } elseif (is_array($docBlock)) {
-            $docBlock = array_filter($docBlock, fn($value) => is_string($value));
+            $docBlock = array_filter($docBlock, fn ($value) => is_string($value));
             $docBlock = new DocBlockDef($docBlock);
         }
         $this->docBlock = $docBlock;
@@ -96,8 +95,7 @@ class MethodDef extends Tokenizes
         null|int|float|string|bool|Token       $defaultValue = null,
         bool                                   $defaultValueIsNull = false,
         bool                                   $isVariadic = false,
-    ): self
-    {
+    ): self {
         if ($this->parameters === null) {
             $this->parameters = new ParameterListDef();
         }

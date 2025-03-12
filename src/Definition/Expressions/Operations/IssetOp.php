@@ -19,8 +19,7 @@ class IssetOp extends Tokenizes
 
     public function __construct(
         public string|Token|Tokenizes $operand,
-    )
-    {
+    ) {
         if (is_string($this->operand)) {
             $this->operand = new Token($this->operand);
         }

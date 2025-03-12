@@ -170,7 +170,7 @@ class ChainOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDow
 
     public function to(string|PropertyDef|MethodDef|CallOp|MemberAccessContext $what): self
     {
-        if(is_string($what)) {
+        if (is_string($what)) {
             $what = new Expression($what);
         }
         $this->chain[] = $what;

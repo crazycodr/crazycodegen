@@ -30,8 +30,7 @@ class NewOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownT
         public string|Token|Tokenizes|SingleTypeDef|ClassDef $class,
         /** @var array|Tokenizes[] $arguments */
         public array                                         $arguments = [],
-    )
-    {
+    ) {
         if (is_string($this->class)) {
             $this->class = new Token($this->class);
         } elseif ($this->class instanceof ClassDef) {

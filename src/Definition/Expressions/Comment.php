@@ -20,8 +20,7 @@ class Comment extends Tokenizes implements ShouldNotBeNestedIntoInstruction
     public function __construct(
         public string $text,
         public bool   $useMultiline = false,
-    )
-    {
+    ) {
     }
 
     /**

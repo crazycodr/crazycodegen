@@ -18,8 +18,7 @@ class ClassRefVal extends Tokenizes
 
     public function __construct(
         public string|SingleTypeDef $name,
-    )
-    {
+    ) {
         if (is_string($this->name)) {
             $this->name = new SingleTypeDef($this->name);
         }

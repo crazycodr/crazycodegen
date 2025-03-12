@@ -17,8 +17,7 @@ class NotOp extends Tokenizes
     public function __construct(
         public int|float|string|bool|Tokenizes $operand,
         public bool                            $doubled = false,
-    )
-    {
+    ) {
         $this->operand = $this->getValOrReturn($this->operand);
     }
 

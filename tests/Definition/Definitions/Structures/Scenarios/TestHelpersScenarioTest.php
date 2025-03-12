@@ -58,7 +58,7 @@ class TestHelpersScenarioTest extends TestCase
                     left: $configApiManagerType->to(new CallOp('getClient')),
                     right: $configApiClientType,
                 )),
-                trueInstructions: [
+                instructions: [
                     $configApiManagerType->to(new CallOp(name: 'setClient', arguments: [null])),
                 ]
             ))
@@ -101,7 +101,7 @@ class TestHelpersScenarioTest extends TestCase
             ->setReturnType($configApiSpyBuilderType)
             ->addInstruction(new Condition(
                 condition: new NotOp(new IssetOp(ThisContext::to($configApiClientSpyBuilderProperty))),
-                trueInstructions: [
+                instructions: [
                     new Assign(
                         subject: ThisContext::to($configApiClientSpyBuilderProperty),
                         value: new NewOp(
@@ -116,7 +116,7 @@ class TestHelpersScenarioTest extends TestCase
             ->addInstruction(new NewLinesToken())
             ->addInstruction(new Condition(
                 condition: $scenarioBuildingCallable,
-                trueInstructions: [
+                instructions: [
                     new CallOp(
                         name: $scenarioBuildingCallable,
                         arguments: [ThisContext::to($configApiClientSpyBuilderProperty)],

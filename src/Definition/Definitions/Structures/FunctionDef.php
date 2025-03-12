@@ -29,8 +29,7 @@ class FunctionDef extends Tokenizes
         public null|ParameterListDef                  $arguments = null,
         public null|string|SingleTypeDef|MultiTypeDef $returnType = null,
         public null|array                             $bodyInstructions = null,
-    )
-    {
+    ) {
     }
 
     /**

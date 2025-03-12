@@ -37,8 +37,7 @@ class ClassDef extends Tokenizes
         public array                         $properties = [],
         /** @var MethodDef[] $methods */
         public array                         $methods = [],
-    )
-    {
+    ) {
         $this->setNamespace($namespace);
         foreach ($this->imports as $importIndex => $import) {
             if (is_string($import)) {
@@ -111,7 +110,7 @@ class ClassDef extends Tokenizes
         if (is_string($docBlock)) {
             $docBlock = new DocBlockDef([$docBlock]);
         } elseif (is_array($docBlock)) {
-            $docBlock = array_filter($docBlock, fn($value) => is_string($value));
+            $docBlock = array_filter($docBlock, fn ($value) => is_string($value));
             $docBlock = new DocBlockDef($docBlock);
         }
         $this->docBlock = $docBlock;
@@ -344,8 +343,7 @@ class ClassDef extends Tokenizes
         WrappingDecision $wrapIndividualImplements,
         RenderContext    $context,
         RenderingRules   $rules,
-    ): array
-    {
+    ): array {
         $scenario = [];
         $scenario[] = $this->getDeclarationTokens();
         $extendsTokens = $this->getExtendsTokens($context, $rules);

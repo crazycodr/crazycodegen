@@ -3,9 +3,9 @@
 namespace CrazyCodeGen\Definition\Expressions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesReference;
 use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Base\ProvidesReference;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
@@ -16,7 +16,6 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
-use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ElseToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\IfToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -27,24 +26,16 @@ class Condition extends Tokenizes implements ShouldNotBeNestedIntoInstruction
     use TokenFunctions;
 
     public function __construct(
-        /** @var array<Token|Tokenizes>|Token|Tokenizes $condition */
-        public array|Token|Tokenizes $condition,
-        /** @var array<Token|Tokenizes>|Token|Tokenizes $trueInstructions */
-        public array|Token|Tokenizes $trueInstructions,
-        /** @var array<Token|Tokenizes>|Token|Tokenizes $falseInstructions */
-        public array|Token|Tokenizes $falseInstructions = [],
+        public null|Tokenizes $condition = null,
+        /** @var Tokenizes[] $instructions */
+        public array          $instructions = [],
     ) {
         if ($this->condition instanceof ProvidesReference) {
             $this->condition = $this->condition->getReference();
         }
-        foreach ($this->trueInstructions as $trueInstructionIndex => $trueInstruction) {
-            if (!$trueInstruction instanceof Instruction) {
-                $this->trueInstructions[$trueInstructionIndex] = new Instruction($trueInstruction);
-            }
-        }
-        foreach ($this->falseInstructions as $falseInstructionIndex => $falseInstruction) {
-            if (!$falseInstruction instanceof Instruction) {
-                $this->falseInstructions[$falseInstructionIndex] = new Instruction($falseInstruction);
+        foreach ($this->instructions as $instructionIndex => $instruction) {
+            if (!$instruction instanceof Instruction) {
+                $this->instructions[$instructionIndex] = new Instruction($instruction);
             }
         }
     }
@@ -58,11 +49,13 @@ class Condition extends Tokenizes implements ShouldNotBeNestedIntoInstruction
     {
         $tokens = [];
 
-        $tokens[] = new IfToken();
-        $tokens[] = new SpacesToken($rules->conditions->spacesAfterKeyword);
-        $tokens[] = new ParStartToken();
-        $tokens[] = $this->convertFlexibleTokenValueToTokens($this->condition, $context, $rules);
-        $tokens[] = new ParEndToken();
+        if (!is_null($this->condition)) {
+            $tokens[] = new IfToken();
+            $tokens[] = new SpacesToken($rules->conditions->spacesAfterKeyword);
+            $tokens[] = new ParStartToken();
+            $tokens[] = $this->convertFlexibleTokenValueToTokens($this->condition, $context, $rules);
+            $tokens[] = new ParEndToken();
+        }
 
         if ($rules->conditions->openingBrace === BracePositionEnum::SAME_LINE) {
             $tokens[] = new SpacesToken($rules->conditions->spacesBeforeOpeningBrace);
@@ -73,44 +66,17 @@ class Condition extends Tokenizes implements ShouldNotBeNestedIntoInstruction
         $tokens[] = new NewLinesToken();
 
         $rules->indent($context);
-        $trueTokens = $this->renderInstructionsFromFlexibleTokenValue($this->trueInstructions, $context, $rules);
-        if (!empty($trueTokens)) {
-            $tokens[] = $this->insertIndentationTokens($rules, $trueTokens);
+        $instructionTokens = [];
+        foreach ($this->instructions as $instruction) {
+            $instructionTokens[] = $instruction->getTokens($context, $rules);
+            $instructionTokens[] = new NewLinesToken();
+        }
+        if (!empty($instructionTokens)) {
+            $tokens[] = $this->insertIndentationTokens($rules, $instructionTokens);
         }
         $rules->unindent($context);
 
         $tokens[] = new BraceEndToken();
-        if (empty($this->falseInstructions)) {
-            return $this->flatten($tokens);
-        }
-        if ($rules->conditions->keywordAfterClosingBrace === BracePositionEnum::DIFF_LINE) {
-            $tokens[] = new NewLinesToken();
-        } else {
-            $tokens[] = new SpacesToken($rules->conditions->spacesAfterClosingBrace);
-        }
-
-        $tokens[] = new ElseToken();
-        if ($this->falseInstructions instanceof Condition) {
-            $tokens[] = $this->falseInstructions->getTokens($context, $rules);
-        } else {
-            if ($rules->conditions->openingBrace === BracePositionEnum::SAME_LINE) {
-                $tokens[] = new SpacesToken($rules->conditions->spacesBeforeOpeningBrace);
-            } else {
-                $tokens[] = new NewLinesToken();
-            }
-            $tokens[] = new BraceStartToken();
-            $tokens[] = new NewLinesToken();
-
-            $rules->indent($context);
-            $falseTokens = $this->renderInstructionsFromFlexibleTokenValue($this->falseInstructions, $context, $rules);
-            if (!empty($falseTokens)) {
-                $tokens = array_merge($tokens, $this->insertIndentationTokens($rules, $falseTokens));
-            }
-            $rules->unindent($context);
-
-            $tokens[] = new BraceEndToken();
-        }
-
         return $this->flatten($tokens);
     }
 }

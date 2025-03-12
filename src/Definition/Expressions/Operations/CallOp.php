@@ -30,8 +30,7 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
         public string|Token|Tokenizes|FunctionDef|MethodDef|ProvidesReference $name,
         /** @var Token[]|Tokenizes[]|Token|Tokenizes $arguments */
         public int|float|string|bool|array|Token|Tokenizes                                   $arguments = [],
-    )
-    {
+    ) {
         if (is_string($this->name)) {
             $this->name = new Token($this->name);
         } elseif ($this->name instanceof ProvidesReference) {

@@ -18,8 +18,7 @@ class InstanceOfOp extends Tokenizes
     public function __construct(
         public Tokenizes|int|float|string|bool $left,
         public Tokenizes|int|float|string|bool $right,
-    )
-    {
+    ) {
         $this->left = $this->getValOrReturn($this->left);
         $this->right = $this->getValOrReturn($this->right);
     }

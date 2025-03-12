@@ -15,8 +15,7 @@ class Expression extends Tokenizes
     public function __construct(
         /** @var string|Token[]|Token|Tokenizes */
         public string|array|Token|Tokenizes $instructions,
-    )
-    {
+    ) {
     }
 
     /**
