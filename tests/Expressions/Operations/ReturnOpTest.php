@@ -19,7 +19,7 @@ class ReturnOpTest extends TestCase
 
         $this->assertEquals(
             <<<'EOS'
-            return $foo;
+            return $foo
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );

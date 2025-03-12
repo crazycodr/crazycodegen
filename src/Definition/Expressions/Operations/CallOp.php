@@ -9,9 +9,7 @@ use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Definition\Base\ProvidesReference;
 use CrazyCodeGen\Definition\Definitions\Structures\FunctionDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
-use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
+use CrazyCodeGen\Definition\Traits\ComputableTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
@@ -26,11 +24,12 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
 {
     use FlattenFunction;
     use TokenFunctions;
+    use ComputableTrait;
 
     public function __construct(
         public string|Token|Tokenizes|FunctionDef|MethodDef|ProvidesReference $name,
         /** @var Token[]|Tokenizes[]|Token|Tokenizes $arguments */
-        public string|array|Token|Tokenizes                                   $arguments = [],
+        public int|float|string|bool|array|Token|Tokenizes                                   $arguments = [],
     )
     {
         if (is_string($this->name)) {
@@ -42,15 +41,14 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
         } elseif ($this->name instanceof MethodDef) {
             $this->name = new Token($this->name->name);
         }
-        if (is_string($this->arguments)) {
-            $this->arguments = new Token($this->arguments);
-        }
         if (!is_array($this->arguments)) {
             $this->arguments = [$this->arguments];
         }
         foreach ($this->arguments as $argumentIndex => $argument) {
             if ($argument instanceof ProvidesReference) {
                 $this->arguments[$argumentIndex] = $argument->getReference();
+            } elseif ($this->isScalarType($argument)) {
+                $this->arguments[$argumentIndex] = $this->getValOrReturn($argument);
             }
         }
     }

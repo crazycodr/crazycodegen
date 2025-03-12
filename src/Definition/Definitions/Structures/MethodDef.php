@@ -4,7 +4,9 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -118,9 +120,17 @@ class MethodDef extends Tokenizes
         return $this;
     }
 
-    public function addInstruction(Token|Tokenizes $instruction): self
+    public function addInstruction(NewLinesToken|Tokenizes|ShouldNotBeNestedIntoInstruction|Instruction $instruction): self
     {
-        $this->instructions[] = $instruction;
+        if ($instruction instanceof NewLinesToken) {
+            $this->instructions[] = $instruction;
+        } elseif ($instruction instanceof ShouldNotBeNestedIntoInstruction) {
+            $this->instructions[] = $instruction;
+        } elseif (!$instruction instanceof Instruction) {
+            $this->instructions[] = new Instruction($instruction);
+        } else {
+            $this->instructions[] = $instruction;
+        }
         return $this;
     }
 

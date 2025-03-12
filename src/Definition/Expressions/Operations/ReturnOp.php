@@ -4,22 +4,24 @@ namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Expressions\Instruction;
+use CrazyCodeGen\Definition\Traits\ComputableTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ReturnToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class ReturnOp extends Instruction
+class ReturnOp extends Tokenizes
 {
     use FlattenFunction;
+    use ComputableTrait;
 
-    /** @noinspection PhpMissingParentConstructorInspection */
     public function __construct(
-        /** @var string|Token[]|Token|Tokenizes */
-        public string|array|Token|Tokenizes $instructions,
+        public int|float|string|bool|Token|Tokenizes $instruction,
     ) {
+        if ($this->isScalarType($instruction)) {
+            $this->instruction = $this->getValOrReturn($this->instruction);
+        }
     }
 
     /**
@@ -32,7 +34,7 @@ class ReturnOp extends Instruction
         $tokens = [];
         $tokens[] = new ReturnToken();
         $tokens[] = new SpacesToken();
-        $tokens = array_merge($tokens, parent::getTokens($context, $rules));
+        $tokens[] = $this->instruction->getTokens($context, $rules);
         return $this->flatten($tokens);
     }
 }

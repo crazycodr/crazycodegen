@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Definition\Expressions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesReference;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -19,7 +20,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\IfToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class Condition extends Tokenizes
+class Condition extends Tokenizes implements ShouldNotBeNestedIntoInstruction
 {
     use FlattenFunction;
     use TokenFunctions;

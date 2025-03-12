@@ -6,10 +6,10 @@ use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
-use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
-use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\Assign;
@@ -32,22 +32,25 @@ class ServiceBuilderScenarioTest extends TestCase
             unionTypes: false,
         );
 
+        $mockProperty = (new PropertyDef('mock'));
+        $mockParameter = (new ParameterDef('mock', $mockedHookBasketAdapterType));
+
         $constructor = (new MethodDef('__construct'))
-            ->addParameterExploded('mock', $mockedHookBasketAdapterType)
+            ->addParameter($mockParameter)
             ->addInstruction(new Assign(
-                subject: new ChainOp([new ThisContext(), 'mock']),
-                value: new VariableDef('mock'),
+                subject: new ChainOp([new ThisContext(), $mockProperty]),
+                value: $mockParameter,
             ));
         $getMockedClassesMethod = (new MethodDef('getMockedClasses'))
             ->setReturnType('array')
             ->setStatic(true)
             ->addInstruction(new ReturnOp(
-                new ArrayVal([new ClassRefVal('HookBasketAdapter')])
+                new ArrayVal([$hookBasketAdapterType])
             ));
         $getServiceMethod = (new MethodDef('getService'))
             ->setReturnType($mockedHookBasketAdapterType)
             ->addInstruction(new ReturnOp(
-                new ChainOp([new ThisContext(), 'mock'])
+                new ChainOp([new ThisContext(), $mockProperty])
             ));
         $classDef = (new ClassDef('HookBasketAdapterBuilder'))
             ->setNamespace('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Baskets\Adapters')

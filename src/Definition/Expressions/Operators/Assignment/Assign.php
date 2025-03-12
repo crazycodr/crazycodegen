@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Definition\Expressions\Operators\Assignment;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -17,13 +18,15 @@ class Assign extends Instruction
 
     public function __construct(
         public string|Token|Tokenizes $subject,
-        public string|Token|Tokenizes $value,
+        public string|Token|Tokenizes|ProvidesReference $value,
     ) {
         if (is_string($this->subject)) {
             $this->subject = new Token($this->subject);
         }
         if (is_string($this->value)) {
             $this->value = new Token($this->value);
+        } elseif ($this->value instanceof ProvidesReference) {
+            $this->value = $this->value->getReference();
         }
         parent::__construct(instructions: [
             $this->subject,

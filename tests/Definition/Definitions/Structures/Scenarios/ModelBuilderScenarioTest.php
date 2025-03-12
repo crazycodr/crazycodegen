@@ -6,6 +6,7 @@ use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Definitions\Values\StringVal;
@@ -27,24 +28,24 @@ class ModelBuilderScenarioTest extends TestCase
         $baseModelBuilderType = new SingleTypeDef('Internal\TestFramework\MockingFramework\Builders\BaseModelBuilder');
         $taxExemptionCategoryModelType = new SingleTypeDef('internal\Baskets\Models\TaxExemptionCategoryModel');
 
+        $modelProperty = new PropertyDef('model');
+
         $createModelMethod = (new MethodDef('createModel'))
             ->setVisibility(VisibilityEnum::PROTECTED)
             ->setReturnType($taxExemptionCategoryModelType)
-            ->addInstruction(new ReturnOp([
-                new NewOp(
-                    class: $taxExemptionCategoryModelType,
-                    arguments: new ArrayVal([
-                        'identifier' => 'stub',
-                        'name' => 'stub',
-                    ]),
-                ),
-            ]));
+            ->addInstruction(new ReturnOp(new NewOp(
+                class: $taxExemptionCategoryModelType,
+                arguments: new ArrayVal([
+                    'identifier' => 'stub',
+                    'name' => 'stub',
+                ]),
+            )));
         $hstExemptionMethod = (new MethodDef('hstExemption'))
             ->setReturnType('static')
             ->addInstruction(new Assign(
                 subject: new ChainOp([
                     new ThisContext(),
-                    'model',
+                    $modelProperty,
                     'identifier',
                 ]),
                 value: new StringVal('hst'),
@@ -52,7 +53,7 @@ class ModelBuilderScenarioTest extends TestCase
             ->addInstruction(new Assign(
                 subject: new ChainOp([
                     new ThisContext(),
-                    'model',
+                    $modelProperty,
                     'name',
                 ]),
                 value: new StringVal('HST'),
@@ -60,9 +61,7 @@ class ModelBuilderScenarioTest extends TestCase
             ->addInstruction(new ReturnOp(new ThisContext()));
         $getMethod = (new MethodDef('get'))
             ->setReturnType($taxExemptionCategoryModelType)
-            ->addInstruction(new ReturnOp([
-                new ChainOp([new ThisContext(), 'model'])
-            ]));
+            ->addInstruction(new ReturnOp(new ChainOp([new ThisContext(), $modelProperty])));
         $classDef = (new ClassDef('TaxExemptionCategoryModelBuilder'))
             ->setNamespace('Internal\TestFramework\MockingFramework\Builders\ModelBuilders\InternalApi\Baskets\Models')
             ->addImport($baseModelBuilderType)

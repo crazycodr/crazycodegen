@@ -11,6 +11,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Expressions\Comment;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
@@ -24,8 +25,6 @@ use CrazyCodeGen\Definition\Expressions\Structures\Condition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
-use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
-use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -68,7 +67,7 @@ class TestHelpersScenarioTest extends TestCase
                 )),
                 trueInstructions: new ChainOp([
                     $configApiManagerType,
-                    new CallOp(name: 'setClient', arguments: [new NullToken()]),
+                    new CallOp(name: 'setClient', arguments: [null]),
                 ]),
             ))
             ->addInstruction(new Assign(
@@ -81,7 +80,7 @@ class TestHelpersScenarioTest extends TestCase
             ->addInstruction(new Instruction([
                 new ChainOp([
                     $configApiManagerType,
-                    new CallOp(name: 'setClient', arguments: [new NullToken()]),
+                    new CallOp(name: 'setClient', arguments: [null]),
                 ]),
             ]))
             ->addInstruction(new Assign(
@@ -160,23 +159,21 @@ class TestHelpersScenarioTest extends TestCase
                 ),
             ))
             ->addInstruction(new NewLinesToken())
-            ->addInstruction(new ReturnOp([
+            ->addInstruction(new ReturnOp(
                 new ChainOp([new ThisContext(), $configApiClientSpyBuilderProperty])
-            ]));
+            ));
         $getAuditingTrackingServiceManagerBuilderMethod = (new MethodDef('getAuditingTrackingServiceManagerBuilder'))
             ->setReturnType($serviceBuilderType)
-            ->addInstruction(new Token('/** @noinspection PhpUnhandledExceptionInspection */'))
-            ->addInstruction(new ReturnOp([
-                new NewOp(
-                    $serviceBuilderType,
-                    arguments: [
-                        new ChainOp([
-                            new ThisContext(),
-                            new CallOp('createMock', arguments: [$trackingServiceManagerType]),
-                        ]),
-                    ]
-                ),
-            ]));
+            ->addInstruction(new Comment('@noinspection PhpUnhandledExceptionInspection', useMultiline: true))
+            ->addInstruction(new ReturnOp(new NewOp(
+                $serviceBuilderType,
+                arguments: [
+                    new ChainOp([
+                        new ThisContext(),
+                        new CallOp('createMock', arguments: [$trackingServiceManagerType]),
+                    ]),
+                ]
+            )));
         $classDef = (new ClassDef('FinalizeTrackingOnRequestEndSubscriberTestHelpers'))
             ->setNamespace('Internal\Tests\Auditing\Subscribers\TestHelpers')
             ->addImport($testCaseType)
