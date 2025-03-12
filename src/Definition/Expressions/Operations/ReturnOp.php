@@ -17,7 +17,7 @@ class ReturnOp extends Tokenizes
     use ComputableTrait;
 
     public function __construct(
-        public int|float|string|bool|Token|Tokenizes $instruction,
+        public int|float|string|bool|array|Token|Tokenizes $instruction,
     ) {
         if ($this->isScalarType($instruction)) {
             $this->instruction = $this->getValOrReturn($this->instruction);

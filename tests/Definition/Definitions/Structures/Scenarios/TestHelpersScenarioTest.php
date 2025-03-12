@@ -12,9 +12,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
 use CrazyCodeGen\Definition\Expressions\Comment;
-use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
-use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
 use CrazyCodeGen\Definition\Expressions\Operations\IssetOp;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
@@ -54,76 +52,47 @@ class TestHelpersScenarioTest extends TestCase
 
         $setUpMethod = (new MethodDef('setUp'))
             ->setReturnType('void')
-            ->addInstruction(new Instruction([
-                new ChainOp([
-                    new ParentContext(),
-                    new CallOp('setUp'),
-                ]),
-            ]))
+            ->addInstruction(ParentContext::to(new CallOp('setUp')))
             ->addInstruction(new Condition(
                 condition: new NotOp(new InstanceOfOp(
-                    left: new ChainOp([$configApiManagerType, new CallOp('getClient')]),
+                    left: $configApiManagerType->to(new CallOp('getClient')),
                     right: $configApiClientType,
                 )),
-                trueInstructions: new ChainOp([
-                    $configApiManagerType,
-                    new CallOp(name: 'setClient', arguments: [null]),
-                ]),
+                trueInstructions: [
+                    $configApiManagerType->to(new CallOp(name: 'setClient', arguments: [null])),
+                ]
             ))
             ->addInstruction(new Assign(
-                subject: new ChainOp([new ThisContext(), $configApiClientBackupProperty]),
-                value: new ChainOp([
-                    $configApiManagerType,
-                    new CallOp('getClient'),
-                ]),
+                subject: ThisContext::to($configApiClientBackupProperty),
+                value: $configApiManagerType->to(new CallOp('getClient')),
             ))
-            ->addInstruction(new Instruction([
-                new ChainOp([
-                    $configApiManagerType,
-                    new CallOp(name: 'setClient', arguments: [null]),
-                ]),
-            ]))
+            ->addInstruction($configApiManagerType->to(new CallOp(name: 'setClient', arguments: [null])))
             ->addInstruction(new Assign(
-                subject: new ChainOp([new ThisContext(), $configApiClientSpyBuilderProperty]),
+                subject: ThisContext::to($configApiClientSpyBuilderProperty),
                 value: new NewOp(
                     class: $configApiSpyBuilderType,
                     arguments: [
-                        new ChainOp([
-                            $configApiManagerType,
-                            new CallOp('getClient'),
-                        ]),
+                        $configApiManagerType->to(new CallOp('getClient'))
                     ],
                 ),
             ));
         $tearDownMethod = (new MethodDef('tearDown'))
             ->setReturnType('void')
-            ->addInstruction(new Instruction([
-                new ChainOp([
-                    new ThisContext(),
-                    $configApiClientSpyBuilderProperty,
-                    new CallOp('getService'),
-                    new CallOp(name: 'validateMandateExpectations', arguments: [new ThisContext()]),
-                ]),
-            ]))
-            ->addInstruction(new Instruction(new ChainOp([
-                $configApiManagerType,
-                new CallOp(
-                    name: 'setClient',
-                    arguments: [
-                        new ChainOp([
-                            new ThisContext(),
-                            $configApiClientBackupProperty,
-                        ]),
-                    ],
-                ),
-            ])))
-            ->addInstruction(new Instruction(new ChainOp([
-                new ParentContext(),
-                new CallOp('tearDown'),
-            ])));
+            ->addInstruction(
+                ThisContext::to($configApiClientSpyBuilderProperty)
+                    ->to(new CallOp('getService'))
+                    ->to(new CallOp(name: 'validateMandateExpectations', arguments: [new ThisContext()]))
+            )
+            ->addInstruction($configApiManagerType->to(new CallOp(
+                name: 'setClient',
+                arguments: [
+                    ThisContext::to($configApiClientBackupProperty),
+                ],
+            )))
+            ->addInstruction(ParentContext::to(new CallOp('tearDown')));
         $scenarioBuildingCallable = new ParameterDef(
             name: 'scenarioBuildingCallable',
-            type: new MultiTypeDef(types: ['null', 'callable']),
+            type: new MultiTypeDef(['null', 'callable']),
             defaultValueIsNull: true
         );
         $getConfigApiSpyBuilderMethod = (new MethodDef('getConfigApiClientSpyBuilder'))
@@ -131,17 +100,14 @@ class TestHelpersScenarioTest extends TestCase
             ->addParameter($scenarioBuildingCallable)
             ->setReturnType($configApiSpyBuilderType)
             ->addInstruction(new Condition(
-                condition: new NotOp(new IssetOp(new ChainOp([new ThisContext(), $configApiClientSpyBuilderProperty]))),
+                condition: new NotOp(new IssetOp(ThisContext::to($configApiClientSpyBuilderProperty))),
                 trueInstructions: [
                     new Assign(
-                        subject: new ChainOp([new ThisContext(), $configApiClientSpyBuilderProperty]),
+                        subject: ThisContext::to($configApiClientSpyBuilderProperty),
                         value: new NewOp(
                             class: $configApiSpyBuilderType,
                             arguments: [
-                                new ChainOp([
-                                    $configApiManagerType,
-                                    new CallOp('getClient'),
-                                ]),
+                                $configApiManagerType->to(new CallOp('getClient')),
                             ],
                         ),
                     ),
@@ -150,29 +116,23 @@ class TestHelpersScenarioTest extends TestCase
             ->addInstruction(new NewLinesToken())
             ->addInstruction(new Condition(
                 condition: $scenarioBuildingCallable,
-                trueInstructions: new CallOp(
-                    name: $scenarioBuildingCallable,
-                    arguments: [new ChainOp([
-                        new ThisContext(),
-                        $configApiClientSpyBuilderProperty,
-                    ])],
-                ),
+                trueInstructions: [
+                    new CallOp(
+                        name: $scenarioBuildingCallable,
+                        arguments: [ThisContext::to($configApiClientSpyBuilderProperty)],
+                    ),
+                ],
             ))
             ->addInstruction(new NewLinesToken())
-            ->addInstruction(new ReturnOp(
-                new ChainOp([new ThisContext(), $configApiClientSpyBuilderProperty])
-            ));
+            ->addInstruction(new ReturnOp(ThisContext::to($configApiClientSpyBuilderProperty)));
         $getAuditingTrackingServiceManagerBuilderMethod = (new MethodDef('getAuditingTrackingServiceManagerBuilder'))
             ->setReturnType($serviceBuilderType)
             ->addInstruction(new Comment('@noinspection PhpUnhandledExceptionInspection', useMultiline: true))
             ->addInstruction(new ReturnOp(new NewOp(
                 $serviceBuilderType,
                 arguments: [
-                    new ChainOp([
-                        new ThisContext(),
-                        new CallOp('createMock', arguments: [$trackingServiceManagerType]),
-                    ]),
-                ]
+                    ThisContext::to(new CallOp('createMock', arguments: [$trackingServiceManagerType])),
+                ],
             )));
         $classDef = (new ClassDef('FinalizeTrackingOnRequestEndSubscriberTestHelpers'))
             ->setNamespace('Internal\Tests\Auditing\Subscribers\TestHelpers')

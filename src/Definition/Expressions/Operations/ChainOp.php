@@ -7,7 +7,10 @@ use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
 use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
+use CrazyCodeGen\Definition\Definitions\Contexts\MemberAccessContext;
+use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\MemberAccessToken;
@@ -33,9 +36,9 @@ class ChainOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDow
         }
         foreach ($this->chain as $chainItemIndex => $chainItem) {
             if (is_string($chainItem)) {
-                $this->chain[$chainItemIndex] = new Token($chainItem);
+                $this->chain[$chainItemIndex] = new Expression($chainItem);
             } elseif ($chainItem instanceof PropertyDef) {
-                $this->chain[$chainItemIndex] = new Token($chainItem->name);
+                $this->chain[$chainItemIndex] = new Expression($chainItem->name);
             }
         }
     }
@@ -163,5 +166,14 @@ class ChainOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDow
             return new StaticAccessToken();
         }
         return new MemberAccessToken();
+    }
+
+    public function to(string|PropertyDef|MethodDef|CallOp|MemberAccessContext $what): self
+    {
+        if(is_string($what)) {
+            $what = new Expression($what);
+        }
+        $this->chain[] = $what;
+        return $this;
     }
 }

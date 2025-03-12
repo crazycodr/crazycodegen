@@ -5,7 +5,10 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
 use CrazyCodeGen\Definition\Base\ProvidesReference;
+use CrazyCodeGen\Definition\Definitions\Contexts\MemberAccessContext;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
+use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
+use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -60,5 +63,10 @@ class SingleTypeDef extends Tokenizes implements DefinesIfStaticallyAccessed, Pr
     public function getReference(): Tokenizes
     {
         return new ClassRefVal($this->type);
+    }
+
+    public function to(PropertyDef|MethodDef|CallOp|MemberAccessContext $what): ChainOp
+    {
+        return new ChainOp([$this, $what]);
     }
 }

@@ -6,6 +6,7 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Expressions\Instruction;
+use CrazyCodeGen\Definition\Traits\ComputableTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
@@ -15,16 +16,17 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 class Assign extends Instruction
 {
     use FlattenFunction;
+    use ComputableTrait;
 
     public function __construct(
         public string|Token|Tokenizes $subject,
-        public string|Token|Tokenizes|ProvidesReference $value,
+        public int|float|string|bool|Token|Tokenizes|ProvidesReference $value,
     ) {
         if (is_string($this->subject)) {
             $this->subject = new Token($this->subject);
         }
-        if (is_string($this->value)) {
-            $this->value = new Token($this->value);
+        if ($this->isScalarType($this->value)) {
+            $this->value = $this->getValOrReturn($this->value);
         } elseif ($this->value instanceof ProvidesReference) {
             $this->value = $this->value->getReference();
         }

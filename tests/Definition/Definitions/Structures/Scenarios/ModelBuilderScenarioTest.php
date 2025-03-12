@@ -8,9 +8,6 @@ use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
-use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
-use CrazyCodeGen\Definition\Definitions\Values\StringVal;
-use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\Assign;
@@ -35,33 +32,27 @@ class ModelBuilderScenarioTest extends TestCase
             ->setReturnType($taxExemptionCategoryModelType)
             ->addInstruction(new ReturnOp(new NewOp(
                 class: $taxExemptionCategoryModelType,
-                arguments: new ArrayVal([
-                    'identifier' => 'stub',
-                    'name' => 'stub',
-                ]),
+                arguments: [
+                    [
+                        'identifier' => 'stub',
+                        'name' => 'stub',
+                    ]
+                ],
             )));
         $hstExemptionMethod = (new MethodDef('hstExemption'))
             ->setReturnType('static')
             ->addInstruction(new Assign(
-                subject: new ChainOp([
-                    new ThisContext(),
-                    $modelProperty,
-                    'identifier',
-                ]),
-                value: new StringVal('hst'),
+                subject: ThisContext::to($modelProperty)->to('identifier'),
+                value: 'hst',
             ))
             ->addInstruction(new Assign(
-                subject: new ChainOp([
-                    new ThisContext(),
-                    $modelProperty,
-                    'name',
-                ]),
-                value: new StringVal('HST'),
+                subject: ThisContext::to($modelProperty)->to('name'),
+                value: 'HST',
             ))
             ->addInstruction(new ReturnOp(new ThisContext()));
         $getMethod = (new MethodDef('get'))
             ->setReturnType($taxExemptionCategoryModelType)
-            ->addInstruction(new ReturnOp(new ChainOp([new ThisContext(), $modelProperty])));
+            ->addInstruction(new ReturnOp(ThisContext::to($modelProperty)));
         $classDef = (new ClassDef('TaxExemptionCategoryModelBuilder'))
             ->setNamespace('Internal\TestFramework\MockingFramework\Builders\ModelBuilders\InternalApi\Baskets\Models')
             ->addImport($baseModelBuilderType)

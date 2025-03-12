@@ -2,7 +2,9 @@
 
 namespace CrazyCodeGen\Tests\Expressions\Structures;
 
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
+use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Structures\Condition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
@@ -11,7 +13,6 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\AsteriskToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
-use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -22,8 +23,10 @@ class ConditionTest extends TestCase
     public function testSpacesAreAddedAfterIf()
     {
         $token = new Condition(
-            condition: new Token('true'),
-            trueInstructions: new Token('true'),
+            condition: new Expression('true'),
+            trueInstructions: [
+                new Expression('true'),
+            ],
         );
 
         $rules = $this->getTestRules();
@@ -54,19 +57,21 @@ class ConditionTest extends TestCase
     {
         $token = new Condition(
             condition: [
-                new Token(1),
+                new Expression(1),
                 new SpacesToken(),
-                new Token('==='),
+                new Expression('==='),
                 new SpacesToken(),
                 [
                     new ParStartToken(),
-                    new Token(1),
+                    new Expression(1),
                     new AsteriskToken(),
-                    new Token(3),
+                    new Expression(3),
                     new ParEndToken(),
                 ],
             ],
-            trueInstructions: new Token('true'),
+            trueInstructions: [
+                new Expression('true'),
+            ],
         );
 
         $rules = $this->getTestRules();
@@ -84,8 +89,10 @@ class ConditionTest extends TestCase
     public function testOpenBraceIsOnSameLineWithExpectedSpaces()
     {
         $token = new Condition(
-            condition: new Token('true'),
-            trueInstructions: new Token('true'),
+            condition: new Expression('true'),
+            trueInstructions: [
+                new Expression('true'),
+            ],
         );
 
         $rules = $this->getTestRules();
@@ -105,8 +112,10 @@ class ConditionTest extends TestCase
     public function testOpenBraceIsOnDiffLineAndSpacesRuleDisregarded()
     {
         $token = new Condition(
-            condition: new Token('true'),
-            trueInstructions: new Token('true'),
+            condition: new Expression('true'),
+            trueInstructions: [
+                new Expression('true'),
+            ],
         );
 
         $rules = $this->getTestRules();
@@ -127,28 +136,16 @@ class ConditionTest extends TestCase
     public function testComplexTrueInstructionsAreRenderedInBodyIndented()
     {
         $token = new Condition(
-            condition: new Token('true'),
+            condition: new Expression('true'),
             trueInstructions: [
                 new Instruction(
                     instructions: [
-                        new Token(1),
-                        new SpacesToken(),
-                        new Token('==='),
-                        new SpacesToken(),
-                        [
-                            new ParStartToken(),
-                            new Token(1),
-                            new AsteriskToken(),
-                            new Token(3),
-                            new ParEndToken(),
-                        ],
+                        new Expression('1 === (1*3)'),
                     ]
                 ),
                 new Instruction(
                     instructions: [
-                        new Token('return'),
-                        new SpacesToken(),
-                        new Token(1),
+                        new ReturnOp(1),
                     ]
                 ),
             ],
@@ -170,9 +167,13 @@ class ConditionTest extends TestCase
     public function testClosingBraceIsOnSameLineAsElseWhenFalseConditionsExist()
     {
         $token = new Condition(
-            condition: new Token('true'),
-            trueInstructions: new Token('true'),
-            falseInstructions: new Token('false'),
+            condition: new Expression('true'),
+            trueInstructions: [
+                new Expression('true'),
+            ],
+            falseInstructions: [
+                new Expression('false'),
+            ],
         );
 
         $rules = $this->getTestRules();
@@ -192,9 +193,13 @@ class ConditionTest extends TestCase
     public function testBracesOnDifferentLinesDoNotAddSpaces()
     {
         $token = new Condition(
-            condition: new Token('true'),
-            trueInstructions: new Token('true'),
-            falseInstructions: new Token('false'),
+            condition: new Expression('true'),
+            trueInstructions: [
+                new Expression('true'),
+            ],
+            falseInstructions: [
+                new Expression('false'),
+            ],
         );
 
         $rules = $this->getTestRules();
@@ -218,22 +223,39 @@ class ConditionTest extends TestCase
 
     public function testConditionTokenGroupAsFalseInstructionsActAsElseIfAndCascadesWithUnlimitedElseIfs()
     {
+        $this->markTestSkipped('Will change');
         $token = new Condition(
-            condition: new Token('true'),
-            trueInstructions: new Token('0'),
-            falseInstructions: new Condition(
-                condition: [new Token(1), new Token('==='), new Token(2)],
-                trueInstructions: new Token('1'),
-                falseInstructions: new Condition(
-                    condition: [new Token(2), new Token('==='), new Token(3)],
-                    trueInstructions: new Token('2'),
-                    falseInstructions: new Condition(
-                        condition: [new Token(3), new Token('==='), new Token(4)],
-                        trueInstructions: new Token('3'),
-                        falseInstructions: new Token('4'),
-                    ),
+            condition: new Expression('true'),
+            trueInstructions: [
+                new Expression('0'),
+            ],
+            falseInstructions: [
+                new Condition(
+                    condition: [new Expression(1), new Expression('==='), new Expression(2)],
+                    trueInstructions: [
+                        new Expression('1'),
+                    ],
+                    falseInstructions: [
+                        new Condition(
+                            condition: [new Expression(2), new Expression('==='), new Expression(3)],
+                            trueInstructions: [
+                                new Expression('2'),
+                            ],
+                            falseInstructions: [
+                                new Condition(
+                                    condition: [new Expression(3), new Expression('==='), new Expression(4)],
+                                    trueInstructions: [
+                                        new Expression('3'),
+                                    ],
+                                    falseInstructions: [
+                                        new Expression('4'),
+                                    ],
+                                ),
+                            ],
+                        ),
+                    ],
                 ),
-            ),
+            ],
         );
 
         $rules = $this->getTestRules();

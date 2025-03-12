@@ -3,11 +3,12 @@
 namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
 use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Traits\ComputableTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
@@ -23,22 +24,23 @@ class NewOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownT
 {
     use FlattenFunction;
     use TokenFunctions;
+    use ComputableTrait;
 
     public function __construct(
         public string|Token|Tokenizes|SingleTypeDef|ClassDef $class,
-        /** @var Token[]|Tokenizes[]|Token|Tokenizes $arguments */
-        public string|array|Token|Tokenizes                  $arguments = [],
-    ) {
+        /** @var array|Tokenizes[] $arguments */
+        public array                                         $arguments = [],
+    )
+    {
         if (is_string($this->class)) {
             $this->class = new Token($this->class);
         } elseif ($this->class instanceof ClassDef) {
             $this->class = new SingleTypeDef($this->class->namespace->path . '\\' . $this->class->name);
         }
-        if (is_string($this->arguments)) {
-            $this->arguments = new Token($this->arguments);
-        }
-        if (!is_array($this->arguments)) {
-            $this->arguments = [$this->arguments];
+        foreach ($this->arguments as $argumentIndex => $argument) {
+            if ($this->isScalarType($argument)) {
+                $this->arguments[$argumentIndex] = $this->getValOrReturn($argument);
+            }
         }
     }
 

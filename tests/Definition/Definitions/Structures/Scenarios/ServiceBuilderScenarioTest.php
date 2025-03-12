@@ -9,8 +9,6 @@ use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
-use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
-use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\Assign;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -38,20 +36,16 @@ class ServiceBuilderScenarioTest extends TestCase
         $constructor = (new MethodDef('__construct'))
             ->addParameter($mockParameter)
             ->addInstruction(new Assign(
-                subject: new ChainOp([new ThisContext(), $mockProperty]),
+                subject: ThisContext::to($mockProperty),
                 value: $mockParameter,
             ));
         $getMockedClassesMethod = (new MethodDef('getMockedClasses'))
             ->setReturnType('array')
             ->setStatic(true)
-            ->addInstruction(new ReturnOp(
-                new ArrayVal([$hookBasketAdapterType])
-            ));
+            ->addInstruction(new ReturnOp([$hookBasketAdapterType]));
         $getServiceMethod = (new MethodDef('getService'))
             ->setReturnType($mockedHookBasketAdapterType)
-            ->addInstruction(new ReturnOp(
-                new ChainOp([new ThisContext(), $mockProperty])
-            ));
+            ->addInstruction(new ReturnOp(ThisContext::to($mockProperty)));
         $classDef = (new ClassDef('HookBasketAdapterBuilder'))
             ->setNamespace('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Baskets\Adapters')
             ->addImport($mockObjectType)

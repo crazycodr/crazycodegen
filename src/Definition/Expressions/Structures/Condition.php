@@ -6,6 +6,7 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesReference;
+use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -35,6 +36,16 @@ class Condition extends Tokenizes implements ShouldNotBeNestedIntoInstruction
     ) {
         if ($this->condition instanceof ProvidesReference) {
             $this->condition = $this->condition->getReference();
+        }
+        foreach ($this->trueInstructions as $trueInstructionIndex => $trueInstruction) {
+            if (!$trueInstruction instanceof Instruction) {
+                $this->trueInstructions[$trueInstructionIndex] = new Instruction($trueInstruction);
+            }
+        }
+        foreach ($this->falseInstructions as $falseInstructionIndex => $falseInstruction) {
+            if (!$falseInstruction instanceof Instruction) {
+                $this->falseInstructions[$falseInstructionIndex] = new Instruction($falseInstruction);
+            }
         }
     }
 

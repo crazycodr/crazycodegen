@@ -45,7 +45,7 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testInlineClassTokenGroupGetConvertedToSimpleClassName()
+    public function testInlineClassTokenizerGetConvertedToSimpleClassName()
     {
         $token = new NewOp(
             class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
@@ -59,7 +59,7 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testInlineClassTokenGroupGetShortNameRenderedWhenClassIsImportedInContext()
+    public function testInlineClassTokenizerGetShortNameRenderedWhenClassIsImportedInContext()
     {
         $token = new NewOp(
             class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
@@ -80,7 +80,7 @@ class NewOpTest extends TestCase
     {
         $token = new NewOp(
             class: new Token('foo'),
-            arguments: 1,
+            arguments: [1],
         );
 
         $this->assertEquals(
@@ -91,26 +91,11 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testInlineRendersTokenArgumentAsSingleToken()
+    public function testInlineRendersTokenizerArgumentAsExpected()
     {
         $token = new NewOp(
             class: new Token('foo'),
-            arguments: new Token(1),
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            new foo(1)
-            EOS,
-            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
-    public function testInlineRendersTokenGroupArgumentAsExpected()
-    {
-        $token = new NewOp(
-            class: new Token('foo'),
-            arguments: new VariableDef('bar'),
+            arguments: [new VariableDef('bar')],
         );
 
         $this->assertEquals(
@@ -136,7 +121,7 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
+    public function testInlineRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new NewOp(
             class: new Token('foo'),
@@ -151,7 +136,7 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions()
+    public function testInlineRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions()
     {
         $token = new NewOp(
             class: new Token('foo'),
@@ -194,7 +179,7 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testChopDownClassTokenGroupGetConvertedToSimpleClassName()
+    public function testChopDownClassTokenizerGetConvertedToSimpleClassName()
     {
         $token = new NewOp(
             class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
@@ -208,7 +193,7 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testChopDownClassTokenGroupGetShortNameRenderedWhenClassIsImportedInContext()
+    public function testChopDownClassTokenizerGetShortNameRenderedWhenClassIsImportedInContext()
     {
         $token = new NewOp(
             class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
@@ -229,7 +214,7 @@ class NewOpTest extends TestCase
     {
         $token = new NewOp(
             class: new Token('foo'),
-            arguments: 1,
+            arguments: [1],
         );
 
         $this->assertEquals(
@@ -242,28 +227,11 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testChopDownRendersTokenArgumentAsSingleToken()
+    public function testChopDownRendersTokenizerArgumentAsExpected()
     {
         $token = new NewOp(
             class: new Token('foo'),
-            arguments: new Token(1),
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            new foo(
-                1,
-            )
-            EOS,
-            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
-    public function testChopDownRendersTokenGroupArgumentAsExpected()
-    {
-        $token = new NewOp(
-            class: new Token('foo'),
-            arguments: new VariableDef('bar'),
+            arguments: [new VariableDef('bar')],
         );
 
         $this->assertEquals(
@@ -295,7 +263,7 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
+    public function testChopDownRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new NewOp(
             class: new Token('foo'),
@@ -313,7 +281,7 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheChopDownVersions()
+    public function testChopDownRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheChopDownVersions()
     {
         $token = new NewOp(
             class: new Token('foo'),

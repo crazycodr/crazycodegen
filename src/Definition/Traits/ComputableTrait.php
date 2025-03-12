@@ -4,6 +4,7 @@ namespace CrazyCodeGen\Definition\Traits;
 
 use CrazyCodeGen\Definition\Base\CanBeComputed;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Definitions\Values\BoolVal;
 use CrazyCodeGen\Definition\Definitions\Values\BoolValue;
 use CrazyCodeGen\Definition\Definitions\Values\FloatVal;
@@ -50,7 +51,8 @@ trait ComputableTrait
             || is_float($value)
             || is_string($value)
             || is_bool($value)
-            || is_null($value);
+            || is_null($value)
+            || is_array($value);
     }
 
     /**
@@ -60,6 +62,9 @@ trait ComputableTrait
     {
         if ($value instanceof Tokenizes) {
             return $value;
+        }
+        if (is_array($value)) {
+            return new ArrayVal($value);
         }
         if (is_float($value)) {
             return new FloatVal($value);
