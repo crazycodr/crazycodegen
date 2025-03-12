@@ -6,7 +6,7 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-abstract class Defines
+abstract class Tokenizes
 {
     /**
      * @param RenderContext $context

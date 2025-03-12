@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
 use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
@@ -19,15 +19,15 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NewToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class NewInstance extends Defines implements ProvidesInlineTokens, ProvidesChopDownTokens
+class NewOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownTokens
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        public string|Token|Defines|SingleTypeDef|ClassDef $class,
-        /** @var Token[]|Defines[]|Token|Defines $arguments */
-        public string|array|Token|Defines                  $arguments = [],
+        public string|Token|Tokenizes|SingleTypeDef|ClassDef $class,
+        /** @var Token[]|Tokenizes[]|Token|Tokenizes $arguments */
+        public string|array|Token|Tokenizes                  $arguments = [],
     ) {
         if (is_string($this->class)) {
             $this->class = new Token($this->class);
@@ -50,7 +50,7 @@ class NewInstance extends Defines implements ProvidesInlineTokens, ProvidesChopD
         $tokens = [];
         $tokens[] = new NewToken();
         $tokens[] = new SpacesToken();
-        if ($this->class instanceof Defines) {
+        if ($this->class instanceof Tokenizes) {
             $tokens[] = $this->class->getTokens($context, $rules);
         } else {
             $tokens[] = $this->class;
@@ -101,7 +101,7 @@ class NewInstance extends Defines implements ProvidesInlineTokens, ProvidesChopD
         $tokens = [];
         $tokens[] = new NewToken();
         $tokens[] = new SpacesToken();
-        if ($this->class instanceof Defines) {
+        if ($this->class instanceof Tokenizes) {
             $tokens[] = $this->class->getTokens($context, $rules);
         } else {
             $tokens[] = $this->class;

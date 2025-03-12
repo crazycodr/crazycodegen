@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesReference;
 use CrazyCodeGen\Definition\Definitions\Values\StringVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -15,7 +15,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ParameterDef extends Defines implements ProvidesReference
+class ParameterDef extends Tokenizes implements ProvidesReference
 {
     use FlattenFunction;
     use TokenFunctions;
@@ -147,7 +147,7 @@ class ParameterDef extends Defines implements ProvidesReference
         return [new SpacesToken($rules->parameters->spacesAfterEquals)];
     }
 
-    public function getReference(): Defines
+    public function getReference(): Tokenizes
     {
         return new VariableDef($this->name);
     }

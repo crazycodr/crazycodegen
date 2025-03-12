@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
 use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Definition\Base\ProvidesReference;
@@ -22,15 +22,15 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class Call extends Defines implements ProvidesInlineTokens, ProvidesChopDownTokens
+class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownTokens
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        public string|Token|Defines|FunctionDef|MethodDef|ProvidesReference $name,
-        /** @var Token[]|Defines[]|Token|Defines $arguments */
-        public string|array|Token|Defines                                   $arguments = [],
+        public string|Token|Tokenizes|FunctionDef|MethodDef|ProvidesReference $name,
+        /** @var Token[]|Tokenizes[]|Token|Tokenizes $arguments */
+        public string|array|Token|Tokenizes                                   $arguments = [],
     )
     {
         if (is_string($this->name)) {
@@ -61,7 +61,7 @@ class Call extends Defines implements ProvidesInlineTokens, ProvidesChopDownToke
     public function getChopDownTokens(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->name instanceof Defines) {
+        if ($this->name instanceof Tokenizes) {
             $tokens[] = $this->name->getTokens($context, $rules);
         } else {
             $tokens[] = $this->name;
@@ -117,7 +117,7 @@ class Call extends Defines implements ProvidesInlineTokens, ProvidesChopDownToke
     public function getInlineTokens(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->name instanceof Defines) {
+        if ($this->name instanceof Tokenizes) {
             $tokens[] = $this->name->getTokens($context, $rules);
         } else {
             $tokens[] = $this->name;

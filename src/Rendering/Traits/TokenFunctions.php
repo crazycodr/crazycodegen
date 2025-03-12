@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Rendering\Traits;
 
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
@@ -118,20 +118,20 @@ trait TokenFunctions
     }
 
     /**
-     * @param array<Token|Defines>|Token|Defines $instructions
+     * @param array<Token|Tokenizes>|Token|Tokenizes $instructions
      * @param RenderContext $context
      * @param RenderingRules $rules
      * @return array
      */
     private function renderInstructionsFromFlexibleTokenValue(
-        array|Token|Defines $instructions,
-        RenderContext       $context,
-        RenderingRules      $rules
+        array|Token|Tokenizes $instructions,
+        RenderContext         $context,
+        RenderingRules        $rules
     ): array {
         $tokens = [];
         if (is_array($instructions)) {
             foreach ($instructions as $instruction) {
-                if (!$instruction instanceof Token && !$instruction instanceof Defines) {
+                if (!$instruction instanceof Token && !$instruction instanceof Tokenizes) {
                     continue;
                 }
                 if ($instruction instanceof NewLinesToken) {
@@ -147,7 +147,7 @@ trait TokenFunctions
             $tokens[] = $instructions;
             $tokens[] = new SemiColonToken();
             $tokens[] = new NewLinesToken();
-        } elseif ($instructions instanceof Defines) {
+        } elseif ($instructions instanceof Tokenizes) {
             $tokens[] = $instructions->getTokens($context, $rules);
             $tokens[] = new SemiColonToken();
             $tokens[] = new NewLinesToken();
@@ -156,19 +156,19 @@ trait TokenFunctions
     }
 
     /**
-     * @param array<Token|Defines>|Token|Defines $values
+     * @param array<Token|Tokenizes>|Token|Tokenizes $values
      */
     private function convertFlexibleTokenValueToTokens(
-        array|Token|Defines $values,
-        RenderContext       $context,
-        RenderingRules      $rules,
+        array|Token|Tokenizes $values,
+        RenderContext         $context,
+        RenderingRules        $rules,
     ): array {
         $tokens = [];
         if (is_array($values)) {
             foreach ($values as $value) {
                 if ($value instanceof Token) {
                     $tokens[] = $value;
-                } elseif ($value instanceof Defines) {
+                } elseif ($value instanceof Tokenizes) {
                     $tokens[] = $value->getTokens($context, $rules);
                 } elseif (is_array($value)) {
                     $tokens[] = $this->convertFlexibleTokenValueToTokens($value, $context, $rules);
@@ -176,7 +176,7 @@ trait TokenFunctions
             }
         } elseif ($values instanceof Token) {
             $tokens[] = $values;
-        } elseif ($values instanceof Defines) {
+        } elseif ($values instanceof Tokenizes) {
             $tokens[] = $values->getTokens($context, $rules);
         }
         return $this->flatten($tokens);

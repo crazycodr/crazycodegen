@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -14,7 +14,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ImplementsToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ImplementsDef extends Defines
+class ImplementsDef extends Tokenizes
 {
     use FlattenFunction;
     use TokenFunctions;

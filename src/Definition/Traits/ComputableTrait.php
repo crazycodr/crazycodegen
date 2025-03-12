@@ -3,11 +3,17 @@
 namespace CrazyCodeGen\Definition\Traits;
 
 use CrazyCodeGen\Definition\Base\CanBeComputed;
+use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Values\BoolVal;
 use CrazyCodeGen\Definition\Definitions\Values\BoolValue;
+use CrazyCodeGen\Definition\Definitions\Values\FloatVal;
 use CrazyCodeGen\Definition\Definitions\Values\FloatValue;
+use CrazyCodeGen\Definition\Definitions\Values\IntVal;
 use CrazyCodeGen\Definition\Definitions\Values\IntValue;
+use CrazyCodeGen\Definition\Definitions\Values\NullVal;
 use CrazyCodeGen\Definition\Definitions\Values\NullValue;
 use CrazyCodeGen\Definition\Definitions\Values\OldStringValue;
+use CrazyCodeGen\Definition\Definitions\Values\StringVal;
 use CrazyCodeGen\Definition\Exceptions\NonComputableValueException;
 
 trait ComputableTrait
@@ -34,6 +40,32 @@ trait ComputableTrait
         }
         if ($value === null) {
             return new NullValue();
+        }
+        throw new NonComputableValueException();
+    }
+
+    /**
+     * @throws NonComputableValueException
+     */
+    public function getValOrReturn(mixed $value): Tokenizes
+    {
+        if ($value instanceof Tokenizes) {
+            return $value;
+        }
+        if (is_float($value)) {
+            return new FloatVal($value);
+        }
+        if (is_int($value)) {
+            return new IntVal($value);
+        }
+        if (is_bool($value)) {
+            return new BoolVal($value);
+        }
+        if (is_string($value)) {
+            return new StringVal($value);
+        }
+        if ($value === null) {
+            return new NullVal();
         }
         throw new NonComputableValueException();
     }

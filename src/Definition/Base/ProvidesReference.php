@@ -8,5 +8,5 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 
 interface ProvidesReference
 {
-    public function getReference(): Defines;
+    public function getReference(): Tokenizes;
 }

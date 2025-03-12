@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Definitions\Values;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
 use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -22,7 +22,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ArrayToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ArrayVal extends Defines implements ProvidesInlineTokens, ProvidesChopDownTokens
+class ArrayVal extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownTokens
 {
     use FlattenFunction;
     use TokenFunctions;
@@ -244,7 +244,7 @@ class ArrayVal extends Defines implements ProvidesInlineTokens, ProvidesChopDown
             $tokens[] = new Token($value ? 'true' : 'false');
         } elseif (is_null($value)) {
             $tokens[] = new Token('null');
-        } elseif ($value instanceof Defines) {
+        } elseif ($value instanceof Tokenizes) {
             $tokens[] = $value->getTokens($context, $rules);
         } elseif ($value instanceof Token) {
             $tokens[] = $value;

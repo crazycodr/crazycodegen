@@ -6,6 +6,9 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\CanBeComputed;
 use CrazyCodeGen\Definition\Traits\ComputableTrait;
 
+/**
+ * @deprecated
+ */
 class Nots implements CanBeComputed
 {
     use FlattenFunction;

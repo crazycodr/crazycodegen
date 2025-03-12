@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Expressions;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
@@ -15,8 +15,8 @@ class Instruction extends Expression
 
     /** @noinspection PhpMissingParentConstructorInspection */
     public function __construct(
-        /** @var Token[]|Token|Defines */
-        public array|Token|Defines $instructions,
+        /** @var string|Token[]|Token|Tokenizes */
+        public string|array|Token|Tokenizes $instructions,
     ) {
     }
 

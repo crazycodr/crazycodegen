@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Expressions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesReference;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
@@ -19,18 +19,18 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\IfToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class Condition extends Defines
+class Condition extends Tokenizes
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        /** @var array<Token|Defines>|Token|Defines $condition */
-        public array|Token|Defines $condition,
-        /** @var array<Token|Defines>|Token|Defines $trueInstructions */
-        public array|Token|Defines $trueInstructions,
-        /** @var array<Token|Defines>|Token|Defines $falseInstructions */
-        public array|Token|Defines $falseInstructions = [],
+        /** @var array<Token|Tokenizes>|Token|Tokenizes $condition */
+        public array|Token|Tokenizes $condition,
+        /** @var array<Token|Tokenizes>|Token|Tokenizes $trueInstructions */
+        public array|Token|Tokenizes $trueInstructions,
+        /** @var array<Token|Tokenizes>|Token|Tokenizes $falseInstructions */
+        public array|Token|Tokenizes $falseInstructions = [],
     ) {
         if ($this->condition instanceof ProvidesReference) {
             $this->condition = $this->condition->getReference();

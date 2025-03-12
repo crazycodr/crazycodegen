@@ -2,15 +2,15 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
 use CrazyCodeGen\Definition\Base\ProvidesReference;
-use CrazyCodeGen\Definition\Definitions\Values\ClassRef;
+use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class SingleTypeDef extends Defines implements DefinesIfStaticallyAccessed, ProvidesReference
+class SingleTypeDef extends Tokenizes implements DefinesIfStaticallyAccessed, ProvidesReference
 {
     private null|string $namespace = null;
     private string $shortName;
@@ -57,8 +57,8 @@ class SingleTypeDef extends Defines implements DefinesIfStaticallyAccessed, Prov
         return true;
     }
 
-    public function getReference(): Defines
+    public function getReference(): Tokenizes
     {
-        return new ClassRef($this->type);
+        return new ClassRefVal($this->type);
     }
 }

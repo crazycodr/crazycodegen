@@ -2,90 +2,72 @@
 
 namespace CrazyCodeGen\Tests\Expressions\Operations;
 
-use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
-use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
+use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
-use CrazyCodeGen\Definition\Expressions\Operations\NewInstance;
+use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class NewInstanceTest extends TestCase
+class CallOpTest extends TestCase
 {
     use TokenFunctions;
 
-    public function testInlineNewKeywordClassnameAndEmptyParenthesesArePresent()
+    public function testInlineSubjectArrowAndFunctionRenderedFromTokensAndParenthesesArePresent()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new Token('setUp'),
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo()
+            setUp()
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
-    public function testInlineStringClassNameIsConvertedAndOutputAsExpected()
+    public function testInlineSubjectAndFunctionAreConvertedToTokensWhenStrings()
     {
-        $token = new NewInstance(
-            class: 'foo'
+        $token = new CallOp(
+            name: 'setUp',
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo()
+            setUp()
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
-    public function testInlineClassTokenGroupGetConvertedToSimpleClassName()
+    public function testInlineFunctionConvertedToTokenWhenMethodTokenGroupPassedIn()
     {
-        $token = new NewInstance(
-            class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new CrazyCodeGen\Tests\foo()
+            setUp()
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
-    public function testInlineClassTokenGroupGetShortNameRenderedWhenClassIsImportedInContext()
-    {
-        $token = new NewInstance(
-            class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
-        );
-
-        $context = new RenderContext();
-        $context->importedClasses[] = 'CrazyCodeGen\Tests\foo';
-
-        $this->assertEquals(
-            <<<'EOS'
-            new foo()
-            EOS,
-            $this->renderTokensToString($token->getInlineTokens($context, new RenderingRules()))
         );
     }
 
     public function testInlineRendersStringArgumentAsSingleToken()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: 1,
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo(1)
+            setUp(1)
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
@@ -93,14 +75,14 @@ class NewInstanceTest extends TestCase
 
     public function testInlineRendersTokenArgumentAsSingleToken()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: new Token(1),
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo(1)
+            setUp(1)
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
@@ -108,14 +90,14 @@ class NewInstanceTest extends TestCase
 
     public function testInlineRendersTokenGroupArgumentAsExpected()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: new VariableDef('bar'),
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo($bar)
+            setUp($bar)
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
@@ -123,14 +105,14 @@ class NewInstanceTest extends TestCase
 
     public function testInlineRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: [new Token(1), new Token(2), new Token(3)],
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo(1, 2, 3)
+            setUp(1, 2, 3)
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
@@ -138,14 +120,14 @@ class NewInstanceTest extends TestCase
 
     public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: [new VariableDef('bar'), new VariableDef('baz')],
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo($bar, $baz)
+            setUp($bar, $baz)
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
@@ -153,88 +135,71 @@ class NewInstanceTest extends TestCase
 
     public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: [new ArrayVal([1, 2, 3]), new VariableDef('baz')],
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo([1, 2, 3], $baz)
+            setUp([1, 2, 3], $baz)
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
-    public function testChopDownNewKeywordClassnameAndEmptyParenthesesArePresent()
+    public function testChopDownSubjectArrowAndFunctionRenderedFromTokensAndParenthesesArePresent()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new Token('setUp'),
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo()
+            setUp()
             EOS,
             $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
-    public function testChopDownStringClassNameIsConvertedAndOutputAsExpected()
+    public function testChopDownSubjectAndFunctionAreConvertedToTokensWhenStrings()
     {
-        $token = new NewInstance(
-            class: 'foo'
+        $token = new CallOp(
+            name: 'setUp',
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo()
+            setUp()
             EOS,
             $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
-    public function testChopDownClassTokenGroupGetConvertedToSimpleClassName()
+    public function testChopDownFunctionConvertedToTokenWhenMethodTokenGroupPassedIn()
     {
-        $token = new NewInstance(
-            class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new CrazyCodeGen\Tests\foo()
+            setUp()
             EOS,
             $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
-    public function testChopDownClassTokenGroupGetShortNameRenderedWhenClassIsImportedInContext()
-    {
-        $token = new NewInstance(
-            class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
-        );
-
-        $context = new RenderContext();
-        $context->importedClasses[] = 'CrazyCodeGen\Tests\foo';
-
-        $this->assertEquals(
-            <<<'EOS'
-            new foo()
-            EOS,
-            $this->renderTokensToString($token->getChopDownTokens($context, new RenderingRules()))
         );
     }
 
     public function testChopDownRendersStringArgumentAsSingleToken()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: 1,
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo(
+            setUp(
                 1,
             )
             EOS,
@@ -244,14 +209,14 @@ class NewInstanceTest extends TestCase
 
     public function testChopDownRendersTokenArgumentAsSingleToken()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: new Token(1),
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo(
+            setUp(
                 1,
             )
             EOS,
@@ -261,14 +226,14 @@ class NewInstanceTest extends TestCase
 
     public function testChopDownRendersTokenGroupArgumentAsExpected()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: new VariableDef('bar'),
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo(
+            setUp(
                 $bar,
             )
             EOS,
@@ -276,16 +241,16 @@ class NewInstanceTest extends TestCase
         );
     }
 
-    public function testChopDownRendersTokensArgumentAsListOfItemsSeparatedByCommasNewLinesAndEverythingIsIndented()
+    public function testChopDownRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: [new Token(1), new Token(2), new Token(3)],
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo(
+            setUp(
                 1,
                 2,
                 3,
@@ -297,14 +262,14 @@ class NewInstanceTest extends TestCase
 
     public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: [new VariableDef('bar'), new VariableDef('baz')],
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo(
+            setUp(
                 $bar,
                 $baz,
             )
@@ -315,14 +280,14 @@ class NewInstanceTest extends TestCase
 
     public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheChopDownVersions()
     {
-        $token = new NewInstance(
-            class: new Token('foo'),
+        $token = new CallOp(
+            name: new MethodDef(name: 'setUp'),
             arguments: [new ArrayVal([1, 2, 3]), new VariableDef('baz')],
         );
 
         $this->assertEquals(
             <<<'EOS'
-            new foo(
+            setUp(
                 [
                     1,
                     2,

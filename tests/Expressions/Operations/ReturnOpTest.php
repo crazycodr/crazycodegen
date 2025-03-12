@@ -3,19 +3,19 @@
 namespace CrazyCodeGen\Tests\Expressions\Operations;
 
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
-use CrazyCodeGen\Definition\Expressions\Operations\ReturnVal;
+use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ReturnValTest extends TestCase
+class ReturnOpTest extends TestCase
 {
     use TokenFunctions;
 
     public function testReturnTokenAndSpaceAddedBeforeInstructions()
     {
-        $token = new ReturnVal(new VariableDef('foo'));
+        $token = new ReturnOp(new VariableDef('foo'));
 
         $this->assertEquals(
             <<<'EOS'

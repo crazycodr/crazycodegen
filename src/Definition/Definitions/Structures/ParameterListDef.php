@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
 use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -16,7 +16,7 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ParameterListDef extends Defines implements ProvidesInlineTokens, ProvidesChopDownTokens
+class ParameterListDef extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownTokens
 {
     use FlattenFunction;
     use TokenFunctions;

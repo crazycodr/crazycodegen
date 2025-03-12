@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Expressions\Operators\Assignment;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -16,8 +16,8 @@ class Assign extends Instruction
     use FlattenFunction;
 
     public function __construct(
-        public string|Token|Defines $subject,
-        public string|Token|Defines $value,
+        public string|Token|Tokenizes $subject,
+        public string|Token|Tokenizes $value,
     ) {
         if (is_string($this->subject)) {
             $this->subject = new Token($this->subject);

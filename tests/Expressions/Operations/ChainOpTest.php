@@ -6,21 +6,21 @@ use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
-use CrazyCodeGen\Definition\Expressions\Operations\Call;
-use CrazyCodeGen\Definition\Expressions\Operations\Chain;
+use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
+use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ChainTest extends TestCase
+class ChainOpTest extends TestCase
 {
     use TokenFunctions;
 
     public function testInlineChainsItemsTogetherWithAccessTokens()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 new Token('$foo'),
                 new Token('bar'),
@@ -38,7 +38,7 @@ class ChainTest extends TestCase
 
     public function testInlineConvertsStringsToTokens()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 '$foo',
                 'bar',
@@ -56,7 +56,7 @@ class ChainTest extends TestCase
 
     public function testInlineConvertsTokenToArrayOfTokens()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: new Token('$foo'),
         );
 
@@ -70,7 +70,7 @@ class ChainTest extends TestCase
 
     public function testInlineConvertsTokenGroupToArrayOfTokenGroups()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: new VariableDef('foo'),
         );
 
@@ -84,7 +84,7 @@ class ChainTest extends TestCase
 
     public function testInlineRendersTokenGroups()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 new VariableDef('foo'),
             ],
@@ -100,7 +100,7 @@ class ChainTest extends TestCase
 
     public function testInlineTransformsPropertyTokenGroupToTokenAndLosesDollarSignBecauseConsideredAsAccess()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 new PropertyDef(name: 'foo', type: 'int'),
             ],
@@ -116,7 +116,7 @@ class ChainTest extends TestCase
 
     public function testInlineRendersThisRefTokenGroupAndAdditionalPropertiesProperly()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 new ThisContext(),
                 new PropertyDef(name: 'foo', type: 'int'),
@@ -134,10 +134,10 @@ class ChainTest extends TestCase
 
     public function testInlineRendersStaticAccessTokensInsteadOfMemberTokensWhenItFindsTokenGroupThatExposesStaticContext()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 new ParentContext(),
-                new Call(name: 'setUp'),
+                new CallOp(name: 'setUp'),
                 new PropertyDef(name: 'bar', type: 'int'),
             ],
         );
@@ -152,7 +152,7 @@ class ChainTest extends TestCase
 
     public function testChopDownChainsItemsTogetherWithAccessTokensAndOnlyFromThirdItemsDoWeGetNewLinesAndIndents()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 new Token('$foo'),
                 new Token('bar'),
@@ -171,7 +171,7 @@ class ChainTest extends TestCase
 
     public function testChopDownConvertsStringsToTokensAndOnlyFromThirdItemsDoWeGetNewLinesAndIndents()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 '$foo',
                 'bar',
@@ -190,7 +190,7 @@ class ChainTest extends TestCase
 
     public function testChopDownConvertsTokenToArrayOfTokens()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: new Token('$foo'),
         );
 
@@ -204,7 +204,7 @@ class ChainTest extends TestCase
 
     public function testChopDownConvertsTokenGroupToArrayOfTokenGroups()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: new VariableDef('foo'),
         );
 
@@ -218,7 +218,7 @@ class ChainTest extends TestCase
 
     public function testChopDownRendersTokenGroups()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 new VariableDef('foo'),
             ],
@@ -234,7 +234,7 @@ class ChainTest extends TestCase
 
     public function testChopDownTransformsPropertyTokenGroupToTokenAndLosesDollarSignBecauseConsideredAsAccess()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 new PropertyDef(name: 'foo', type: 'int'),
             ],
@@ -250,7 +250,7 @@ class ChainTest extends TestCase
 
     public function testChopDownRendersThisRefTokenGroupAndAdditionalPropertiesProperlyAndOnlyFromThirdItemsDoWeGetNewLinesAndIndents()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 new ThisContext(),
                 new PropertyDef(name: 'foo', type: 'int'),
@@ -269,10 +269,10 @@ class ChainTest extends TestCase
 
     public function testChopDownRendersStaticAccessTokensInsteadOfMemberTokensWhenItFindsTokenGroupThatExposesStaticContext()
     {
-        $token = new Chain(
+        $token = new ChainOp(
             chain: [
                 new ParentContext(),
-                new Call(name: 'setUp'),
+                new CallOp(name: 'setUp'),
                 new PropertyDef(name: 'bar', type: 'int'),
             ],
         );

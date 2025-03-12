@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -21,7 +21,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class MethodDef extends Defines
+class MethodDef extends Tokenizes
 {
     use FlattenFunction;
     use TokenFunctions;
@@ -34,8 +34,8 @@ class MethodDef extends Defines
         public bool                                   $static = false,
         public null|ParameterListDef                  $parameters = null,
         public null|string|SingleTypeDef|MultiTypeDef $returnType = null,
-        /** @var Token|Defines|Token[]|Defines[] $instructions */
-        public array|Token|Defines                    $instructions = [],
+        /** @var Token|Tokenizes|Token[]|Tokenizes[] $instructions */
+        public array|Token|Tokenizes                  $instructions = [],
     )
     {
         $this->setDocBlock($docBlock);
@@ -118,7 +118,7 @@ class MethodDef extends Defines
         return $this;
     }
 
-    public function addInstruction(Token|Defines $instruction): self
+    public function addInstruction(Token|Tokenizes $instruction): self
     {
         $this->instructions[] = $instruction;
         return $this;

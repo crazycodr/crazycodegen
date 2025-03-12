@@ -2,31 +2,19 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\Scenarios;
 
-use CrazyCodeGen\Common\Enums\VisibilityEnum;
-use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
-use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
-use CrazyCodeGen\Definition\Definitions\Values\ClassRef;
-use CrazyCodeGen\Definition\Definitions\Values\StringVal;
-use CrazyCodeGen\Definition\Expressions\Instruction;
-use CrazyCodeGen\Definition\Expressions\Operations\Call;
-use CrazyCodeGen\Definition\Expressions\Operations\Chain;
-use CrazyCodeGen\Definition\Expressions\Operations\NewInstance;
-use CrazyCodeGen\Definition\Expressions\Operations\ReturnVal;
+use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
+use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
+use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\Assign;
-use CrazyCodeGen\Definition\Expressions\Structures\Condition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
-use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
-use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -47,19 +35,19 @@ class ServiceBuilderScenarioTest extends TestCase
         $constructor = (new MethodDef('__construct'))
             ->addParameterExploded('mock', $mockedHookBasketAdapterType)
             ->addInstruction(new Assign(
-                subject: new Chain([new ThisContext(), 'mock']),
+                subject: new ChainOp([new ThisContext(), 'mock']),
                 value: new VariableDef('mock'),
             ));
         $getMockedClassesMethod = (new MethodDef('getMockedClasses'))
             ->setReturnType('array')
             ->setStatic(true)
-            ->addInstruction(new ReturnVal(
-                new ArrayVal([new ClassRef('HookBasketAdapter')])
+            ->addInstruction(new ReturnOp(
+                new ArrayVal([new ClassRefVal('HookBasketAdapter')])
             ));
         $getServiceMethod = (new MethodDef('getService'))
             ->setReturnType($mockedHookBasketAdapterType)
-            ->addInstruction(new ReturnVal(
-                new Chain([new ThisContext(), 'mock'])
+            ->addInstruction(new ReturnOp(
+                new ChainOp([new ThisContext(), 'mock'])
             ));
         $classDef = (new ClassDef('HookBasketAdapterBuilder'))
             ->setNamespace('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Baskets\Adapters')

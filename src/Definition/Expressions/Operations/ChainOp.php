@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\Defines;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
 use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
@@ -16,14 +16,14 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\StaticAccessToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class Chain extends Defines implements ProvidesInlineTokens, ProvidesChopDownTokens
+class ChainOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownTokens
 {
     use FlattenFunction;
     use TokenFunctions;
 
     public function __construct(
-        /** @var string|Token|Defines|string[]|Token[]|Defines[] $chain */
-        public string|array|Token|Defines $chain = [],
+        /** @var string|Token|Tokenizes|string[]|Token[]|Tokenizes[] $chain */
+        public string|array|Token|Tokenizes $chain = [],
     ) {
         if (is_string($this->chain)) {
             $this->chain = new Token($this->chain);
@@ -130,9 +130,9 @@ class Chain extends Defines implements ProvidesInlineTokens, ProvidesChopDownTok
         $tokens = [];
         if ($chainItem instanceof Token) {
             $tokens[] = $chainItem;
-        } elseif ($chainItem instanceof Defines && $chainItem instanceof ProvidesChopDownTokens) {
+        } elseif ($chainItem instanceof Tokenizes && $chainItem instanceof ProvidesChopDownTokens) {
             $tokens[] = $chainItem->getChopDownTokens($context, $rules);
-        } elseif ($chainItem instanceof Defines) {
+        } elseif ($chainItem instanceof Tokenizes) {
             $tokens[] = $chainItem->getTokens($context, $rules);
         }
         return $tokens;
@@ -149,9 +149,9 @@ class Chain extends Defines implements ProvidesInlineTokens, ProvidesChopDownTok
         $tokens = [];
         if ($chainItem instanceof Token) {
             $tokens[] = $chainItem;
-        } elseif ($chainItem instanceof Defines && $chainItem instanceof ProvidesInlineTokens) {
+        } elseif ($chainItem instanceof Tokenizes && $chainItem instanceof ProvidesInlineTokens) {
             $tokens[] = $chainItem->getInlineTokens($context, $rules);
-        } elseif ($chainItem instanceof Defines) {
+        } elseif ($chainItem instanceof Tokenizes) {
             $tokens[] = $chainItem->getTokens($context, $rules);
         }
         return $tokens;
