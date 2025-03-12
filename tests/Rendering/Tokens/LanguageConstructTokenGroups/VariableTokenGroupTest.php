@@ -2,10 +2,10 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
+use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\DollarToken;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use PHPUnit\Framework\TestCase;
 
@@ -13,31 +13,31 @@ class VariableTokenGroupTest extends TestCase
 {
     public function testVariableIsRenderedWithLeadingDollarSign()
     {
-        $token = new VariableTokenGroup('foo');
+        $token = new VariableDef('foo');
 
         $this->assertEquals(
             new DollarToken(),
-            $token->render(new RenderContext(), new RenderingRules())[0]
+            $token->getTokens(new RenderContext(), new RenderingRules())[0]
         );
     }
 
     public function testStringNameIsTransformedIntoIdentifierAndRendered()
     {
-        $token = new VariableTokenGroup($name = new Token('foo'));
+        $token = new VariableDef($name = new Token('foo'));
 
         $this->assertEquals(
             $name,
-            $token->render(new RenderContext(), new RenderingRules())[1]
+            $token->getTokens(new RenderContext(), new RenderingRules())[1]
         );
     }
 
     public function testVariableNameIsRenderedNext()
     {
-        $token = new VariableTokenGroup('foo');
+        $token = new VariableDef('foo');
 
         $this->assertEquals(
             new Token('foo'),
-            $token->render(new RenderContext(), new RenderingRules())[1]
+            $token->getTokens(new RenderContext(), new RenderingRules())[1]
         );
     }
 }

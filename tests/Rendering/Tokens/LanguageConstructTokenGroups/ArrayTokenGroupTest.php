@@ -2,13 +2,13 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
+use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\PlusToken;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArrayTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ExpressionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class ArrayTokenGroupTest extends TestCase
 
     public function testLongFormUsedWhenConfigurationSaysSoAndNoKeysArePrintedBecauseTheyAreSequential()
     {
-        $token = new ArrayTokenGroup([1, 2, 3]);
+        $token = new ArrayVal([1, 2, 3]);
 
         $rules = $this->getRenderingRules();
         $rules->arrays->useShortForm = false;
@@ -28,13 +28,13 @@ class ArrayTokenGroupTest extends TestCase
             <<<'EOS'
             array(1, 2, 3)
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testShortFormUsedWhenConfigurationSaysSoAndNoKeysArePrintedBecauseTheyAreSequential()
     {
-        $token = new ArrayTokenGroup([1, 2, 3]);
+        $token = new ArrayVal([1, 2, 3]);
 
         $rules = $this->getRenderingRules();
 
@@ -42,13 +42,13 @@ class ArrayTokenGroupTest extends TestCase
             <<<'EOS'
             [1, 2, 3]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testIntKeysNotInSequentialOrderGetsAddedToArray()
     {
-        $token = new ArrayTokenGroup([0 => 1, 2 => 2, 3 => 3]);
+        $token = new ArrayVal([0 => 1, 2 => 2, 3 => 3]);
 
         $rules = $this->getRenderingRules();
 
@@ -56,13 +56,13 @@ class ArrayTokenGroupTest extends TestCase
             <<<'EOS'
             [0 => 1, 2 => 2, 3 => 3]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testStringKeysGetsAllKeysAddedToArray()
     {
-        $token = new ArrayTokenGroup(['0' => 1, 2 => 2, 'hello' => 3]);
+        $token = new ArrayVal(['0' => 1, 2 => 2, 'hello' => 3]);
 
         $rules = $this->getRenderingRules();
 
@@ -70,13 +70,13 @@ class ArrayTokenGroupTest extends TestCase
             <<<'EOS'
             [0 => 1, 2 => 2, 'hello' => 3]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testNumericalIntKeysAreTransformedToIntKeysBecauseOfPhp()
     {
-        $token = new ArrayTokenGroup(['0' => 1, '2' => 2, 'hello' => 3]);
+        $token = new ArrayVal(['0' => 1, '2' => 2, 'hello' => 3]);
 
         $rules = $this->getRenderingRules();
 
@@ -84,13 +84,13 @@ class ArrayTokenGroupTest extends TestCase
             <<<'EOS'
             [0 => 1, 2 => 2, 'hello' => 3]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSpacesAfterIdentifiersAreRespected()
     {
-        $token = new ArrayTokenGroup(['hello' => 1, 'world' => 2, 'foo' => 3]);
+        $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
 
         $rules = $this->getRenderingRules();
         $rules->arrays->spacesAfterIdentifiers = 3;
@@ -99,13 +99,13 @@ class ArrayTokenGroupTest extends TestCase
             <<<'EOS'
             ['hello'   => 1, 'world'   => 2, 'foo'   => 3]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSpacesAfterOperatorsAreRespected()
     {
-        $token = new ArrayTokenGroup(['hello' => 1, 'world' => 2, 'foo' => 3]);
+        $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
 
         $rules = $this->getRenderingRules();
         $rules->arrays->spacesAfterOperators = 3;
@@ -114,13 +114,13 @@ class ArrayTokenGroupTest extends TestCase
             <<<'EOS'
             ['hello' =>   1, 'world' =>   2, 'foo' =>   3]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSpacesAfterValuesAreRespected()
     {
-        $token = new ArrayTokenGroup(['hello' => 1, 'world' => 2, 'foo' => 3]);
+        $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
 
         $rules = $this->getRenderingRules();
         $rules->arrays->spacesAfterValues = 3;
@@ -129,13 +129,13 @@ class ArrayTokenGroupTest extends TestCase
             <<<'EOS'
             ['hello' => 1   , 'world' => 2   , 'foo' => 3]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSpacesAfterSeparatorsAreRespected()
     {
-        $token = new ArrayTokenGroup(['hello' => 1, 'world' => 2, 'foo' => 3]);
+        $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
 
         $rules = $this->getRenderingRules();
         $rules->arrays->spacesAfterSeparators = 3;
@@ -144,13 +144,13 @@ class ArrayTokenGroupTest extends TestCase
             <<<'EOS'
             ['hello' => 1,   'world' => 2,   'foo' => 3]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testWrappingIsDoneWhenLineIsTooLong()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'thisIsAPrettyLongKey' => 1,
             'thisAlsoContributesToWrapping' => 2,
             'shortButWraps' => 3
@@ -168,13 +168,13 @@ class ArrayTokenGroupTest extends TestCase
                 'shortButWraps' => 3,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testWrappingIsDoneEvenIfLineNotTooLong()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => 1,
             'is' => 2,
             'short' => 3
@@ -191,13 +191,13 @@ class ArrayTokenGroupTest extends TestCase
                 'short' => 3,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testWrappingIsNotDoneEvenIfLineTooLong()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'thisIsAPrettyLongKey' => 1,
             'thisAlsoContributesToWrapping' => 2,
             'shortButWraps' => 3
@@ -211,13 +211,13 @@ class ArrayTokenGroupTest extends TestCase
             <<<'EOS'
             ['thisIsAPrettyLongKey' => 1, 'thisAlsoContributesToWrapping' => 2, 'shortButWraps' => 3]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testOpeningBraceOnSameLineIfWrappingIndentsAllOtherItemsButFirst()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => 1,
             'is' => 2,
             'short' => 3
@@ -235,13 +235,13 @@ class ArrayTokenGroupTest extends TestCase
                 'short' => 3,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testOpeningBraceOnDiffLineIfWrappingIsPropertyIndented()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => 1,
             'is' => 2,
             'short' => 3
@@ -260,13 +260,13 @@ class ArrayTokenGroupTest extends TestCase
                 'short' => 3,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testClosingBraceOnSameLineIfWrappingHidesLastItemComma()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => 1,
             'is' => 2,
             'short' => 3
@@ -284,13 +284,13 @@ class ArrayTokenGroupTest extends TestCase
                 'is' => 2,
                 'short' => 3]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testClosingBraceOnDiffLineIfWrappingShowsLastItemCommaIfConfigured()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => 1,
             'is' => 2,
             'short' => 3
@@ -310,13 +310,13 @@ class ArrayTokenGroupTest extends TestCase
                 'short' => 3,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testWrappedConfigDoesNotFeatureSpacesAfterSeparatorAndHidesLastSeparatorWhenConfigured()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => 1,
             'is' => 2,
             'short' => 3
@@ -334,13 +334,13 @@ class ArrayTokenGroupTest extends TestCase
                 'short' => 3
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testPaddingOfIdentifiersIsAppliedIfConfigured()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => 1,
             'is' => 2,
             'short' => 3
@@ -357,13 +357,13 @@ class ArrayTokenGroupTest extends TestCase
                 'short' => 3,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testStringValuesAreProperlyConverted()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => 'is a string',
         ]);
 
@@ -376,13 +376,13 @@ class ArrayTokenGroupTest extends TestCase
                 'this' => 'is a string',
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testBoolValuesAreProperlyConverted()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => true,
         ]);
 
@@ -395,13 +395,13 @@ class ArrayTokenGroupTest extends TestCase
                 'this' => true,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testNullValuesAreProperlyConverted()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => null,
         ]);
 
@@ -414,14 +414,14 @@ class ArrayTokenGroupTest extends TestCase
                 'this' => null,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testTokenGroupValuesAreRenderedIn()
     {
-        $token = new ArrayTokenGroup([
-            'this' => new ExpressionTokenGroup([new Token(1), new PlusToken(), new Token(2)]),
+        $token = new ArrayVal([
+            'this' => new Expression([new Token(1), new PlusToken(), new Token(2)]),
         ]);
 
         $rules = $this->getRenderingRules();
@@ -433,13 +433,13 @@ class ArrayTokenGroupTest extends TestCase
                 'this' => 1+2,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testTokenValuesAreSimplyReused()
     {
-        $token = new ArrayTokenGroup([
+        $token = new ArrayVal([
             'this' => new Token('$someDirectIdentifier'),
         ]);
 
@@ -452,14 +452,14 @@ class ArrayTokenGroupTest extends TestCase
                 'this' => $someDirectIdentifier,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testNestedTokenGroupsAreProperlyIndented()
     {
-        $token = new ArrayTokenGroup([
-            'hello' => new ArrayTokenGroup([
+        $token = new ArrayVal([
+            'hello' => new ArrayVal([
                 'foo' => 'bar',
                 'bar' => 'baz',
             ]),
@@ -479,7 +479,7 @@ class ArrayTokenGroupTest extends TestCase
                 'world' => 123,
             ]
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 

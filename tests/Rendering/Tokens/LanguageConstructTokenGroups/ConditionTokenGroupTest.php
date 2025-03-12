@@ -2,6 +2,8 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
+use CrazyCodeGen\Definition\Expressions\Instruction;
+use CrazyCodeGen\Definition\Expressions\Structures\Condition;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -9,8 +11,6 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\AsteriskToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ConditionTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\InstructionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -21,7 +21,7 @@ class ConditionTokenGroupTest extends TestCase
 
     public function testSpacesAreAddedAfterIf()
     {
-        $token = new ConditionTokenGroup(
+        $token = new Condition(
             condition: new Token('true'),
             trueInstructions: new Token('true'),
         );
@@ -35,7 +35,7 @@ class ConditionTokenGroupTest extends TestCase
                 true;
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
@@ -52,7 +52,7 @@ class ConditionTokenGroupTest extends TestCase
 
     public function testComplexConditionWithDifferentTokensAndTokenGroupsIsRenderedAsIsAndInsideParentheses()
     {
-        $token = new ConditionTokenGroup(
+        $token = new Condition(
             condition: [
                 new Token(1),
                 new SpacesToken(),
@@ -77,13 +77,13 @@ class ConditionTokenGroupTest extends TestCase
                 true;
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testOpenBraceIsOnSameLineWithExpectedSpaces()
     {
-        $token = new ConditionTokenGroup(
+        $token = new Condition(
             condition: new Token('true'),
             trueInstructions: new Token('true'),
         );
@@ -98,13 +98,13 @@ class ConditionTokenGroupTest extends TestCase
                 true;
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testOpenBraceIsOnDiffLineAndSpacesRuleDisregarded()
     {
-        $token = new ConditionTokenGroup(
+        $token = new Condition(
             condition: new Token('true'),
             trueInstructions: new Token('true'),
         );
@@ -120,16 +120,16 @@ class ConditionTokenGroupTest extends TestCase
                 true;
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testComplexTrueInstructionsAreRenderedInBodyIndented()
     {
-        $token = new ConditionTokenGroup(
+        $token = new Condition(
             condition: new Token('true'),
             trueInstructions: [
-                new InstructionTokenGroup(
+                new Instruction(
                     instructions: [
                         new Token(1),
                         new SpacesToken(),
@@ -144,7 +144,7 @@ class ConditionTokenGroupTest extends TestCase
                         ],
                     ]
                 ),
-                new InstructionTokenGroup(
+                new Instruction(
                     instructions: [
                         new Token('return'),
                         new SpacesToken(),
@@ -163,13 +163,13 @@ class ConditionTokenGroupTest extends TestCase
                 return 1;
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testClosingBraceIsOnSameLineAsElseWhenFalseConditionsExist()
     {
-        $token = new ConditionTokenGroup(
+        $token = new Condition(
             condition: new Token('true'),
             trueInstructions: new Token('true'),
             falseInstructions: new Token('false'),
@@ -185,13 +185,13 @@ class ConditionTokenGroupTest extends TestCase
                 false;
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testBracesOnDifferentLinesDoNotAddSpaces()
     {
-        $token = new ConditionTokenGroup(
+        $token = new Condition(
             condition: new Token('true'),
             trueInstructions: new Token('true'),
             falseInstructions: new Token('false'),
@@ -212,22 +212,22 @@ class ConditionTokenGroupTest extends TestCase
                 false;
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testConditionTokenGroupAsFalseInstructionsActAsElseIfAndCascadesWithUnlimitedElseIfs()
     {
-        $token = new ConditionTokenGroup(
+        $token = new Condition(
             condition: new Token('true'),
             trueInstructions: new Token('0'),
-            falseInstructions: new ConditionTokenGroup(
+            falseInstructions: new Condition(
                 condition: [new Token(1), new Token('==='), new Token(2)],
                 trueInstructions: new Token('1'),
-                falseInstructions: new ConditionTokenGroup(
+                falseInstructions: new Condition(
                     condition: [new Token(2), new Token('==='), new Token(3)],
                     trueInstructions: new Token('2'),
-                    falseInstructions: new ConditionTokenGroup(
+                    falseInstructions: new Condition(
                         condition: [new Token(3), new Token('==='), new Token(4)],
                         trueInstructions: new Token('3'),
                         falseInstructions: new Token('4'),
@@ -252,7 +252,7 @@ class ConditionTokenGroupTest extends TestCase
                 4;
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 }

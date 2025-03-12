@@ -3,9 +3,9 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
-use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\PropertyDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
+use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -18,7 +18,7 @@ class PropertyDefinitionTest extends TestCase
 
     public function testRendersVisibilityAndNameWithSpaces()
     {
-        $token = new PropertyDefinition(
+        $token = new PropertyDef(
             name: new Token('foo'),
         );
 
@@ -29,7 +29,7 @@ class PropertyDefinitionTest extends TestCase
             <<<'EOS'
             public    $foo;
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
@@ -46,7 +46,7 @@ class PropertyDefinitionTest extends TestCase
 
     public function testRendersNameFromStringAsExpected()
     {
-        $token = new PropertyDefinition(
+        $token = new PropertyDef(
             name: 'foo',
         );
 
@@ -56,13 +56,13 @@ class PropertyDefinitionTest extends TestCase
             <<<'EOS'
             public $foo;
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testDifferentVisibilityPropertyRendered()
     {
-        $token = new PropertyDefinition(
+        $token = new PropertyDef(
             name: new Token('foo'),
             visibility: VisibilityEnum::PROTECTED,
         );
@@ -73,13 +73,13 @@ class PropertyDefinitionTest extends TestCase
             <<<'EOS'
             protected $foo;
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testRendersStaticModifierWithSpaces()
     {
-        $token = new PropertyDefinition(
+        $token = new PropertyDef(
             name: new Token('foo'),
             static: true
         );
@@ -91,13 +91,13 @@ class PropertyDefinitionTest extends TestCase
             <<<'EOS'
             public static    $foo;
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testRendersTypeWithSpaces()
     {
-        $token = new PropertyDefinition(
+        $token = new PropertyDef(
             name: new Token('foo'),
             type: 'int'
         );
@@ -109,15 +109,15 @@ class PropertyDefinitionTest extends TestCase
             <<<'EOS'
             public int    $foo;
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testRendersComplexTypeAsExpected()
     {
-        $token = new PropertyDefinition(
+        $token = new PropertyDef(
             name: new Token('foo'),
-            type: new MultiTypeDefinition(types: ['int', 'string', 'bool'])
+            type: new MultiTypeDef(types: ['int', 'string', 'bool'])
         );
 
         $rules = $this->getTestRules();
@@ -126,13 +126,13 @@ class PropertyDefinitionTest extends TestCase
             <<<'EOS'
             public int|string|bool $foo;
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testDefaultValueRendersAfterNameWithExpectedSpaces()
     {
-        $token = new PropertyDefinition(
+        $token = new PropertyDef(
             name: new Token('foo'),
             defaultValue: 'Hello world'
         );
@@ -145,13 +145,13 @@ class PropertyDefinitionTest extends TestCase
             <<<'EOS'
             public $foo    =    'Hello world';
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testContextPaddingIsRespectedOverRules()
     {
-        $token = new PropertyDefinition(
+        $token = new PropertyDef(
             name: new Token('foo'),
             type: 'int',
             visibility: VisibilityEnum::PROTECTED,
@@ -170,13 +170,13 @@ class PropertyDefinitionTest extends TestCase
             <<<'EOS'
             protected static    int        $foo        = 'Hello world';
             EOS,
-            $this->renderTokensToString($token->render($context, $rules))
+            $this->renderTokensToString($token->getTokens($context, $rules))
         );
     }
 
     public function testContextPaddingRendersAtLeastOneSpaceEvenIfSmallerToNotCreateInvalidCode()
     {
-        $token = new PropertyDefinition(
+        $token = new PropertyDef(
             name: new Token('foo'),
             type: 'int',
             visibility: VisibilityEnum::PROTECTED,
@@ -195,15 +195,15 @@ class PropertyDefinitionTest extends TestCase
             <<<'EOS'
             protected static int $foo = 'Hello world';
             EOS,
-            $this->renderTokensToString($token->render($context, $rules))
+            $this->renderTokensToString($token->getTokens($context, $rules))
         );
     }
 
     public function testDocBlockIsProperlyRendered()
     {
-        $token = new PropertyDefinition(
+        $token = new PropertyDef(
             name: 'prop1',
-            docBlock: new DocBlockDefinition(['This is a docblock that should be wrapped and displayed before the prop.']),
+            docBlock: new DocBlockDef(['This is a docblock that should be wrapped and displayed before the prop.']),
         );
 
         $rules = $this->getTestRules();
@@ -220,7 +220,7 @@ class PropertyDefinitionTest extends TestCase
             
             public $prop1;
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 }

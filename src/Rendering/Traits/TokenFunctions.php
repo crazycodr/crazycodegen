@@ -2,13 +2,13 @@
 
 namespace CrazyCodeGen\Rendering\Traits;
 
+use CrazyCodeGen\Definition\Base\Defines;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
-use CrazyCodeGen\Rendering\Tokens\TokenGroup;
 
 trait TokenFunctions
 {
@@ -118,20 +118,20 @@ trait TokenFunctions
     }
 
     /**
-     * @param array<Token|TokenGroup>|Token|TokenGroup $instructions
+     * @param array<Token|Defines>|Token|Defines $instructions
      * @param RenderContext $context
      * @param RenderingRules $rules
      * @return array
      */
     private function renderInstructionsFromFlexibleTokenValue(
-        array|Token|TokenGroup $instructions,
-        RenderContext          $context,
-        RenderingRules         $rules
+        array|Token|Defines $instructions,
+        RenderContext       $context,
+        RenderingRules      $rules
     ): array {
         $tokens = [];
         if (is_array($instructions)) {
             foreach ($instructions as $instruction) {
-                if (!$instruction instanceof Token && !$instruction instanceof TokenGroup) {
+                if (!$instruction instanceof Token && !$instruction instanceof Defines) {
                     continue;
                 }
                 if ($instruction instanceof NewLinesToken) {
@@ -147,8 +147,8 @@ trait TokenFunctions
             $tokens[] = $instructions;
             $tokens[] = new SemiColonToken();
             $tokens[] = new NewLinesToken();
-        } elseif ($instructions instanceof TokenGroup) {
-            $tokens[] = $instructions->render($context, $rules);
+        } elseif ($instructions instanceof Defines) {
+            $tokens[] = $instructions->getTokens($context, $rules);
             $tokens[] = new SemiColonToken();
             $tokens[] = new NewLinesToken();
         }
@@ -156,28 +156,28 @@ trait TokenFunctions
     }
 
     /**
-     * @param array<Token|TokenGroup>|Token|TokenGroup $values
+     * @param array<Token|Defines>|Token|Defines $values
      */
     private function convertFlexibleTokenValueToTokens(
-        array|Token|TokenGroup $values,
-        RenderContext          $context,
-        RenderingRules         $rules,
+        array|Token|Defines $values,
+        RenderContext       $context,
+        RenderingRules      $rules,
     ): array {
         $tokens = [];
         if (is_array($values)) {
             foreach ($values as $value) {
                 if ($value instanceof Token) {
                     $tokens[] = $value;
-                } elseif ($value instanceof TokenGroup) {
-                    $tokens[] = $value->render($context, $rules);
+                } elseif ($value instanceof Defines) {
+                    $tokens[] = $value->getTokens($context, $rules);
                 } elseif (is_array($value)) {
                     $tokens[] = $this->convertFlexibleTokenValueToTokens($value, $context, $rules);
                 }
             }
         } elseif ($values instanceof Token) {
             $tokens[] = $values;
-        } elseif ($values instanceof TokenGroup) {
-            $tokens[] = $values->render($context, $rules);
+        } elseif ($values instanceof Defines) {
+            $tokens[] = $values->getTokens($context, $rules);
         }
         return $this->flatten($tokens);
     }

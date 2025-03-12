@@ -2,13 +2,13 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Definition\Definitions\Structures\ClassDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
+use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
+use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
+use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
+use CrazyCodeGen\Definition\Expressions\Operations\NewInstance;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArrayTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\NewInstanceTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class NewInstanceTokenGroupTest extends TestCase
 
     public function testInlineNewKeywordClassnameAndEmptyParenthesesArePresent()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
         );
 
@@ -27,13 +27,13 @@ class NewInstanceTokenGroupTest extends TestCase
             <<<'EOS'
             new foo()
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineStringClassNameIsConvertedAndOutputAsExpected()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: 'foo'
         );
 
@@ -41,28 +41,28 @@ class NewInstanceTokenGroupTest extends TestCase
             <<<'EOS'
             new foo()
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineClassTokenGroupGetConvertedToSimpleClassName()
     {
-        $token = new NewInstanceTokenGroup(
-            class: new ClassDefinition(name: 'foo', namespace: new NamespaceDefinition('CrazyCodeGen\Tests')),
+        $token = new NewInstance(
+            class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
         );
 
         $this->assertEquals(
             <<<'EOS'
             new CrazyCodeGen\Tests\foo()
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineClassTokenGroupGetShortNameRenderedWhenClassIsImportedInContext()
     {
-        $token = new NewInstanceTokenGroup(
-            class: new ClassDefinition(name: 'foo', namespace: new NamespaceDefinition('CrazyCodeGen\Tests')),
+        $token = new NewInstance(
+            class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
         );
 
         $context = new RenderContext();
@@ -72,13 +72,13 @@ class NewInstanceTokenGroupTest extends TestCase
             <<<'EOS'
             new foo()
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario($context, new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens($context, new RenderingRules()))
         );
     }
 
     public function testInlineRendersStringArgumentAsSingleToken()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
             arguments: 1,
         );
@@ -87,13 +87,13 @@ class NewInstanceTokenGroupTest extends TestCase
             <<<'EOS'
             new foo(1)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokenArgumentAsSingleToken()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
             arguments: new Token(1),
         );
@@ -102,28 +102,28 @@ class NewInstanceTokenGroupTest extends TestCase
             <<<'EOS'
             new foo(1)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokenGroupArgumentAsExpected()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
-            arguments: new VariableTokenGroup('bar'),
+            arguments: new VariableDef('bar'),
         );
 
         $this->assertEquals(
             <<<'EOS'
             new foo($bar)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
             arguments: [new Token(1), new Token(2), new Token(3)],
         );
@@ -132,43 +132,43 @@ class NewInstanceTokenGroupTest extends TestCase
             <<<'EOS'
             new foo(1, 2, 3)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
-            arguments: [new VariableTokenGroup('bar'), new VariableTokenGroup('baz')],
+            arguments: [new VariableDef('bar'), new VariableDef('baz')],
         );
 
         $this->assertEquals(
             <<<'EOS'
             new foo($bar, $baz)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
-            arguments: [new ArrayTokenGroup([1, 2, 3]), new VariableTokenGroup('baz')],
+            arguments: [new ArrayVal([1, 2, 3]), new VariableDef('baz')],
         );
 
         $this->assertEquals(
             <<<'EOS'
             new foo([1, 2, 3], $baz)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownNewKeywordClassnameAndEmptyParenthesesArePresent()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
         );
 
@@ -176,13 +176,13 @@ class NewInstanceTokenGroupTest extends TestCase
             <<<'EOS'
             new foo()
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownStringClassNameIsConvertedAndOutputAsExpected()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: 'foo'
         );
 
@@ -190,28 +190,28 @@ class NewInstanceTokenGroupTest extends TestCase
             <<<'EOS'
             new foo()
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownClassTokenGroupGetConvertedToSimpleClassName()
     {
-        $token = new NewInstanceTokenGroup(
-            class: new ClassDefinition(name: 'foo', namespace: new NamespaceDefinition('CrazyCodeGen\Tests')),
+        $token = new NewInstance(
+            class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
         );
 
         $this->assertEquals(
             <<<'EOS'
             new CrazyCodeGen\Tests\foo()
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownClassTokenGroupGetShortNameRenderedWhenClassIsImportedInContext()
     {
-        $token = new NewInstanceTokenGroup(
-            class: new ClassDefinition(name: 'foo', namespace: new NamespaceDefinition('CrazyCodeGen\Tests')),
+        $token = new NewInstance(
+            class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
         );
 
         $context = new RenderContext();
@@ -221,13 +221,13 @@ class NewInstanceTokenGroupTest extends TestCase
             <<<'EOS'
             new foo()
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario($context, new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens($context, new RenderingRules()))
         );
     }
 
     public function testChopDownRendersStringArgumentAsSingleToken()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
             arguments: 1,
         );
@@ -238,13 +238,13 @@ class NewInstanceTokenGroupTest extends TestCase
                 1,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokenArgumentAsSingleToken()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
             arguments: new Token(1),
         );
@@ -255,15 +255,15 @@ class NewInstanceTokenGroupTest extends TestCase
                 1,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokenGroupArgumentAsExpected()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
-            arguments: new VariableTokenGroup('bar'),
+            arguments: new VariableDef('bar'),
         );
 
         $this->assertEquals(
@@ -272,13 +272,13 @@ class NewInstanceTokenGroupTest extends TestCase
                 $bar,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokensArgumentAsListOfItemsSeparatedByCommasNewLinesAndEverythingIsIndented()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
             arguments: [new Token(1), new Token(2), new Token(3)],
         );
@@ -291,15 +291,15 @@ class NewInstanceTokenGroupTest extends TestCase
                 3,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
-            arguments: [new VariableTokenGroup('bar'), new VariableTokenGroup('baz')],
+            arguments: [new VariableDef('bar'), new VariableDef('baz')],
         );
 
         $this->assertEquals(
@@ -309,15 +309,15 @@ class NewInstanceTokenGroupTest extends TestCase
                 $baz,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheChopDownVersions()
     {
-        $token = new NewInstanceTokenGroup(
+        $token = new NewInstance(
             class: new Token('foo'),
-            arguments: [new ArrayTokenGroup([1, 2, 3]), new VariableTokenGroup('baz')],
+            arguments: [new ArrayVal([1, 2, 3]), new VariableDef('baz')],
         );
 
         $this->assertEquals(
@@ -331,7 +331,7 @@ class NewInstanceTokenGroupTest extends TestCase
                 $baz,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 }

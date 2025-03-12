@@ -6,7 +6,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\FuncDef;
 use CrazyCodeGen\Definition\Definitions\Values\BoolValue;
 use CrazyCodeGen\Definition\Definitions\Values\FloatValue;
 use CrazyCodeGen\Definition\Definitions\Values\IntValue;
-use CrazyCodeGen\Definition\Definitions\Values\StringValue;
+use CrazyCodeGen\Definition\Definitions\Values\OldStringValue;
 use CrazyCodeGen\Definition\Definitions\Values\Variable;
 
 class DefinitionFactory
@@ -21,9 +21,9 @@ class DefinitionFactory
         return new FloatValue($value);
     }
 
-    public function stringVal(string $value): StringValue
+    public function stringVal(string $value): OldStringValue
     {
-        return new StringValue($value);
+        return new OldStringValue($value);
     }
 
     public function boolVal(bool $value): BoolValue

@@ -2,10 +2,10 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
+use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
+use CrazyCodeGen\Definition\Expressions\Operations\ReturnVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ReturnInstructionTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -15,13 +15,13 @@ class ReturnInstructionTokenGroupTest extends TestCase
 
     public function testReturnTokenAndSpaceAddedBeforeInstructions()
     {
-        $token = new ReturnInstructionTokenGroup(new VariableTokenGroup('foo'));
+        $token = new ReturnVal(new VariableDef('foo'));
 
         $this->assertEquals(
             <<<'EOS'
             return $foo;
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 }

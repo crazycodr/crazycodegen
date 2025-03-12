@@ -2,8 +2,8 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -15,25 +15,25 @@ class MultiTypeDefinitionTest extends TestCase
 
     public function testTypesAreJoinedWithPipeWhenUnionIsTrueByDefault()
     {
-        $token = new MultiTypeDefinition([
-            new SingleTypeDefinition('string'),
-            new SingleTypeDefinition('int'),
+        $token = new MultiTypeDef([
+            new SingleTypeDef('string'),
+            new SingleTypeDef('int'),
         ]);
 
         $this->assertEquals(
             <<<'EOS'
             string|int
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testTypesAreJoinedWithAmpersandWhenUnionIsFalse()
     {
-        $token = new MultiTypeDefinition(
+        $token = new MultiTypeDef(
             [
-                new SingleTypeDefinition('string'),
-                new SingleTypeDefinition('int'),
+                new SingleTypeDef('string'),
+                new SingleTypeDef('int'),
             ],
             unionTypes: false
         );
@@ -42,40 +42,40 @@ class MultiTypeDefinitionTest extends TestCase
             <<<'EOS'
             string&int
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testStringTypesAreConvertedToSingleTypeTokenGroupsAndRendered()
     {
-        $token = new MultiTypeDefinition(['string', 'int']);
+        $token = new MultiTypeDef(['string', 'int']);
 
         $this->assertEquals(
             <<<'EOS'
             string|int
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testParenthesesAreAddedAroundTokensWhenNestedIsTurnedOn()
     {
-        $token = new MultiTypeDefinition(['string', 'int'], nestedTypes: true);
+        $token = new MultiTypeDef(['string', 'int'], nestedTypes: true);
 
         $this->assertEquals(
             <<<'EOS'
             (string|int)
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testIfInnerTypeIsMultiTypeItGetsRenderedAtTheCorrectPlaceAndAllParenthesesAreRendered()
     {
-        $token = new MultiTypeDefinition(
+        $token = new MultiTypeDef(
             [
-                new MultiTypeDefinition(['int', 'float'], nestedTypes: true),
-                new MultiTypeDefinition(['string', 'bool'], nestedTypes: true),
+                new MultiTypeDef(['int', 'float'], nestedTypes: true),
+                new MultiTypeDef(['string', 'bool'], nestedTypes: true),
             ],
             unionTypes: false,
             nestedTypes: true,
@@ -85,7 +85,7 @@ class MultiTypeDefinitionTest extends TestCase
             <<<'EOS'
             ((int|float)&(string|bool))
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 }

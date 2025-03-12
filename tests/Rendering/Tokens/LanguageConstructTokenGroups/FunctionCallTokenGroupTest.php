@@ -2,12 +2,12 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Definition\Definitions\Structures\MethodDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
+use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
+use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
+use CrazyCodeGen\Definition\Expressions\Operations\Call;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ArrayTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionCallTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +18,7 @@ class FunctionCallTokenGroupTest extends TestCase
 
     public function testInlineSubjectArrowAndFunctionRenderedFromTokensAndParenthesesArePresent()
     {
-        $token = new FunctionCallTokenGroup(
+        $token = new Call(
             name: new Token('setUp'),
         );
 
@@ -26,13 +26,13 @@ class FunctionCallTokenGroupTest extends TestCase
             <<<'EOS'
             setUp()
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineSubjectAndFunctionAreConvertedToTokensWhenStrings()
     {
-        $token = new FunctionCallTokenGroup(
+        $token = new Call(
             name: 'setUp',
         );
 
@@ -40,28 +40,28 @@ class FunctionCallTokenGroupTest extends TestCase
             <<<'EOS'
             setUp()
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineFunctionConvertedToTokenWhenMethodTokenGroupPassedIn()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
         );
 
         $this->assertEquals(
             <<<'EOS'
             setUp()
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersStringArgumentAsSingleToken()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
             arguments: 1,
         );
 
@@ -69,14 +69,14 @@ class FunctionCallTokenGroupTest extends TestCase
             <<<'EOS'
             setUp(1)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokenArgumentAsSingleToken()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
             arguments: new Token(1),
         );
 
@@ -84,29 +84,29 @@ class FunctionCallTokenGroupTest extends TestCase
             <<<'EOS'
             setUp(1)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokenGroupArgumentAsExpected()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
-            arguments: new VariableTokenGroup('bar'),
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
+            arguments: new VariableDef('bar'),
         );
 
         $this->assertEquals(
             <<<'EOS'
             setUp($bar)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
             arguments: [new Token(1), new Token(2), new Token(3)],
         );
 
@@ -114,43 +114,43 @@ class FunctionCallTokenGroupTest extends TestCase
             <<<'EOS'
             setUp(1, 2, 3)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
-            arguments: [new VariableTokenGroup('bar'), new VariableTokenGroup('baz')],
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
+            arguments: [new VariableDef('bar'), new VariableDef('baz')],
         );
 
         $this->assertEquals(
             <<<'EOS'
             setUp($bar, $baz)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
-            arguments: [new ArrayTokenGroup([1, 2, 3]), new VariableTokenGroup('baz')],
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
+            arguments: [new ArrayVal([1, 2, 3]), new VariableDef('baz')],
         );
 
         $this->assertEquals(
             <<<'EOS'
             setUp([1, 2, 3], $baz)
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownSubjectArrowAndFunctionRenderedFromTokensAndParenthesesArePresent()
     {
-        $token = new FunctionCallTokenGroup(
+        $token = new Call(
             name: new Token('setUp'),
         );
 
@@ -158,13 +158,13 @@ class FunctionCallTokenGroupTest extends TestCase
             <<<'EOS'
             setUp()
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownSubjectAndFunctionAreConvertedToTokensWhenStrings()
     {
-        $token = new FunctionCallTokenGroup(
+        $token = new Call(
             name: 'setUp',
         );
 
@@ -172,28 +172,28 @@ class FunctionCallTokenGroupTest extends TestCase
             <<<'EOS'
             setUp()
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownFunctionConvertedToTokenWhenMethodTokenGroupPassedIn()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
         );
 
         $this->assertEquals(
             <<<'EOS'
             setUp()
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersStringArgumentAsSingleToken()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
             arguments: 1,
         );
 
@@ -203,14 +203,14 @@ class FunctionCallTokenGroupTest extends TestCase
                 1,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokenArgumentAsSingleToken()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
             arguments: new Token(1),
         );
 
@@ -220,15 +220,15 @@ class FunctionCallTokenGroupTest extends TestCase
                 1,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokenGroupArgumentAsExpected()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
-            arguments: new VariableTokenGroup('bar'),
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
+            arguments: new VariableDef('bar'),
         );
 
         $this->assertEquals(
@@ -237,14 +237,14 @@ class FunctionCallTokenGroupTest extends TestCase
                 $bar,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
             arguments: [new Token(1), new Token(2), new Token(3)],
         );
 
@@ -256,15 +256,15 @@ class FunctionCallTokenGroupTest extends TestCase
                 3,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
-            arguments: [new VariableTokenGroup('bar'), new VariableTokenGroup('baz')],
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
+            arguments: [new VariableDef('bar'), new VariableDef('baz')],
         );
 
         $this->assertEquals(
@@ -274,15 +274,15 @@ class FunctionCallTokenGroupTest extends TestCase
                 $baz,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheChopDownVersions()
     {
-        $token = new FunctionCallTokenGroup(
-            name: new MethodDefinition(name: 'setUp'),
-            arguments: [new ArrayTokenGroup([1, 2, 3]), new VariableTokenGroup('baz')],
+        $token = new Call(
+            name: new MethodDef(name: 'setUp'),
+            arguments: [new ArrayVal([1, 2, 3]), new VariableDef('baz')],
         );
 
         $this->assertEquals(
@@ -296,7 +296,7 @@ class FunctionCallTokenGroupTest extends TestCase
                 $baz,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 }

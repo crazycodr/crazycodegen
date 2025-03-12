@@ -2,10 +2,10 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\FunctionDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
+use CrazyCodeGen\Definition\Definitions\Structures\FunctionDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -19,7 +19,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersFunctionKeyword()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -57,7 +57,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersNameOfFunction()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -75,7 +75,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersNoSpaceBetweenNameAndArgumentList()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -93,7 +93,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersSpacesBetweenNameAndArgumentListAsPerRules()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -112,13 +112,13 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersArgumentListInlineAsExpectedBetweenParentheses()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDefinition(
+            arguments: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -137,7 +137,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenListAndReturnColonAsPerRules()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -157,7 +157,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenReturnColonAndTypeAsPerRules()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -177,7 +177,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenTypeAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -197,7 +197,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceAfterArgumentListWithSpacesBetweenListAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -217,7 +217,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningAndClosingBraceOnSameLineAsPerConfiguration()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -235,7 +235,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceOnSameLineAndClosingBraceOnDiffLineAsPerConfiguration()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -254,7 +254,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceOnDiffLineWithClosingBraceOnSameLineAsPerConfiguration()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -273,7 +273,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningAndClosingBracesOnSeparateLinesAsPerConfiguration()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -293,7 +293,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersFunctionKeyword()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -311,7 +311,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersNameOfFunction()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -329,7 +329,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersNoSpaceBetweenNameAndArgumentList()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -347,7 +347,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersSpacesBetweenNameAndArgumentListAsPerRules()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -366,13 +366,13 @@ class FunctionDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersArgumentListChopDownAsExpectedBetweenParentheses()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDefinition(
+            arguments: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -394,7 +394,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenListAndReturnColonAsPerRules()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -414,7 +414,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenReturnColonAndTypeAsPerRules()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -434,7 +434,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenTypeAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -454,7 +454,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersOpeningBraceAfterArgumentListWithSpacesBetweenListAndOpeningBraceAsPerRules()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -473,7 +473,7 @@ class FunctionDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersOpeningAndClosingBracesPositionIsNotRespectedAndAlwaysSameLineDiffLine()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
         );
 
@@ -493,13 +493,13 @@ class FunctionDefinitionTest extends TestCase
 
     public function testRenderReturnsTheInlineVersionIfArgumentsOnDifferentLinesIsNeverWrap()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDefinition(
+            arguments: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -514,19 +514,19 @@ class FunctionDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testRenderReturnsTheInlineVersionIfArgumentsOnDifferentLinesChopIfTooLongButItStillFits()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDefinition(
+            arguments: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -540,19 +540,19 @@ class FunctionDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testRenderReturnsTheChopDownVersionIfArgumentsOnDifferentLinesChopIfTooLongAndItDoesNotFit()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDefinition(
+            arguments: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -570,19 +570,19 @@ class FunctionDefinitionTest extends TestCase
             ) {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testRenderReturnsTheChopDownVersionEvenIfArgumentsWouldFitButConfigurationForcesIt()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDefinition(
+            arguments: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -599,15 +599,15 @@ class FunctionDefinitionTest extends TestCase
             ) {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testDocBlockIsProperlyRendered()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
-            docBlock: new DocBlockDefinition(['This is a docblock that should be wrapped and displayed before the function declaration.']),
+            docBlock: new DocBlockDef(['This is a docblock that should be wrapped and displayed before the function declaration.']),
         );
 
         $rules = $this->getTestRules();
@@ -627,21 +627,21 @@ class FunctionDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testDocBlockDoesNotInterfereWithDecisionToChopDownArgumentList()
     {
-        $token = new FunctionDefinition(
+        $token = new FunctionDef(
             name: 'myFunction',
-            docBlock: new DocBlockDefinition(['This is a docblock that should be wrapped and displayed before the function.']),
-            arguments: new ParameterListDefinition(
+            docBlock: new DocBlockDef(['This is a docblock that should be wrapped and displayed before the function.']),
+            arguments: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
-                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
-                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
-                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
+                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
+                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
+                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
+                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
                 ],
             ),
             returnType: 'int',
@@ -662,7 +662,7 @@ class FunctionDefinitionTest extends TestCase
             ): int {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 }

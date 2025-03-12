@@ -2,14 +2,14 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Definition\Definitions\Structures\PropertyDefinition;
+use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
+use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
+use CrazyCodeGen\Definition\Expressions\Operations\Call;
+use CrazyCodeGen\Definition\Expressions\Operations\Chain;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ChainTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\FunctionCallTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ParentRefTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ThisRefTokenGroup;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\VariableTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +20,7 @@ class ChainTokenGroupTest extends TestCase
 
     public function testInlineChainsItemsTogetherWithAccessTokens()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
                 new Token('$foo'),
                 new Token('bar'),
@@ -32,13 +32,13 @@ class ChainTokenGroupTest extends TestCase
             <<<'EOS'
             $foo->bar->baz
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineConvertsStringsToTokens()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
                 '$foo',
                 'bar',
@@ -50,13 +50,13 @@ class ChainTokenGroupTest extends TestCase
             <<<'EOS'
             $foo->bar->baz
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineConvertsTokenToArrayOfTokens()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: new Token('$foo'),
         );
 
@@ -64,29 +64,29 @@ class ChainTokenGroupTest extends TestCase
             <<<'EOS'
             $foo
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineConvertsTokenGroupToArrayOfTokenGroups()
     {
-        $token = new ChainTokenGroup(
-            chain: new VariableTokenGroup('foo'),
+        $token = new Chain(
+            chain: new VariableDef('foo'),
         );
 
         $this->assertEquals(
             <<<'EOS'
             $foo
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersTokenGroups()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
-                new VariableTokenGroup('foo'),
+                new VariableDef('foo'),
             ],
         );
 
@@ -94,15 +94,15 @@ class ChainTokenGroupTest extends TestCase
             <<<'EOS'
             $foo
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineTransformsPropertyTokenGroupToTokenAndLosesDollarSignBecauseConsideredAsAccess()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
-                new PropertyDefinition(name: 'foo', type: 'int'),
+                new PropertyDef(name: 'foo', type: 'int'),
             ],
         );
 
@@ -110,17 +110,17 @@ class ChainTokenGroupTest extends TestCase
             <<<'EOS'
             foo
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersThisRefTokenGroupAndAdditionalPropertiesProperly()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
-                new ThisRefTokenGroup(),
-                new PropertyDefinition(name: 'foo', type: 'int'),
-                new PropertyDefinition(name: 'bar', type: 'int'),
+                new ThisContext(),
+                new PropertyDef(name: 'foo', type: 'int'),
+                new PropertyDef(name: 'bar', type: 'int'),
             ],
         );
 
@@ -128,17 +128,17 @@ class ChainTokenGroupTest extends TestCase
             <<<'EOS'
             $this->foo->bar
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testInlineRendersStaticAccessTokensInsteadOfMemberTokensWhenItFindsTokenGroupThatExposesStaticContext()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
-                new ParentRefTokenGroup(),
-                new FunctionCallTokenGroup(name: 'setUp'),
-                new PropertyDefinition(name: 'bar', type: 'int'),
+                new ParentContext(),
+                new Call(name: 'setUp'),
+                new PropertyDef(name: 'bar', type: 'int'),
             ],
         );
 
@@ -146,13 +146,13 @@ class ChainTokenGroupTest extends TestCase
             <<<'EOS'
             parent::setUp()->bar
             EOS,
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownChainsItemsTogetherWithAccessTokensAndOnlyFromThirdItemsDoWeGetNewLinesAndIndents()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
                 new Token('$foo'),
                 new Token('bar'),
@@ -165,13 +165,13 @@ class ChainTokenGroupTest extends TestCase
             $foo->bar
                 ->baz
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownConvertsStringsToTokensAndOnlyFromThirdItemsDoWeGetNewLinesAndIndents()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
                 '$foo',
                 'bar',
@@ -184,13 +184,13 @@ class ChainTokenGroupTest extends TestCase
             $foo->bar
                 ->baz
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownConvertsTokenToArrayOfTokens()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: new Token('$foo'),
         );
 
@@ -198,29 +198,29 @@ class ChainTokenGroupTest extends TestCase
             <<<'EOS'
             $foo
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownConvertsTokenGroupToArrayOfTokenGroups()
     {
-        $token = new ChainTokenGroup(
-            chain: new VariableTokenGroup('foo'),
+        $token = new Chain(
+            chain: new VariableDef('foo'),
         );
 
         $this->assertEquals(
             <<<'EOS'
             $foo
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersTokenGroups()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
-                new VariableTokenGroup('foo'),
+                new VariableDef('foo'),
             ],
         );
 
@@ -228,15 +228,15 @@ class ChainTokenGroupTest extends TestCase
             <<<'EOS'
             $foo
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownTransformsPropertyTokenGroupToTokenAndLosesDollarSignBecauseConsideredAsAccess()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
-                new PropertyDefinition(name: 'foo', type: 'int'),
+                new PropertyDef(name: 'foo', type: 'int'),
             ],
         );
 
@@ -244,17 +244,17 @@ class ChainTokenGroupTest extends TestCase
             <<<'EOS'
             foo
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersThisRefTokenGroupAndAdditionalPropertiesProperlyAndOnlyFromThirdItemsDoWeGetNewLinesAndIndents()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
-                new ThisRefTokenGroup(),
-                new PropertyDefinition(name: 'foo', type: 'int'),
-                new PropertyDefinition(name: 'bar', type: 'int'),
+                new ThisContext(),
+                new PropertyDef(name: 'foo', type: 'int'),
+                new PropertyDef(name: 'bar', type: 'int'),
             ],
         );
 
@@ -263,17 +263,17 @@ class ChainTokenGroupTest extends TestCase
             $this->foo
                  ->bar
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testChopDownRendersStaticAccessTokensInsteadOfMemberTokensWhenItFindsTokenGroupThatExposesStaticContext()
     {
-        $token = new ChainTokenGroup(
+        $token = new Chain(
             chain: [
-                new ParentRefTokenGroup(),
-                new FunctionCallTokenGroup(name: 'setUp'),
-                new PropertyDefinition(name: 'bar', type: 'int'),
+                new ParentContext(),
+                new Call(name: 'setUp'),
+                new PropertyDef(name: 'bar', type: 'int'),
             ],
         );
 
@@ -282,7 +282,7 @@ class ChainTokenGroupTest extends TestCase
             parent::setUp()
                   ->bar
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );
     }
 }

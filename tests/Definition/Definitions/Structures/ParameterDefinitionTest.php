@@ -2,8 +2,8 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -17,7 +17,7 @@ class ParameterDefinitionTest extends TestCase
 
     public function testRendersNameAsExpectedWithoutSpacesAround()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo')
         );
 
@@ -28,15 +28,15 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             '$foo',
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testAddsTypeInFrontOfIdentifierAndSeparatesWithSpace()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
-            new SingleTypeDefinition('int'),
+            new SingleTypeDef('int'),
         );
 
         $rules = new RenderingRules();
@@ -46,13 +46,13 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             'int $foo',
-            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules)),
         );
     }
 
     public function testAddsDefaultValueAfterIdentifierWithSpaceBetweenIdentifierAndEqual()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
             defaultValue: 123,
         );
@@ -64,13 +64,13 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             '$foo = 123',
-            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules)),
         );
     }
 
     public function testAddsDefaultValueWithSingleQuotesIfString()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
             defaultValue: 'Hello World',
         );
@@ -82,13 +82,13 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             '$foo = \'Hello World\'',
-            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules)),
         );
     }
 
     public function testAddsDefaultValueWithStringRepresentationIfBool()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
             defaultValue: true,
         );
@@ -100,15 +100,15 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             '$foo = true',
-            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules)),
         );
     }
 
     public function testAddsTheConfiguredSpacesBetweenTypeAndIdentifierAsPerRules()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
-            new SingleTypeDefinition('int'),
+            new SingleTypeDef('int'),
         );
 
         $rules = new RenderingRules();
@@ -118,15 +118,15 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             'int  $foo',
-            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules)),
         );
     }
 
     public function testAddsTheConfiguredChopDownSpacesByPaddingTypeProperly()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
-            new SingleTypeDefinition('int'),
+            new SingleTypeDef('int'),
         );
 
         $rules = new RenderingRules();
@@ -140,13 +140,13 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             'int     $foo',
-            $this->renderTokensToString($token->render($context, $rules)),
+            $this->renderTokensToString($token->getTokens($context, $rules)),
         );
     }
 
     public function testAddsTheConfiguredChopDownSpacesByPaddingTypeProperlyEvenIfThereIsNoType()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
         );
 
@@ -161,13 +161,13 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             '        $foo',
-            $this->renderTokensToString($token->render($context, $rules)),
+            $this->renderTokensToString($token->getTokens($context, $rules)),
         );
     }
 
     public function testAddsTheConfiguredSpacesBetweenIdentifierAndEqualsAsPerRules()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
             defaultValue: 123,
         );
@@ -179,13 +179,13 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             '$foo  =  123',
-            $this->renderTokensToString($token->render(new RenderContext(), $rules)),
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules)),
         );
     }
 
     public function testAddsTheConfiguredChopDownSpacesByPaddingIdentifier()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
             defaultValue: 123,
         );
@@ -201,15 +201,15 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             '$foo    = 123',
-            $this->renderTokensToString($token->render($context, $rules)),
+            $this->renderTokensToString($token->getTokens($context, $rules)),
         );
     }
 
     public function testWhenTypePaddingIsLessThanTypeAtLeastOneSpaceIsAdded()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
-            new SingleTypeDefinition('reallyLongType'),
+            new SingleTypeDef('reallyLongType'),
         );
 
         $rules = new RenderingRules();
@@ -223,13 +223,13 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             'reallyLongType $foo',
-            $this->renderTokensToString($token->render($context, $rules)),
+            $this->renderTokensToString($token->getTokens($context, $rules)),
         );
     }
 
     public function testWhenIdentifierPaddingIsLessThanIdentifierAtLeastOneSpaceIsAdded()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('reallyLongIdentifier'),
             defaultValue: 123,
         );
@@ -245,26 +245,26 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             '$reallyLongIdentifier = 123',
-            $this->renderTokensToString($token->render($context, $rules)),
+            $this->renderTokensToString($token->getTokens($context, $rules)),
         );
     }
 
     public function testWhenVariadicExpansionTokenAppearBeforeVariable()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('reallyLongIdentifier'),
             isVariadic: true,
         );
 
         $this->assertEquals(
             '...$reallyLongIdentifier',
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules())),
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules())),
         );
     }
 
     public function testPaddingOnIdentifierTakesVariadicExpansionTokenIntoAccount()
     {
-        $token = new ParameterDefinition(
+        $token = new ParameterDef(
             new Token('foo'),
             defaultValue: 123,
             isVariadic: true,
@@ -281,7 +281,7 @@ class ParameterDefinitionTest extends TestCase
 
         $this->assertEquals(
             '...$foo    = 123',
-            $this->renderTokensToString($token->render($context, $rules)),
+            $this->renderTokensToString($token->getTokens($context, $rules)),
         );
     }
 }

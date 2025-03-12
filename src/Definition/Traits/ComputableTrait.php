@@ -7,7 +7,7 @@ use CrazyCodeGen\Definition\Definitions\Values\BoolValue;
 use CrazyCodeGen\Definition\Definitions\Values\FloatValue;
 use CrazyCodeGen\Definition\Definitions\Values\IntValue;
 use CrazyCodeGen\Definition\Definitions\Values\NullValue;
-use CrazyCodeGen\Definition\Definitions\Values\StringValue;
+use CrazyCodeGen\Definition\Definitions\Values\OldStringValue;
 use CrazyCodeGen\Definition\Exceptions\NonComputableValueException;
 
 trait ComputableTrait
@@ -30,7 +30,7 @@ trait ComputableTrait
             return new BoolValue($value);
         }
         if (is_string($value)) {
-            return new StringValue($value);
+            return new OldStringValue($value);
         }
         if ($value === null) {
             return new NullValue();

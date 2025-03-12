@@ -2,8 +2,8 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Definitions\Structures\ImplementsDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ImplementsDef;
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\ClassRules;
@@ -17,7 +17,7 @@ class ImplementsDefinitionTest extends TestCase
 
     public function testInlineScenarioRendersImplementsKeyword()
     {
-        $token = new ImplementsDefinition(
+        $token = new ImplementsDef(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -35,8 +35,8 @@ class ImplementsDefinitionTest extends TestCase
 
     public function testInlineScenarioRendersEachImplementationUsingSingleTypeTokenGroupOrOriginal()
     {
-        $token = new ImplementsDefinition(
-            implementations: ['\\JsonSerializable', new SingleTypeDefinition('\\ArrayAccess')],
+        $token = new ImplementsDef(
+            implementations: ['\\JsonSerializable', new SingleTypeDef('\\ArrayAccess')],
         );
 
         $rules = new RenderingRules();
@@ -55,7 +55,7 @@ class ImplementsDefinitionTest extends TestCase
 
     public function testInlineScenarioAddsConfiguredSpacesBetweenImplementsAndFirstItem()
     {
-        $token = new ImplementsDefinition(
+        $token = new ImplementsDef(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -75,7 +75,7 @@ class ImplementsDefinitionTest extends TestCase
 
     public function testInlineScenarioAddsConfiguredSpacesAfterEachImplementsExceptLastOne()
     {
-        $token = new ImplementsDefinition(
+        $token = new ImplementsDef(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -95,7 +95,7 @@ class ImplementsDefinitionTest extends TestCase
 
     public function testChopDownScenarioRendersImplementsKeywordAndFirstItemOnSameLine()
     {
-        $token = new ImplementsDefinition(
+        $token = new ImplementsDef(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -116,7 +116,7 @@ class ImplementsDefinitionTest extends TestCase
 
     public function testChopDownScenarioRendersConfiguredSpacesAfterImplementsAddPadsAccordingly()
     {
-        $token = new ImplementsDefinition(
+        $token = new ImplementsDef(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 

@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -14,7 +14,7 @@ class NamespaceDefinitionTest extends TestCase
 
     public function testNamespaceKeywordAndPathAndSemiColonAreRendered()
     {
-        $token = new NamespaceDefinition('CrazyCodeGen\\Tests');
+        $token = new NamespaceDef('CrazyCodeGen\\Tests');
 
         $rules = new RenderingRules();
         $rules->namespaces->spacesAfterNamespace = 1;
@@ -24,13 +24,13 @@ class NamespaceDefinitionTest extends TestCase
             <<<'EOS'
             namespace CrazyCodeGen\Tests;
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSpacesBetweenKeywordAndPathAreRespected()
     {
-        $token = new NamespaceDefinition('CrazyCodeGen\\Tests');
+        $token = new NamespaceDef('CrazyCodeGen\\Tests');
 
         $rules = new RenderingRules();
         $rules->namespaces->spacesAfterNamespace = 4;
@@ -40,13 +40,13 @@ class NamespaceDefinitionTest extends TestCase
             <<<'EOS'
             namespace    CrazyCodeGen\Tests;
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testLinesAfterNamespaceDeclarationIsRespected()
     {
-        $token = new NamespaceDefinition('CrazyCodeGen\\Tests');
+        $token = new NamespaceDef('CrazyCodeGen\\Tests');
 
         $rules = new RenderingRules();
         $rules->namespaces->spacesAfterNamespace = 1;
@@ -58,7 +58,7 @@ class NamespaceDefinitionTest extends TestCase
             
             
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 }

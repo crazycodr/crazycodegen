@@ -2,9 +2,9 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\ArgumentListRules;
@@ -18,9 +18,9 @@ class ParameterListDefinitionTest extends TestCase
 
     public function testInlineScenarioHasStartAndEndParenthesisAndTokensFromArgumentAndNoTrailingComma()
     {
-        $token = new ParameterListDefinition(
+        $token = new ParameterListDef(
             [
-                new ParameterDefinition('foo'),
+                new ParameterDef('foo'),
             ],
         );
 
@@ -32,17 +32,17 @@ class ParameterListDefinitionTest extends TestCase
 
         $this->assertEquals(
             '($foo)',
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), $rules))
         );
     }
 
     public function testInlineScenarioHasCommaAndSpaceAfterEachArgumentExceptLast()
     {
-        $token = new ParameterListDefinition(
+        $token = new ParameterListDef(
             [
-                new ParameterDefinition('foo'),
-                new ParameterDefinition('bar'),
-                new ParameterDefinition('baz'),
+                new ParameterDef('foo'),
+                new ParameterDef('bar'),
+                new ParameterDef('baz'),
             ],
         );
 
@@ -54,17 +54,17 @@ class ParameterListDefinitionTest extends TestCase
 
         $this->assertEquals(
             '($foo, $bar, $baz)',
-            $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), $rules))
         );
     }
 
     public function testChopDownScenarioHasIndentsForEachArgumentAndCommaAfterEachButNoSpacesExceptLastWhenConfiguredAsSo()
     {
-        $token = new ParameterListDefinition(
+        $token = new ParameterListDef(
             [
-                new ParameterDefinition('foo'),
-                new ParameterDefinition('bar'),
-                new ParameterDefinition('baz'),
+                new ParameterDef('foo'),
+                new ParameterDef('bar'),
+                new ParameterDef('baz'),
             ],
         );
 
@@ -82,17 +82,17 @@ class ParameterListDefinitionTest extends TestCase
                 $baz
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), $rules))
         );
     }
 
     public function testChopDownScenarioHasIndentsForEachArgumentAndCommaAfterEachEventTheLastWhenConfiguredAsSo()
     {
-        $token = new ParameterListDefinition(
+        $token = new ParameterListDef(
             [
-                new ParameterDefinition('foo'),
-                new ParameterDefinition('bar'),
-                new ParameterDefinition('baz'),
+                new ParameterDef('foo'),
+                new ParameterDef('bar'),
+                new ParameterDef('baz'),
             ],
         );
 
@@ -110,17 +110,17 @@ class ParameterListDefinitionTest extends TestCase
                 $baz,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), $rules))
         );
     }
 
     public function testChopDownPadsTypesAndIdentifiersToAlignAllComponentsProperlyEvenIfTypeOrDefaultValueIsNotPresent()
     {
-        $token = new ParameterListDefinition(
+        $token = new ParameterListDef(
             [
-                new ParameterDefinition('foo', type: 'string', defaultValue: 'Hello world'),
-                new ParameterDefinition('bar', type: new MultiTypeDefinition(['string', 'bool', 'float'])),
-                new ParameterDefinition('longerVarName', defaultValue: 1),
+                new ParameterDef('foo', type: 'string', defaultValue: 'Hello world'),
+                new ParameterDef('bar', type: new MultiTypeDef(['string', 'bool', 'float'])),
+                new ParameterDef('longerVarName', defaultValue: 1),
             ],
         );
 
@@ -143,20 +143,20 @@ class ParameterListDefinitionTest extends TestCase
                                   $longerVarName = 1,
             )
             EOS,
-            $this->renderTokensToString($token->renderChopDownScenario($context, $rules))
+            $this->renderTokensToString($token->getChopDownTokens($context, $rules))
         );
     }
 
     public function testRenderReturnsInlineScenario(): void
     {
-        $token = new ParameterListDefinition(
+        $token = new ParameterListDef(
             [
-                new ParameterDefinition('foo'),
+                new ParameterDef('foo'),
             ],
         );
 
-        $inlineScenario = $token->renderInlineScenario(new RenderContext(), new RenderingRules());
-        $defaultScenario = $token->render(new RenderContext(), new RenderingRules());
+        $inlineScenario = $token->getInlineTokens(new RenderContext(), new RenderingRules());
+        $defaultScenario = $token->getTokens(new RenderContext(), new RenderingRules());
 
         $this->assertEquals($inlineScenario, $defaultScenario);
     }

@@ -2,12 +2,12 @@
 
 namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
 
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\ExpressionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +18,7 @@ class ExpressionTokenGroupTest extends TestCase
 
     public function testSingleTokenIsRenderedAsExpected()
     {
-        $token = new ExpressionTokenGroup(
+        $token = new Expression(
             new Token(1),
         );
 
@@ -26,27 +26,27 @@ class ExpressionTokenGroupTest extends TestCase
             <<<'EOS'
             1
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testTokenGroupIsRenderedAsExpected()
     {
-        $token = new ExpressionTokenGroup(
-            new SingleTypeDefinition('int'),
+        $token = new Expression(
+            new SingleTypeDef('int'),
         );
 
         $this->assertEquals(
             <<<'EOS'
             int
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testArrayOfTokensIsReturnedAsIs()
     {
-        $token = new ExpressionTokenGroup(
+        $token = new Expression(
             [new Token(1), new CommaToken(), new Token(2)],
         );
 
@@ -54,21 +54,21 @@ class ExpressionTokenGroupTest extends TestCase
             <<<'EOS'
             1,2
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testMixOfTokensAndTokenGroupsIsRendered()
     {
-        $token = new ExpressionTokenGroup(
-            [new Token(1), new SpacesToken(), new SingleTypeDefinition('string')],
+        $token = new Expression(
+            [new Token(1), new SpacesToken(), new SingleTypeDef('string')],
         );
 
         $this->assertEquals(
             <<<'EOS'
             1 string
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 }

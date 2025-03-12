@@ -6,7 +6,7 @@ use CrazyCodeGen\Definition\Base\CanBeComputed;
 use CrazyCodeGen\Definition\Definitions\Values\BoolValue;
 use CrazyCodeGen\Definition\Definitions\Values\FloatValue;
 use CrazyCodeGen\Definition\Definitions\Values\IntValue;
-use CrazyCodeGen\Definition\Definitions\Values\StringValue;
+use CrazyCodeGen\Definition\Definitions\Values\OldStringValue;
 use CrazyCodeGen\Definition\Exceptions\ExpressionBuildingMissingOperandForFoundTokenException;
 use CrazyCodeGen\Definition\Exceptions\ExpressionBuildingYieldsMultipleFinalComponentsException;
 use CrazyCodeGen\Definition\Expressions\Operators\Arithmetics\Adds;
@@ -225,7 +225,7 @@ class ExpressionBuilder
             } elseif (is_float($component)) {
                 $components[$index] = new FloatValue($component);
             } elseif (is_string($component)) {
-                $components[$index] = new StringValue($component);
+                $components[$index] = new OldStringValue($component);
             } elseif (is_bool($component)) {
                 $components[$index] = new BoolValue($component);
             }

@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -14,16 +14,16 @@ class DocBlockDefinitionTest extends TestCase
 
     public function testEmptyDocBlockIsNotRendered()
     {
-        $token = new DocBlockDefinition(
+        $token = new DocBlockDef(
             texts: [],
         );
 
-        $this->assertEquals([], $token->render(new RenderContext(), new RenderingRules()));
+        $this->assertEquals([], $token->getTokens(new RenderContext(), new RenderingRules()));
     }
 
     public function testEmptyTextsAreIgnoredButCanStillGenerateEmptyDocBlock()
     {
-        $token = new DocBlockDefinition(
+        $token = new DocBlockDef(
             texts: ['', ''],
         );
 
@@ -32,13 +32,13 @@ class DocBlockDefinitionTest extends TestCase
             /**
              */
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testTextsAreGeneratedWithEmptyLineBetweenThemAndEmptyLineDoesNotFeatureTrailingSpace()
     {
-        $token = new DocBlockDefinition(
+        $token = new DocBlockDef(
             texts: ['Hello', 'World', 'Foo'],
         );
 
@@ -52,13 +52,13 @@ class DocBlockDefinitionTest extends TestCase
              * Foo
              */
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
     public function testLongTextsAreWrappedBasedOnLineLengthAndSplitsOnSpacesOnlyAndExtraSpacesAreTrimmedOnSplit()
     {
-        $token = new DocBlockDefinition(
+        $token = new DocBlockDef(
             texts: ['Hello world, i love programming and this automatically wraps on 25 characters.'],
         );
 
@@ -74,13 +74,13 @@ class DocBlockDefinitionTest extends TestCase
              * characters.
              */
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceAsLongAsNeeded()
     {
-        $token = new DocBlockDefinition(
+        $token = new DocBlockDef(
             texts: ['https://example.com/questions/49907308/url-without-spaces will chop here.'],
         );
 
@@ -94,13 +94,13 @@ class DocBlockDefinitionTest extends TestCase
              * will chop here.
              */
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceButWillTakeAllIfNothingLeftAfterIt()
     {
-        $token = new DocBlockDefinition(
+        $token = new DocBlockDef(
             texts: ['Upcoming url is too long so it will be take as a whole: https://example.com/questions/49907308/url-without-spaces'],
         );
 
@@ -116,7 +116,7 @@ class DocBlockDefinitionTest extends TestCase
              * https://example.com/questions/49907308/url-without-spaces
              */
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 }

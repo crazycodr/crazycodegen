@@ -3,10 +3,11 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
-use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\MethodDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
+use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
+use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -15,7 +16,6 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\AsteriskToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
-use CrazyCodeGen\Rendering\Tokens\LanguageConstructTokenGroups\InstructionTokenGroup;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +26,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testDeclarationRendersAbstractKeywordWithSpaces()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
             abstract: true,
         );
@@ -68,7 +68,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testDeclarationRendersPublicVisibilityByDefault()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -86,7 +86,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testDeclarationRendersStaticKeywordAndSpaces()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
             static: true,
         );
@@ -106,7 +106,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testDeclarationRendersVisibilityWithSpaces()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
             visibility: VisibilityEnum::PROTECTED,
         );
@@ -126,7 +126,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersFunctionKeyword()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -144,7 +144,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersNameOfFunction()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -162,7 +162,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersNoSpaceBetweenNameAndArgumentList()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -180,7 +180,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersSpacesBetweenNameAndArgumentListAsPerRules()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -199,13 +199,13 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersArgumentListInlineAsExpectedBetweenParentheses()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
-            parameters: new ParameterListDefinition(
+            parameters: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -224,7 +224,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenListAndReturnColonAsPerRules()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -244,7 +244,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenReturnColonAndTypeAsPerRules()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -264,7 +264,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenTypeAndOpeningBraceAsPerRules()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -284,7 +284,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceAfterArgumentListWithSpacesBetweenListAndOpeningBraceAsPerRules()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -303,7 +303,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningAndClosingBraceOnSameLineAsPerConfiguration()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -321,7 +321,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceOnSameLineAndClosingBraceOnDiffLineAsPerConfiguration()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -340,7 +340,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningBraceOnDiffLineWithClosingBraceOnSameLineAsPerConfiguration()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -359,7 +359,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testInlineDefinitionRendersOpeningAndClosingBracesOnSeparateLinesAsPerConfiguration()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -379,7 +379,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersFunctionKeyword()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -397,7 +397,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersNameOfFunction()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -415,7 +415,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersNoSpaceBetweenNameAndArgumentList()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -433,7 +433,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersSpacesBetweenNameAndArgumentListAsPerRules()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -452,13 +452,13 @@ class MethodDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersArgumentListChopDownAsExpectedBetweenParentheses()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
-            parameters: new ParameterListDefinition(
+            parameters: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -481,7 +481,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenListAndReturnColonAsPerRules()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -502,7 +502,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenReturnColonAndTypeAsPerRules()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -523,7 +523,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersReturnTypeAfterArgumentListWithSpacesBetweenTypeAndOpeningBraceAsPerRules()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
             returnType: 'string',
         );
@@ -544,7 +544,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersOpeningBraceAfterArgumentListWithSpacesBetweenThemAsPerRules()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -564,7 +564,7 @@ class MethodDefinitionTest extends TestCase
 
     public function testChopDownDefinitionRendersOpeningAndClosingBracesPositionIsNotRespectedAndAlwaysSameLineDiffLine()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
         );
 
@@ -585,13 +585,13 @@ class MethodDefinitionTest extends TestCase
 
     public function testRenderReturnsTheInlineVersionIfArgumentsOnDifferentLinesIsNeverWrap()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
-            parameters: new ParameterListDefinition(
+            parameters: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -605,19 +605,19 @@ class MethodDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testRenderReturnsTheInlineVersionIfArgumentsOnDifferentLinesIfTooLongButItStillFits()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
-            parameters: new ParameterListDefinition(
+            parameters: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -630,19 +630,19 @@ class MethodDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testRenderReturnsTheChopDownVersionIfArgumentsOnDifferentLinesChopIfTooLongAndItDoesNotFit()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
-            parameters: new ParameterListDefinition(
+            parameters: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -659,19 +659,19 @@ class MethodDefinitionTest extends TestCase
             ) {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testRenderReturnsTheChopDownVersionEvenIfArgumentsWouldFitButConfigurationForcesIt()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
-            parameters: new ParameterListDefinition(
+            parameters: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'foo'),
-                    new ParameterDefinition(name: 'bar', type: 'int'),
-                    new ParameterDefinition(name: 'baz', type: 'bool', defaultValue: true),
+                    new ParameterDef(name: 'foo'),
+                    new ParameterDef(name: 'bar', type: 'int'),
+                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
                 ]
             )
         );
@@ -688,15 +688,15 @@ class MethodDefinitionTest extends TestCase
             ) {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testDocBlockIsProperlyRendered()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
-            docBlock: new DocBlockDefinition(['This is a docblock that should be wrapped and displayed before the function declaration.']),
+            docBlock: new DocBlockDef(['This is a docblock that should be wrapped and displayed before the function declaration.']),
         );
 
         $rules = $this->getBaseTestingRules();
@@ -716,16 +716,16 @@ class MethodDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testAreRenderedInBodyIndented()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
             instructions: [
-                new InstructionTokenGroup(
+                new Instruction(
                     instructions: [
                         new Token(1),
                         new SpacesToken(),
@@ -740,7 +740,7 @@ class MethodDefinitionTest extends TestCase
                         ],
                     ]
                 ),
-                new InstructionTokenGroup(
+                new Instruction(
                     instructions: [
                         new Token('return'),
                         new SpacesToken(),
@@ -760,21 +760,21 @@ class MethodDefinitionTest extends TestCase
                 return 1;
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testDocBlockDoesNotInterfereWithDecisionToChopDownArgumentList()
     {
-        $token = new MethodDefinition(
+        $token = new MethodDef(
             name: 'myFunction',
-            docBlock: new DocBlockDefinition(['This is a docblock that should be wrapped and displayed before the function.']),
-            parameters: new ParameterListDefinition(
+            docBlock: new DocBlockDef(['This is a docblock that should be wrapped and displayed before the function.']),
+            parameters: new ParameterListDef(
                 parameters: [
-                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
-                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
-                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
-                    new ParameterDefinition(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
+                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
+                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
+                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
+                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
                 ],
             ),
             returnType: 'int',
@@ -795,7 +795,7 @@ class MethodDefinitionTest extends TestCase
             ): int {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 }

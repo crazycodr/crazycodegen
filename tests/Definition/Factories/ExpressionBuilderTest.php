@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Tests\Definition\Factories;
 use CrazyCodeGen\Definition\Definitions\Values\BoolValue;
 use CrazyCodeGen\Definition\Definitions\Values\FloatValue;
 use CrazyCodeGen\Definition\Definitions\Values\IntValue;
-use CrazyCodeGen\Definition\Definitions\Values\StringValue;
+use CrazyCodeGen\Definition\Definitions\Values\OldStringValue;
 use CrazyCodeGen\Definition\Exceptions\ExpressionBuildingMissingOperandForFoundTokenException;
 use CrazyCodeGen\Definition\Expressions\Operators\Arithmetics\Adds;
 use CrazyCodeGen\Definition\Expressions\Operators\Arithmetics\Divs;
@@ -98,7 +98,7 @@ class ExpressionBuilderTest extends TestCase
         $builder = new ExpressionBuilder();
 
         $result = $builder->build('hello world');
-        $this->assertEquals(new StringValue('hello world'), $result);
+        $this->assertEquals(new OldStringValue('hello world'), $result);
     }
 
     public function testBoolResultsInBoolValue(): void

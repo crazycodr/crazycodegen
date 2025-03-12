@@ -2,16 +2,16 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Definitions\Structures\ClassDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\ImportDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\MethodDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\PropertyDefinition;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDefinition;
+use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
+use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ImportDef;
+use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
+use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -25,7 +25,7 @@ class ClassDefinitionTest extends TestCase
 
     public function testFunctionKeywordIsRendered()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
         );
 
@@ -37,7 +37,7 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
@@ -86,7 +86,7 @@ class ClassDefinitionTest extends TestCase
 
     public function testClassNameIsRendered()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
         );
 
@@ -98,13 +98,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testAbstractKeywordIsRendered()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             abstract: true,
         );
@@ -117,15 +117,15 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testNamespaceIsRendered()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
-            namespace: new NamespaceDefinition('CrazyCodeGen\\Tests'),
+            namespace: new NamespaceDef('CrazyCodeGen\\Tests'),
         );
 
         $rules = $this->getBaseTestingRules();
@@ -138,16 +138,16 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testStringsAreConvertedToImportTokenGroupsAndAreRenderedWithProperLinesBetweenThemAndAfterBlock()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             imports: [
-                new ImportDefinition('CrazyCodeGen\\Tests\\Tests1'),
+                new ImportDef('CrazyCodeGen\\Tests\\Tests1'),
                 'CrazyCodeGen\\Tests\\Test2',
             ]
         );
@@ -169,34 +169,34 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testImportsShortenTheTypesEvenIfSpecifiedAsStrings()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             imports: [
-                new ImportDefinition('CrazyCodeGen\\Tests\\Test1'),
+                new ImportDef('CrazyCodeGen\\Tests\\Test1'),
                 'CrazyCodeGen\\Tests\\Test2',
             ],
             properties: [
-                new PropertyDefinition(
+                new PropertyDef(
                     name: 'prop1',
-                    type: new SingleTypeDefinition(type: 'CrazyCodeGen\\Tests\\Test1'),
+                    type: new SingleTypeDef(type: 'CrazyCodeGen\\Tests\\Test1'),
                 ),
-                new PropertyDefinition(
+                new PropertyDef(
                     name: 'prop2',
-                    type: new MultiTypeDefinition(types: ['int', 'CrazyCodeGen\\Tests\\Test2']),
+                    type: new MultiTypeDef(types: ['int', 'CrazyCodeGen\\Tests\\Test2']),
                 ),
             ],
             methods: [
-                new MethodDefinition(
+                new MethodDef(
                     name: 'method1',
-                    parameters: new ParameterListDefinition(
+                    parameters: new ParameterListDef(
                         parameters: [
-                            new ParameterDefinition(
+                            new ParameterDef(
                                 name: 'arg1',
                                 type: 'CrazyCodeGen\\Tests\\Test2',
                             )
@@ -224,15 +224,15 @@ class ClassDefinitionTest extends TestCase
                 }
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testDocBlockIsProperlyRendered()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
-            docBlock: new DocBlockDefinition(['This is a docblock that should be wrapped and displayed before the class declaration.']),
+            docBlock: new DocBlockDef(['This is a docblock that should be wrapped and displayed before the class declaration.']),
         );
 
         $rules = $this->getBaseTestingRules();
@@ -252,13 +252,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testExtendsIsRenderedInlineEvenIfTooLong()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
         );
@@ -273,13 +273,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testExtendsIsRenderedOnNewLineWhenTooLongAndExtendsIsTabbedIn()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
         );
@@ -295,13 +295,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testExtendsIsRenderedOnNewLineWhenForcedToWrapAndIsTabbedInEvenIfNotLongEnough()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests',
         );
@@ -316,13 +316,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSpacesBetweenImplementsAndFirstTypeIsRespected()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests',
@@ -340,13 +340,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSpacesBetweenImplementTypesOnSameLineAreRespected()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests1',
@@ -365,13 +365,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSpacesBetweenImplementsAndTypesAreTakenIntoPaddingAccountWhenOnMultipleLines()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests1',
@@ -393,13 +393,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testImplementsIsRenderedOnSameLineEvenIfTooLong()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
@@ -415,13 +415,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testImplementsIsRenderedOnDiffLineIfTooLong()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
@@ -439,13 +439,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testImplementsIsRenderedOnDiffLineEvenIfNotLongEnough()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests',
@@ -463,13 +463,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testMultipleImplementsAreRenderedOnSameLineEvenIfTooLong()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -491,13 +491,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testMultipleImplementsAreRenderedOnIndividualLinesIfTheyAreTooLongInTotalAndAreProperlyIndented()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -522,13 +522,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testMultipleImplementsAreRenderedOnIndividualLinesWhenForcedToEvenIfNotLongEnough()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -548,13 +548,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testMultipleImplementsAreNotRenderedOnIndividualLinesWhenForcedToBecauseImplementsOnDiffLineIsPrevented()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -572,13 +572,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testCombinationOfExtendsAndImplementsWithForcedWrappingAllGoOnDifferentLines()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\Test1',
             implements: [
@@ -601,13 +601,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSameLineOpeningAndClosingBraceAreAfterClassNameWithExpectedSpaces()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
         );
 
@@ -620,13 +620,13 @@ class ClassDefinitionTest extends TestCase
             <<<'EOS'
             class myClass    {}
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSameLineOpeningAndDiffLineClosingBraceAreAfterClassNameAndOnDiffLineWithExpectedSpaces()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
         );
 
@@ -640,13 +640,13 @@ class ClassDefinitionTest extends TestCase
             class myClass    {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testDiffLineOpeningAndSameLineClosingBraceAreUnderClassNameAndNoExtraSpacesAreAdded()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
         );
 
@@ -660,13 +660,13 @@ class ClassDefinitionTest extends TestCase
             class myClass
             {}
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testDiffLineOpeningAndDiffLineClosingBraceAreUnderClassNameAndNoExtraSpacesAreAdded()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
         );
 
@@ -681,13 +681,13 @@ class ClassDefinitionTest extends TestCase
             {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSameLineOpeningBraceEndsUpAfterExtendsWithProperSpacing()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             extends: 'CrazyCodeGen\\Tests\\Test1',
         );
@@ -706,13 +706,13 @@ class ClassDefinitionTest extends TestCase
                 extends CrazyCodeGen\Tests\Test1    {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testSameLineOpeningBraceEndsUpAfterImplementsWithProperSpacing()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             implements: [
                 'CrazyCodeGen\\Tests\\Test1',
@@ -735,18 +735,18 @@ class ClassDefinitionTest extends TestCase
                            CrazyCodeGen\Tests\Test2    {
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testPropertiesAreRenderedWithNewLinesBetweenThemAsExpected()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             properties: [
-                new PropertyDefinition(name: 'prop1'),
-                new PropertyDefinition(name: 'prop2'),
-                new PropertyDefinition(name: 'prop3'),
+                new PropertyDef(name: 'prop1'),
+                new PropertyDef(name: 'prop2'),
+                new PropertyDef(name: 'prop3'),
             ]
         );
 
@@ -766,18 +766,18 @@ class ClassDefinitionTest extends TestCase
                 public $prop3;
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testMethodsAreRenderedWithNewLinesBetweenThemAsConfigured()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             methods: [
-                new MethodDefinition(name: 'method1'),
-                new MethodDefinition(name: 'method2'),
-                new MethodDefinition(name: 'method3'),
+                new MethodDef(name: 'method1'),
+                new MethodDef(name: 'method2'),
+                new MethodDef(name: 'method3'),
             ]
         );
 
@@ -805,19 +805,19 @@ class ClassDefinitionTest extends TestCase
                 }
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 
     public function testLinesBetweenPropertiesAndMethodsAreRespected()
     {
-        $token = new ClassDefinition(
+        $token = new ClassDef(
             name: 'myClass',
             properties: [
-                new PropertyDefinition(name: 'prop1'),
+                new PropertyDef(name: 'prop1'),
             ],
             methods: [
-                new MethodDefinition(name: 'method1'),
+                new MethodDef(name: 'method1'),
             ]
         );
 
@@ -837,7 +837,7 @@ class ClassDefinitionTest extends TestCase
                 }
             }
             EOS,
-            $this->renderTokensToString($token->render(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
     }
 }
