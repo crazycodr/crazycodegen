@@ -12,7 +12,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ParameterListDefinitionTest extends TestCase
+class ParameterListDefTest extends TestCase
 {
     use TokenFunctions;
 

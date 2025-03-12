@@ -20,7 +20,7 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class MethodDefinitionTest extends TestCase
+class MethodDefTest extends TestCase
 {
     use TokenFunctions;
 

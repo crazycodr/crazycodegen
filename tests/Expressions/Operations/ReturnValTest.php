@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Expressions\Operations;
 
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnVal;
@@ -9,7 +9,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ReturnInstructionTokenGroupTest extends TestCase
+class ReturnValTest extends TestCase
 {
     use TokenFunctions;
 

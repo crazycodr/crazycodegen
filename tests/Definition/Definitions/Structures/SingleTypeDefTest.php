@@ -8,7 +8,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use PHPUnit\Framework\TestCase;
 
-class SingleTypeDefinitionTest extends TestCase
+class SingleTypeDefTest extends TestCase
 {
     public function testTypeIsRenderedAsAnIdentifier()
     {

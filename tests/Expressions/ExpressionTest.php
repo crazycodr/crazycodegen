@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Expressions;
 
 use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
 use CrazyCodeGen\Definition\Expressions\Expression;
@@ -12,7 +12,7 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ExpressionTokenGroupTest extends TestCase
+class ExpressionTest extends TestCase
 {
     use TokenFunctions;
 

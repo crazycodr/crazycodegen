@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Values;
 
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Expressions\Expression;
@@ -13,7 +13,7 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ArrayTokenGroupTest extends TestCase
+class ArrayValTest extends TestCase
 {
     use TokenFunctions;
 

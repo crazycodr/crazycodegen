@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Values;
 
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -9,7 +9,7 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\DollarToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use PHPUnit\Framework\TestCase;
 
-class VariableTokenGroupTest extends TestCase
+class VariableDefTest extends TestCase
 {
     public function testVariableIsRenderedWithLeadingDollarSign()
     {

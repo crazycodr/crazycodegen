@@ -9,7 +9,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class MultiTypeDefinitionTest extends TestCase
+class MultiTypeDefTest extends TestCase
 {
     use TokenFunctions;
 

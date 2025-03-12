@@ -11,7 +11,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ImplementsDefinitionTest extends TestCase
+class ImplementsDefTest extends TestCase
 {
     use TokenFunctions;
 

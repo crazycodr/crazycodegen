@@ -13,7 +13,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class FunctionDefinitionTest extends TestCase
+class FunctionDefTest extends TestCase
 {
     use TokenFunctions;
 

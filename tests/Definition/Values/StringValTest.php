@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Definition\Values;
 
 use CrazyCodeGen\Definition\Definitions\Values\StringVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -8,7 +8,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class StringTokenGroupTest extends TestCase
+class StringValTest extends TestCase
 {
     use TokenFunctions;
 

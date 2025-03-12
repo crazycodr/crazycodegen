@@ -19,7 +19,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ClassDefinitionTest extends TestCase
+class ClassDefTest extends TestCase
 {
     use TokenFunctions;
 

@@ -8,7 +8,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class NamespaceDefinitionTest extends TestCase
+class NamespaceDefTest extends TestCase
 {
     use TokenFunctions;
 

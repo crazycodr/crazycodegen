@@ -8,7 +8,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class DocBlockDefinitionTest extends TestCase
+class DocBlockDefTest extends TestCase
 {
     use TokenFunctions;
 

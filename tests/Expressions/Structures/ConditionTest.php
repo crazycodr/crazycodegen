@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Rendering\Tokens\LanguageConstructTokenGroups;
+namespace CrazyCodeGen\Tests\Expressions\Structures;
 
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Definition\Expressions\Structures\Condition;
@@ -15,7 +15,7 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ConditionTokenGroupTest extends TestCase
+class ConditionTest extends TestCase
 {
     use TokenFunctions;
 
