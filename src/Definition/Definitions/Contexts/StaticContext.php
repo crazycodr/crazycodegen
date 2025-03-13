@@ -2,18 +2,14 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Contexts;
 
-use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
-use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
-use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Expressions\Expression;
-use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
-use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
+use CrazyCodeGen\Definition\Expressions\Operations\ChainToTrait;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\StaticToken;
 
 class StaticContext extends Expression implements DefinesIfStaticallyAccessed, MemberAccessContext
 {
-    use FlattenFunction;
+    use ChainToTrait;
 
     public function __construct()
     {
@@ -23,10 +19,5 @@ class StaticContext extends Expression implements DefinesIfStaticallyAccessed, M
     public function shouldAccessWithStatic(): bool
     {
         return true;
-    }
-
-    public static function to(PropertyDef|MethodDef|CallOp|MemberAccessContext $what): ChainOp
-    {
-        return new ChainOp([new self(), $what]);
     }
 }
