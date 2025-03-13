@@ -1,15 +1,15 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\Types;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
-use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use PHPUnit\Framework\TestCase;
 
-class SingleTypeDefTest extends TestCase
+class ClassTypeDefTest extends TestCase
 {
     public function testTypeIsRenderedAsAnIdentifier()
     {

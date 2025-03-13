@@ -6,8 +6,8 @@ use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeDef;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeInferenceTrait;
+use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
+use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
@@ -92,30 +92,10 @@ class MethodDef extends Tokenizes
         return $this;
     }
 
-    public function addParameterExploded(
-        string                                $name,
-        null|string|TypeDef $type,
-        null|int|float|string|bool|Token      $defaultValue = null,
-        bool                                  $defaultValueIsNull = false,
-        bool                                  $isVariadic = false,
-    ): self {
-        if ($this->parameters === null) {
-            $this->parameters = new ParameterListDef();
-        }
-        $this->parameters->parameters[] = new ParameterDef(
-            $name,
-            $type,
-            $defaultValue,
-            $defaultValueIsNull,
-            $isVariadic,
-        );
-        return $this;
-    }
-
     public function setReturnType(null|string|TypeDef $type): self
     {
         if (is_string($type)) {
-            $type = $this->inferAnyType($type);
+            $type = $this->inferType($type);
         }
         $this->returnType = $type;
         return $this;

@@ -9,8 +9,8 @@ use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\MultiTypeDef;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
 use CrazyCodeGen\Definition\Expressions\Comment;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\IssetOp;
@@ -93,7 +93,7 @@ class TestHelpersScenarioTest extends TestCase
         $scenarioBuildingCallable = new ParameterDef(
             name: 'scenarioBuildingCallable',
             type: new MultiTypeDef(['null', 'callable']),
-            defaultValueIsNull: true
+            defaultValue: null
         );
         $getConfigApiSpyBuilderMethod = (new MethodDef('getConfigApiClientSpyBuilder'))
             ->setVisibility(VisibilityEnum::PROTECTED)

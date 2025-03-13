@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Expressions;
 
-use CrazyCodeGen\Definition\Definitions\Structures\Types\BuiltInTypeSpec;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;

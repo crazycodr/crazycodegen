@@ -4,12 +4,12 @@ namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
-use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Definition\Base\ProvidesClassType;
+use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
-use CrazyCodeGen\Definition\Traits\ComputableTrait;
+use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
@@ -25,7 +25,7 @@ class NewOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownT
 {
     use FlattenFunction;
     use TokenFunctions;
-    use ComputableTrait;
+    use ValueInferenceTrait;
 
     public function __construct(
         public string|Token|Tokenizes|ClassTypeDef|ClassDef $class,
@@ -40,8 +40,8 @@ class NewOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownT
             $this->class = $this->class->getClassType();
         }
         foreach ($this->arguments as $argumentIndex => $argument) {
-            if ($this->isScalarType($argument)) {
-                $this->arguments[$argumentIndex] = $this->getValOrReturn($argument);
+            if ($this->isSupportedValue($argument)) {
+                $this->arguments[$argumentIndex] = $this->inferValue($argument);
             }
         }
     }

@@ -7,16 +7,15 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeDef;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeInferenceTrait;
-use CrazyCodeGen\Definition\Traits\ComputableTrait;
+use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
+use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
+use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
-use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\StaticToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -26,27 +25,30 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference
 {
     use FlattenFunction;
     use TokenFunctions;
-    use ComputableTrait;
     use TypeInferenceTrait;
+    use ValueInferenceTrait;
+
+    public const UNSET_DEFAULT_VALUE = '@!#UNSET@!#';
 
     public function __construct(
-        public string|Token                                                      $name,
-        public null|string|DocBlockDef                                           $docBlock = null,
-        public null|string|TypeDef                                               $type = null,
-        public VisibilityEnum                                                    $visibility = VisibilityEnum::PUBLIC,
-        public bool                                                              $static = false,
-        public null|int|float|string|bool|ProvidesClassReference|Token|Tokenizes $defaultValue = null,
-        public bool                                                              $defaultValueIsNull = false,
+        public string|Token            $name,
+        public null|string|DocBlockDef $docBlock = null,
+        public null|string|TypeDef     $type = null,
+        public VisibilityEnum          $visibility = VisibilityEnum::PUBLIC,
+        public bool                    $static = false,
+        public mixed                   $defaultValue = self::UNSET_DEFAULT_VALUE,
     ) {
         if (is_string($this->type)) {
-            $this->type = $this->inferVariableOnlyType($this->type);
+            $this->type = $this->inferType($this->type);
         }
-        if ($this->defaultValue instanceof ProvidesClassReference) {
+        if ($this->defaultValue === self::UNSET_DEFAULT_VALUE) {
+            // Do nothing or isSupportedValue will change to StringVal
+        } elseif ($this->isSupportedValue($this->defaultValue)) {
+            $this->defaultValue = $this->inferValue($this->defaultValue);
+        } elseif ($this->defaultValue instanceof ProvidesClassReference) {
             $this->defaultValue = $this->defaultValue->getClassReference();
-        } elseif (is_null($this->defaultValue)) {
-            // Preserve default of null to suppress default value
-        } elseif ($this->isScalarType($this->defaultValue)) {
-            $this->defaultValue = $this->getValOrReturn($this->defaultValue);
+        } else {
+            $this->defaultValue = self::UNSET_DEFAULT_VALUE;
         }
     }
 
@@ -153,7 +155,7 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference
     {
         $tokens = [];
         $tokens[] = $tokensToPad = (new VariableDef($this->name))->getTokens($context, $rules);
-        if ($this->defaultValue || $this->defaultValueIsNull) {
+        if ($this->defaultValue !== self::UNSET_DEFAULT_VALUE) {
             $tokens[] = new SpacesToken($this->calculatePaddingOrGetRuleSpaces(
                 $tokensToPad,
                 $context->chopDown?->paddingSpacesForIdentifiers,
@@ -171,18 +173,10 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference
     public function renderDefaultValue(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->defaultValueIsNull) {
+        if ($this->defaultValue !== self::UNSET_DEFAULT_VALUE) {
             $tokens[] = new EqualToken();
             $tokens[] = new SpacesToken($rules->properties->spacesAfterEquals);
-            $tokens[] = new NullToken();
-        } elseif ($this->defaultValue !== null) {
-            $tokens[] = new EqualToken();
-            $tokens[] = new SpacesToken($rules->properties->spacesAfterEquals);
-            if ($this->defaultValue instanceof Tokenizes) {
-                $tokens[] = $this->defaultValue->getTokens($context, $rules);
-            } elseif ($this->defaultValue instanceof Token) {
-                $tokens[] = $this->defaultValue;
-            }
+            $tokens[] = $this->defaultValue->getTokens($context, $rules);
         }
         return $this->flatten($tokens);
     }

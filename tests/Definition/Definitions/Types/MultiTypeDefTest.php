@@ -1,9 +1,9 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\Types;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
-use CrazyCodeGen\Definition\Definitions\Structures\Types\MultiTypeDef;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\BuiltInTypeSpec;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
+use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;

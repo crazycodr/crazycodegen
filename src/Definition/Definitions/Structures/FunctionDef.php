@@ -4,8 +4,8 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeDef;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeInferenceTrait;
+use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
+use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -34,7 +34,7 @@ class FunctionDef extends Tokenizes
         public null|array                            $bodyInstructions = null,
     ) {
         if (is_string($this->returnType)) {
-            $this->returnType = $this->inferVariableOnlyType($this->returnType);
+            $this->returnType = $this->inferType($this->returnType);
         }
     }
 

@@ -23,7 +23,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ArrayToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ArrayVal extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownTokens
+class ArrayVal extends BaseVal implements ProvidesInlineTokens, ProvidesChopDownTokens
 {
     use FlattenFunction;
     use TokenFunctions;

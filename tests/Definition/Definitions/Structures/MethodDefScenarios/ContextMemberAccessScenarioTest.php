@@ -6,7 +6,7 @@ use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
@@ -32,7 +32,7 @@ class ContextMemberAccessScenarioTest extends TestCase
         $modelProperty = new PropertyDef(
             'model',
             type: $modelTypePropertyType->asNullable(),
-            defaultValueIsNull: true
+            defaultValue: null
         );
 
         $getMethod = (new MethodDef('get'))

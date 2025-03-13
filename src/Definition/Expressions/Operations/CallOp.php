@@ -10,7 +10,7 @@ use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Definitions\Structures\FunctionDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
-use CrazyCodeGen\Definition\Traits\ComputableTrait;
+use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
@@ -25,7 +25,7 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
 {
     use FlattenFunction;
     use TokenFunctions;
-    use ComputableTrait;
+    use ValueInferenceTrait;
 
     public function __construct(
         public string|Token|Tokenizes|FunctionDef|MethodDef|ProvidesClassReference|ProvidesVariableReference $name,
@@ -49,8 +49,8 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
         foreach ($this->arguments as $argumentIndex => $argument) {
             if ($argument instanceof ProvidesClassReference) {
                 $this->arguments[$argumentIndex] = $argument->getClassReference();
-            } elseif ($this->isScalarType($argument)) {
-                $this->arguments[$argumentIndex] = $this->getValOrReturn($argument);
+            } elseif ($this->isSupportedValue($argument)) {
+                $this->arguments[$argumentIndex] = $this->inferValue($argument);
             }
         }
     }

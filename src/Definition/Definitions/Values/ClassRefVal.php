@@ -11,7 +11,7 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\StaticAccessToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ClassToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ClassRefVal extends Tokenizes
+class ClassRefVal extends BaseVal
 {
     use FlattenFunction;
     use TokenFunctions;

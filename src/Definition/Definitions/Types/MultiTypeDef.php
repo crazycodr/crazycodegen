@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Definition\Definitions\Structures\Types;
+namespace CrazyCodeGen\Definition\Definitions\Types;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -28,7 +28,7 @@ class MultiTypeDef extends TypeDef
             if (is_null($type)) {
                 $this->types[$typeIndex] = new NullToken();
             } elseif (is_string($type)) {
-                $this->types[$typeIndex] = $this->inferAnyType($type);
+                $this->types[$typeIndex] = $this->inferType($type);
             } elseif (!$type instanceof TypeDef) {
                 unset($this->types[$typeIndex]);
             }

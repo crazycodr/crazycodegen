@@ -6,8 +6,8 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Definition\Expressions\Instruction;
-use CrazyCodeGen\Definition\Traits\ComputableTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
@@ -17,7 +17,7 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 class AssignOp extends Instruction
 {
     use FlattenFunction;
-    use ComputableTrait;
+    use ValueInferenceTrait;
 
     public function __construct(
         public string|Token|Tokenizes|ProvidesVariableReference                                       $subject,
@@ -28,8 +28,8 @@ class AssignOp extends Instruction
         } elseif ($this->subject instanceof ProvidesVariableReference) {
             $this->subject = $this->subject->getVariableReference();
         }
-        if ($this->isScalarType($this->value)) {
-            $this->value = $this->getValOrReturn($this->value);
+        if ($this->isSupportedValue($this->value)) {
+            $this->value = $this->inferValue($this->value);
         } elseif ($this->value instanceof ProvidesClassReference) {
             $this->value = $this->value->getClassReference();
         } elseif ($this->value instanceof ProvidesVariableReference) {

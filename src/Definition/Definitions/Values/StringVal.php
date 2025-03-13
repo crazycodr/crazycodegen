@@ -2,13 +2,12 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Values;
 
-use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SingleQuoteToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class StringVal extends Tokenizes
+class StringVal extends BaseVal
 {
     public function __construct(
         public string $value,

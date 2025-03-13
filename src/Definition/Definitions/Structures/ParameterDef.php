@@ -5,15 +5,14 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeDef;
-use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeInferenceTrait;
-use CrazyCodeGen\Definition\Definitions\Values\StringVal;
+use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
+use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
+use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ExpansionToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
-use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
@@ -22,16 +21,25 @@ class ParameterDef extends Tokenizes implements ProvidesVariableReference
     use FlattenFunction;
     use TokenFunctions;
     use TypeInferenceTrait;
+    use ValueInferenceTrait;
+
+    public const UNSET_DEFAULT_VALUE = '@!#UNSET@!#';
 
     public function __construct(
-        public string|Token                          $name,
+        public string|Token        $name,
         public null|string|TypeDef $type = null,
-        public null|int|float|string|bool|Token      $defaultValue = null,
-        public bool                                  $defaultValueIsNull = false,
-        public bool                                  $isVariadic = false,
+        public mixed               $defaultValue = self::UNSET_DEFAULT_VALUE,
+        public bool                $isVariadic = false,
     ) {
         if (is_string($this->type)) {
-            $this->type = $this->inferAnyType($this->type);
+            $this->type = $this->inferType($this->type);
+        }
+        if ($this->defaultValue === self::UNSET_DEFAULT_VALUE) {
+            // Do nothing or isSupportedValue will change to StringVal
+        } elseif ($this->isSupportedValue($this->defaultValue)) {
+            $this->defaultValue = $this->inferValue($this->defaultValue);
+        } else {
+            $this->defaultValue = self::UNSET_DEFAULT_VALUE;
         }
     }
 
@@ -103,22 +111,11 @@ class ParameterDef extends Tokenizes implements ProvidesVariableReference
     public function renderDefaultValue(RenderContext $context, RenderingRules $rules, array $identifierTokens): array
     {
         $tokens = [];
-        if ($this->defaultValueIsNull) {
+        if ($this->defaultValue !== self::UNSET_DEFAULT_VALUE) {
             $tokens[] = $this->getSpacesBetweenIdentifierAndEquals($identifierTokens, $context, $rules);
             $tokens[] = new EqualToken();
             $tokens[] = $this->getSpacesBetweenEqualsAndValue($rules);
-            $tokens[] = new NullToken();
-        } elseif ($this->defaultValue) {
-            $tokens[] = $this->getSpacesBetweenIdentifierAndEquals($identifierTokens, $context, $rules);
-            $tokens[] = new EqualToken();
-            $tokens[] = $this->getSpacesBetweenEqualsAndValue($rules);
-            if (is_string($this->defaultValue)) {
-                $tokens[] = (new StringVal($this->defaultValue))->getTokens($context, $rules);
-            } elseif (is_bool($this->defaultValue)) {
-                $tokens[] = new Token($this->defaultValue ? 'true' : 'false');
-            } else {
-                $tokens[] = new Token($this->defaultValue);
-            }
+            $tokens[] = $this->defaultValue->getTokens($context, $rules);
         }
         return $this->flatten($tokens);
     }

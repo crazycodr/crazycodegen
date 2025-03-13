@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Definition\Definitions\Structures\Types;
+namespace CrazyCodeGen\Definition\Definitions\Types;
 
 use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
@@ -73,6 +73,6 @@ class ClassTypeDef extends TypeDef implements DefinesIfStaticallyAccessed, Provi
 
     public function asNullable(): MultiTypeDef
     {
-        return new MultiTypeDef([$this, new NullTypeSpec()]);
+        return new MultiTypeDef([$this, new BuiltInTypeSpec('null')]);
     }
 }

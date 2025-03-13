@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Definition\Definitions\Structures\Types;
+namespace CrazyCodeGen\Definition\Definitions\Types;
 
 use CrazyCodeGen\Definition\Base\Tokenizes;
 

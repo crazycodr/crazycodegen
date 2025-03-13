@@ -2,13 +2,12 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Values;
 
-use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\FalseToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\TrueToken;
 
-class BoolVal extends Tokenizes
+class BoolVal extends BaseVal
 {
     public function __construct(
         public bool $value,
@@ -17,9 +16,6 @@ class BoolVal extends Tokenizes
 
     public function getTokens(RenderContext $context, RenderingRules $rules): array
     {
-        if ($this->value) {
-            return [new TrueToken()];
-        }
-        return [new FalseToken()];
+        return [$this->value ? new TrueToken() : new FalseToken()];
     }
 }

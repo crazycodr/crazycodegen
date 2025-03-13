@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Traits\ComputableTrait;
+use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
@@ -14,13 +14,13 @@ use CrazyCodeGen\Rendering\Tokens\Token;
 class ReturnOp extends Tokenizes
 {
     use FlattenFunction;
-    use ComputableTrait;
+    use ValueInferenceTrait;
 
     public function __construct(
         public int|float|string|bool|array|Token|Tokenizes $instruction,
     ) {
-        if ($this->isScalarType($instruction)) {
-            $this->instruction = $this->getValOrReturn($this->instruction);
+        if ($this->isSupportedValue($instruction)) {
+            $this->instruction = $this->inferValue($this->instruction);
         }
     }
 
