@@ -28,7 +28,7 @@ class AssignOp extends Instruction
         } elseif ($this->subject instanceof ProvidesVariableReference) {
             $this->subject = $this->subject->getVariableReference();
         }
-        if ($this->isSupportedValue($this->value)) {
+        if ($this->isInferableValue($this->value)) {
             $this->value = $this->inferValue($this->value);
         } elseif ($this->value instanceof ProvidesClassReference) {
             $this->value = $this->value->getClassReference();

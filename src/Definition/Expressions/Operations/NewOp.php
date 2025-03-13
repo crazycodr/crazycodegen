@@ -40,7 +40,7 @@ class NewOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownT
             $this->class = $this->class->getClassType();
         }
         foreach ($this->arguments as $argumentIndex => $argument) {
-            if ($this->isSupportedValue($argument)) {
+            if ($this->isInferableValue($argument)) {
                 $this->arguments[$argumentIndex] = $this->inferValue($argument);
             }
         }

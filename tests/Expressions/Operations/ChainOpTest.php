@@ -137,7 +137,7 @@ class ChainOpTest extends TestCase
         $token = new ChainOp(
             chain: [
                 new ParentContext(),
-                new CallOp(name: 'setUp'),
+                new CallOp(subject: 'setUp'),
                 new PropertyDef(name: 'bar', type: 'int'),
             ],
         );
@@ -272,7 +272,7 @@ class ChainOpTest extends TestCase
         $token = new ChainOp(
             chain: [
                 new ParentContext(),
-                new CallOp(name: 'setUp'),
+                new CallOp(subject: 'setUp'),
                 new PropertyDef(name: 'bar', type: 'int'),
             ],
         );

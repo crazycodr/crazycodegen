@@ -18,7 +18,7 @@ class NotOp extends Tokenizes
         public int|float|string|bool|Tokenizes $operand,
         public bool                            $doubled = false,
     ) {
-        if ($this->isSupportedValue($this->operand)) {
+        if ($this->isInferableValue($this->operand)) {
             $this->operand = $this->inferValue($this->operand);
         }
     }

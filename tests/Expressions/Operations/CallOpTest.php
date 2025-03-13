@@ -16,24 +16,10 @@ class CallOpTest extends TestCase
 {
     use TokenFunctions;
 
-    public function testInlineSubjectArrowAndFunctionRenderedFromTokensAndParenthesesArePresent()
-    {
-        $token = new CallOp(
-            name: new Token('setUp'),
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            setUp()
-            EOS,
-            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
     public function testInlineSubjectAndFunctionAreConvertedToTokensWhenStrings()
     {
         $token = new CallOp(
-            name: 'setUp',
+            subject: 'setUp',
         );
 
         $this->assertEquals(
@@ -47,7 +33,7 @@ class CallOpTest extends TestCase
     public function testInlineFunctionConvertedToTokenWhenMethodTokenGroupPassedIn()
     {
         $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
+            subject: new MethodDef(name: 'setUp'),
         );
 
         $this->assertEquals(
@@ -58,41 +44,11 @@ class CallOpTest extends TestCase
         );
     }
 
-    public function testInlineRendersStringArgumentAsSingleToken()
-    {
-        $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
-            arguments: 1,
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            setUp(1)
-            EOS,
-            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
-    public function testInlineRendersTokenArgumentAsSingleToken()
-    {
-        $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
-            arguments: new Token(1),
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            setUp(1)
-            EOS,
-            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
     public function testInlineRendersTokenGroupArgumentAsExpected()
     {
         $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
-            arguments: new VariableDef('bar'),
+            subject: new MethodDef(name: 'setUp'),
+            arguments: [new VariableDef('bar')],
         );
 
         $this->assertEquals(
@@ -106,7 +62,7 @@ class CallOpTest extends TestCase
     public function testInlineRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
+            subject: new MethodDef(name: 'setUp'),
             arguments: [new Token(1), new Token(2), new Token(3)],
         );
 
@@ -121,7 +77,7 @@ class CallOpTest extends TestCase
     public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
+            subject: new MethodDef(name: 'setUp'),
             arguments: [new VariableDef('bar'), new VariableDef('baz')],
         );
 
@@ -136,7 +92,7 @@ class CallOpTest extends TestCase
     public function testInlineRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions()
     {
         $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
+            subject: new MethodDef(name: 'setUp'),
             arguments: [new ArrayVal([1, 2, 3]), new VariableDef('baz')],
         );
 
@@ -148,24 +104,10 @@ class CallOpTest extends TestCase
         );
     }
 
-    public function testChopDownSubjectArrowAndFunctionRenderedFromTokensAndParenthesesArePresent()
-    {
-        $token = new CallOp(
-            name: new Token('setUp'),
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            setUp()
-            EOS,
-            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
     public function testChopDownSubjectAndFunctionAreConvertedToTokensWhenStrings()
     {
         $token = new CallOp(
-            name: 'setUp',
+            subject: 'setUp',
         );
 
         $this->assertEquals(
@@ -179,7 +121,7 @@ class CallOpTest extends TestCase
     public function testChopDownFunctionConvertedToTokenWhenMethodTokenGroupPassedIn()
     {
         $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
+            subject: new MethodDef(name: 'setUp'),
         );
 
         $this->assertEquals(
@@ -190,45 +132,11 @@ class CallOpTest extends TestCase
         );
     }
 
-    public function testChopDownRendersStringArgumentAsSingleToken()
-    {
-        $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
-            arguments: 1,
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            setUp(
-                1,
-            )
-            EOS,
-            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
-    public function testChopDownRendersTokenArgumentAsSingleToken()
-    {
-        $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
-            arguments: new Token(1),
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            setUp(
-                1,
-            )
-            EOS,
-            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
     public function testChopDownRendersTokenGroupArgumentAsExpected()
     {
         $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
-            arguments: new VariableDef('bar'),
+            subject: new MethodDef(name: 'setUp'),
+            arguments: [new VariableDef('bar')],
         );
 
         $this->assertEquals(
@@ -244,7 +152,7 @@ class CallOpTest extends TestCase
     public function testChopDownRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
+            subject: new MethodDef(name: 'setUp'),
             arguments: [new Token(1), new Token(2), new Token(3)],
         );
 
@@ -263,7 +171,7 @@ class CallOpTest extends TestCase
     public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
+            subject: new MethodDef(name: 'setUp'),
             arguments: [new VariableDef('bar'), new VariableDef('baz')],
         );
 
@@ -281,7 +189,7 @@ class CallOpTest extends TestCase
     public function testChopDownRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheChopDownVersions()
     {
         $token = new CallOp(
-            name: new MethodDef(name: 'setUp'),
+            subject: new MethodDef(name: 'setUp'),
             arguments: [new ArrayVal([1, 2, 3]), new VariableDef('baz')],
         );
 

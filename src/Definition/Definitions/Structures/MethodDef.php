@@ -4,10 +4,12 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
@@ -25,7 +27,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class MethodDef extends Tokenizes
+class MethodDef extends Tokenizes implements ProvidesCallableReference
 {
     use FlattenFunction;
     use TokenFunctions;
@@ -327,5 +329,10 @@ class MethodDef extends Tokenizes
         }
         $tokens[] = new BraceEndToken();
         return $tokens;
+    }
+
+    public function getCallableReference(): Expression
+    {
+        return new Expression($this->name);
     }
 }

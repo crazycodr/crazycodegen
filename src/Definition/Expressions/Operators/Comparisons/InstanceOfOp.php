@@ -19,10 +19,10 @@ class InstanceOfOp extends Tokenizes
         public Tokenizes|int|float|string|bool $left,
         public Tokenizes|int|float|string|bool $right,
     ) {
-        if ($this->isSupportedValue($this->left)) {
+        if ($this->isInferableValue($this->left)) {
             $this->left = $this->inferValue($this->left);
         }
-        if ($this->isSupportedValue($this->right)) {
+        if ($this->isInferableValue($this->right)) {
             $this->right = $this->inferValue($this->right);
         }
     }

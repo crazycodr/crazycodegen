@@ -4,12 +4,14 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
@@ -21,7 +23,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class PropertyDef extends Tokenizes implements ProvidesVariableReference
+class PropertyDef extends Tokenizes implements ProvidesVariableReference, ProvidesCallableReference
 {
     use FlattenFunction;
     use TokenFunctions;
@@ -43,7 +45,7 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference
         }
         if ($this->defaultValue === self::UNSET_DEFAULT_VALUE) {
             // Do nothing or isSupportedValue will change to StringVal
-        } elseif ($this->isSupportedValue($this->defaultValue)) {
+        } elseif ($this->isInferableValue($this->defaultValue)) {
             $this->defaultValue = $this->inferValue($this->defaultValue);
         } elseif ($this->defaultValue instanceof ProvidesClassReference) {
             $this->defaultValue = $this->defaultValue->getClassReference();
@@ -184,5 +186,10 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference
     public function getVariableReference(): VariableDef
     {
         return new VariableDef($this->name);
+    }
+
+    public function getCallableReference(): Expression
+    {
+        return new Expression($this->getVariableReference());
     }
 }

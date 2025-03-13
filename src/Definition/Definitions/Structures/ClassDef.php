@@ -3,11 +3,13 @@
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassType;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -22,7 +24,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ExtendsToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassReference
+class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassReference, ProvidesCallableReference
 {
     use FlattenFunction;
     use TokenFunctions;
@@ -428,5 +430,10 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
             return new ClassTypeDef($this->namespace->path . '\\' . $this->name);
         }
         return new ClassTypeDef($this->name);
+    }
+
+    public function getCallableReference(): Expression
+    {
+        return $this->getClassType()->getCallableReference();
     }
 }

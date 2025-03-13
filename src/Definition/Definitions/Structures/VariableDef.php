@@ -3,14 +3,16 @@
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\DollarToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class VariableDef extends Tokenizes
+class VariableDef extends Tokenizes implements ProvidesCallableReference
 {
     use FlattenFunction;
 
@@ -35,5 +37,10 @@ class VariableDef extends Tokenizes
         }
         $tokens[] = new SpacesToken($context->argumentDefinitionIdentifierPaddingSize);
         return $this->flatten($tokens);
+    }
+
+    public function getCallableReference(): Expression
+    {
+        return new Expression($this);
     }
 }

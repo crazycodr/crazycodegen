@@ -3,18 +3,20 @@
 namespace CrazyCodeGen\Definition\Definitions\Types;
 
 use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
+use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Definitions\Contexts\MemberAccessContext;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class ClassTypeDef extends TypeDef implements DefinesIfStaticallyAccessed, ProvidesClassReference
+class ClassTypeDef extends TypeDef implements DefinesIfStaticallyAccessed, ProvidesClassReference, ProvidesCallableReference
 {
     private null|string $namespace = null;
     private string $shortName;
@@ -74,5 +76,10 @@ class ClassTypeDef extends TypeDef implements DefinesIfStaticallyAccessed, Provi
     public function asNullable(): MultiTypeDef
     {
         return new MultiTypeDef([$this, new BuiltInTypeSpec('null')]);
+    }
+
+    public function getCallableReference(): Expression
+    {
+        return new Expression($this);
     }
 }

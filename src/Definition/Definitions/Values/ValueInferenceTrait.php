@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Definition\Definitions\Values;
 
 trait ValueInferenceTrait
 {
-    public function isSupportedValue(mixed $value): bool
+    public function isInferableValue(mixed $value): bool
     {
         if (is_int($value)) {
             return true;

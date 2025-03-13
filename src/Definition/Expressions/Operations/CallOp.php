@@ -3,14 +3,13 @@
 namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
-use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
-use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
-use CrazyCodeGen\Definition\Definitions\Structures\FunctionDef;
-use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
+use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
+use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
@@ -28,29 +27,20 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
     use ValueInferenceTrait;
 
     public function __construct(
-        public string|Token|Tokenizes|FunctionDef|MethodDef|ProvidesClassReference|ProvidesVariableReference $name,
-        /** @var Token[]|Tokenizes[]|Token|Tokenizes $arguments */
-        public int|float|string|bool|array|Token|Tokenizes                         $arguments = [],
-    ) {
-        if (is_string($this->name)) {
-            $this->name = new Token($this->name);
-        } elseif ($this->name instanceof ProvidesClassReference) {
-            $this->name = $this->name->getClassReference();
-        } elseif ($this->name instanceof ProvidesVariableReference) {
-            $this->name = $this->name->getVariableReference();
-        } elseif ($this->name instanceof FunctionDef) {
-            $this->name = new Token($this->name->name);
-        } elseif ($this->name instanceof MethodDef) {
-            $this->name = new Token($this->name->name);
-        }
-        if (!is_array($this->arguments)) {
-            $this->arguments = [$this->arguments];
+        public string|Expression|ProvidesCallableReference $subject,
+        public array                            $arguments = [],
+    )
+    {
+        if ($this->subject instanceof ProvidesCallableReference) {
+            $this->subject = $this->subject->getCallableReference();
+        } elseif (is_string($this->subject)) {
+            $this->subject = new Expression($this->subject);
         }
         foreach ($this->arguments as $argumentIndex => $argument) {
-            if ($argument instanceof ProvidesClassReference) {
-                $this->arguments[$argumentIndex] = $argument->getClassReference();
-            } elseif ($this->isSupportedValue($argument)) {
+            if ($this->isInferableValue($argument)) {
                 $this->arguments[$argumentIndex] = $this->inferValue($argument);
+            } elseif ($argument instanceof ProvidesClassReference) {
+                $this->arguments[$argumentIndex] = $argument->getClassReference();
             }
         }
     }
@@ -61,10 +51,10 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
     public function getChopDownTokens(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->name instanceof Tokenizes) {
-            $tokens[] = $this->name->getTokens($context, $rules);
+        if ($this->subject instanceof Tokenizes) {
+            $tokens[] = $this->subject->getTokens($context, $rules);
         } else {
-            $tokens[] = $this->name;
+            $tokens[] = $this->subject;
         }
         $tokens[] = new ParStartToken();
         if (!empty($this->arguments)) {
@@ -117,10 +107,10 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
     public function getInlineTokens(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->name instanceof Tokenizes) {
-            $tokens[] = $this->name->getTokens($context, $rules);
+        if ($this->subject instanceof Tokenizes) {
+            $tokens[] = $this->subject->getTokens($context, $rules);
         } else {
-            $tokens[] = $this->name;
+            $tokens[] = $this->subject;
         }
         $tokens[] = new ParStartToken();
         $argumentsLeft = count($this->arguments);

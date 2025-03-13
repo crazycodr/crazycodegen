@@ -19,7 +19,7 @@ class ReturnOp extends Tokenizes
     public function __construct(
         public int|float|string|bool|array|Token|Tokenizes $instruction,
     ) {
-        if ($this->isSupportedValue($instruction)) {
+        if ($this->isInferableValue($instruction)) {
             $this->instruction = $this->inferValue($this->instruction);
         }
     }

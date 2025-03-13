@@ -59,14 +59,14 @@ class TestHelpersScenarioTest extends TestCase
                     right: $configApiClientType,
                 )),
                 instructions: [
-                    $configApiManagerType->to(new CallOp(name: 'setClient', arguments: [null])),
+                    $configApiManagerType->to(new CallOp(subject: 'setClient', arguments: [null])),
                 ]
             ))
             ->addInstruction(new AssignOp(
                 subject: ThisContext::to($configApiClientBackupProperty),
                 value: $configApiManagerType->to(new CallOp('getClient')),
             ))
-            ->addInstruction($configApiManagerType->to(new CallOp(name: 'setClient', arguments: [null])))
+            ->addInstruction($configApiManagerType->to(new CallOp(subject: 'setClient', arguments: [null])))
             ->addInstruction(new AssignOp(
                 subject: ThisContext::to($configApiClientSpyBuilderProperty),
                 value: new NewOp(
@@ -81,10 +81,10 @@ class TestHelpersScenarioTest extends TestCase
             ->addInstruction(
                 ThisContext::to($configApiClientSpyBuilderProperty)
                     ->to(new CallOp('getService'))
-                    ->to(new CallOp(name: 'validateMandateExpectations', arguments: [new ThisContext()]))
+                    ->to(new CallOp(subject: 'validateMandateExpectations', arguments: [new ThisContext()]))
             )
             ->addInstruction($configApiManagerType->to(new CallOp(
-                name: 'setClient',
+                subject: 'setClient',
                 arguments: [
                     ThisContext::to($configApiClientBackupProperty),
                 ],
@@ -118,7 +118,7 @@ class TestHelpersScenarioTest extends TestCase
                 condition: $scenarioBuildingCallable,
                 instructions: [
                     new CallOp(
-                        name: $scenarioBuildingCallable,
+                        subject: $scenarioBuildingCallable,
                         arguments: [ThisContext::to($configApiClientSpyBuilderProperty)],
                     ),
                 ],
