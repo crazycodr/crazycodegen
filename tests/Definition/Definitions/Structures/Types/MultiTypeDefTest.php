@@ -1,9 +1,9 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\Types;
 
-use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\MultiTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -16,8 +16,8 @@ class MultiTypeDefTest extends TestCase
     public function testTypesAreJoinedWithPipeWhenUnionIsTrueByDefault()
     {
         $token = new MultiTypeDef([
-            new SingleTypeDef('string'),
-            new SingleTypeDef('int'),
+            new BuiltInTypeSpec('string'),
+            new BuiltInTypeSpec('int'),
         ]);
 
         $this->assertEquals(
@@ -32,8 +32,8 @@ class MultiTypeDefTest extends TestCase
     {
         $token = new MultiTypeDef(
             [
-                new SingleTypeDef('string'),
-                new SingleTypeDef('int'),
+                new BuiltInTypeSpec('string'),
+                new BuiltInTypeSpec('int'),
             ],
             unionTypes: false
         );

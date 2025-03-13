@@ -2,9 +2,9 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\MultiTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\ArgumentListRules;

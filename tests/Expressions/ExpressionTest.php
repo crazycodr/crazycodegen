@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Expressions;
 
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -33,7 +33,7 @@ class ExpressionTest extends TestCase
     public function testTokenGroupIsRenderedAsExpected()
     {
         $token = new Expression(
-            new SingleTypeDef('int'),
+            new BuiltInTypeSpec('int'),
         );
 
         $this->assertEquals(
@@ -61,7 +61,7 @@ class ExpressionTest extends TestCase
     public function testMixOfTokensAndTokenGroupsIsRendered()
     {
         $token = new Expression(
-            [new Token(1), new SpacesToken(), new SingleTypeDef('string')],
+            [new Token(1), new SpacesToken(), new BuiltInTypeSpec('string')],
         );
 
         $this->assertEquals(

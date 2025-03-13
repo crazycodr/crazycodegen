@@ -3,7 +3,8 @@
 namespace CrazyCodeGen\Definition\Expressions\Operators\Assignment;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\ProvidesReference;
+use CrazyCodeGen\Definition\Base\ProvidesClassReference;
+use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Definition\Traits\ComputableTrait;
@@ -13,22 +14,26 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class Assign extends Instruction
+class AssignOp extends Instruction
 {
     use FlattenFunction;
     use ComputableTrait;
 
     public function __construct(
-        public string|Token|Tokenizes $subject,
-        public int|float|string|bool|Token|Tokenizes|ProvidesReference $value,
+        public string|Token|Tokenizes|ProvidesVariableReference                                       $subject,
+        public int|float|string|bool|Token|Tokenizes|ProvidesClassReference|ProvidesVariableReference $value,
     ) {
         if (is_string($this->subject)) {
             $this->subject = new Token($this->subject);
+        } elseif ($this->subject instanceof ProvidesVariableReference) {
+            $this->subject = $this->subject->getVariableReference();
         }
         if ($this->isScalarType($this->value)) {
             $this->value = $this->getValOrReturn($this->value);
-        } elseif ($this->value instanceof ProvidesReference) {
-            $this->value = $this->value->getReference();
+        } elseif ($this->value instanceof ProvidesClassReference) {
+            $this->value = $this->value->getClassReference();
+        } elseif ($this->value instanceof ProvidesVariableReference) {
+            $this->value = $this->value->getVariableReference();
         }
         parent::__construct(instructions: [
             $this->subject,

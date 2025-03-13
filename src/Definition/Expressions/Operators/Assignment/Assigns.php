@@ -7,6 +7,9 @@ use CrazyCodeGen\Definition\Base\CanBeAssigned;
 use CrazyCodeGen\Definition\Base\CanBeComputed;
 use CrazyCodeGen\Definition\Traits\ComputableTrait;
 
+/**
+ * @deprecated
+ */
 class Assigns implements CanBeComputed
 {
     use FlattenFunction;

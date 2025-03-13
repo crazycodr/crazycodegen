@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Definition\Definitions\Structures\ImplementsDef;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\ClassRules;
@@ -36,7 +36,7 @@ class ImplementsDefTest extends TestCase
     public function testInlineScenarioRendersEachImplementationUsingSingleTypeTokenGroupOrOriginal()
     {
         $token = new ImplementsDef(
-            implementations: ['\\JsonSerializable', new SingleTypeDef('\\ArrayAccess')],
+            implementations: ['\\JsonSerializable', new ClassTypeDef('\\ArrayAccess')],
         );
 
         $rules = new RenderingRules();

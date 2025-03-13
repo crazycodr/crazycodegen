@@ -4,6 +4,7 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -20,9 +21,16 @@ class ImplementsDef extends Tokenizes
     use TokenFunctions;
 
     public function __construct(
-        /** @var string[]|SingleTypeDef[] $implementations */
+        /** @var string[]|ClassTypeDef[] $implementations */
         public array $implementations,
     ) {
+        foreach ($this->implementations as $implementationIndex => $implementation) {
+            if (is_string($implementation)) {
+                $this->implementations[$implementationIndex] = new ClassTypeDef($implementation);
+            } elseif (!$implementation instanceof ClassTypeDef) {
+                unset($this->implementations[$implementationIndex]);
+            }
+        }
     }
 
     /**
@@ -61,11 +69,7 @@ class ImplementsDef extends Tokenizes
         $implementsLeft = count($this->implementations);
         foreach ($this->implementations as $implement) {
             $implementsLeft--;
-            if (!$implement instanceof SingleTypeDef) {
-                $tokens[] = (new SingleTypeDef($implement))->getTokens($context, $rules);
-            } else {
-                $tokens[] = $implement->getTokens($context, $rules);
-            }
+            $tokens[] = $implement->getTokens($context, $rules);
             if ($implementsLeft > 0) {
                 $tokens[] = new CommaToken();
                 $tokens[] = new SpacesToken($rules->classes->spacesAfterImplementSeparator);
@@ -96,11 +100,7 @@ class ImplementsDef extends Tokenizes
                 $tokens[] = new SpacesToken($paddingSpaces);
             }
             $implementsLeft--;
-            if (!$implement instanceof SingleTypeDef) {
-                $tokens[] = (new SingleTypeDef($implement))->getTokens($context, $rules);
-            } else {
-                $tokens[] = $implement->getTokens($context, $rules);
-            }
+            $tokens[] = $implement->getTokens($context, $rules);
             if ($implementsLeft > 0) {
                 $tokens[] = new CommaToken();
             }

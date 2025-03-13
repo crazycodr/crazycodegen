@@ -1,8 +1,9 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\Types;
 
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -12,14 +13,14 @@ class SingleTypeDefTest extends TestCase
 {
     public function testTypeIsRenderedAsAnIdentifier()
     {
-        $token = new SingleTypeDef('CrazyCodeGen\\Tokens\\Token');
+        $token = new ClassTypeDef('CrazyCodeGen\\Tokens\\Token');
 
         $this->assertEquals(new Token('CrazyCodeGen\\Tokens\\Token'), $token->getTokens(new RenderContext(), new RenderingRules())[0]);
     }
 
     public function testShortNameIsRenderedAsAnIdentifierWhenShortenIsTurnedOn()
     {
-        $token = new SingleTypeDef('CrazyCodeGen\\Tokens\\Token');
+        $token = new ClassTypeDef('CrazyCodeGen\\Tokens\\Token');
 
         $context = new RenderContext();
         $context->importedClasses[] = 'CrazyCodeGen\\Tokens\\Token';
@@ -29,7 +30,7 @@ class SingleTypeDefTest extends TestCase
 
     public function testShortNameAndNamespaceAlwaysAvailableEvenWhenShortenIsOff()
     {
-        $token = new SingleTypeDef('CrazyCodeGen\\Tokens\\Token');
+        $token = new ClassTypeDef('CrazyCodeGen\\Tokens\\Token');
 
         $this->assertEquals('Token', $token->getShortName());
         $this->assertEquals('CrazyCodeGen\\Tokens', $token->getNamespace());
@@ -37,9 +38,16 @@ class SingleTypeDefTest extends TestCase
 
     public function testNamespaceIsNullWhenNoBackslashFound()
     {
-        $token = new SingleTypeDef('Token');
+        $token = new ClassTypeDef('Token');
 
         $this->assertEquals('Token', $token->getShortName());
         $this->assertNull($token->getNamespace());
+    }
+
+    public function testCanResolveClassReference()
+    {
+        $token = new ClassTypeDef('Token');
+
+        $this->assertEquals(new ClassRefVal($token), $token->getClassReference());
     }
 }

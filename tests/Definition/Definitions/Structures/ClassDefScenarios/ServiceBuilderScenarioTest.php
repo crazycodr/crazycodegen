@@ -1,16 +1,16 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\Scenarios;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\ClassDefScenarios;
 
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
-use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\MultiTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
-use CrazyCodeGen\Definition\Expressions\Operators\Assignment\Assign;
+use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -22,9 +22,9 @@ class ServiceBuilderScenarioTest extends TestCase
 
     public function testAbilityToGenerateTestBuilderClassFromPreviousInternalFramework()
     {
-        $baseMockBuilderType = new SingleTypeDef('Internal\TestFramework\MockingFramework\Builders\BaseMockBuilder');
-        $mockObjectType = new SingleTypeDef('PHPUnit\Framework\MockObject\MockObject');
-        $hookBasketAdapterType = new SingleTypeDef('internal\Baskets\Adapters\HookBasketAdapter');
+        $baseMockBuilderType = new ClassTypeDef('Internal\TestFramework\MockingFramework\Builders\BaseMockBuilder');
+        $mockObjectType = new ClassTypeDef('PHPUnit\Framework\MockObject\MockObject');
+        $hookBasketAdapterType = new ClassTypeDef('internal\Baskets\Adapters\HookBasketAdapter');
         $mockedHookBasketAdapterType = new MultiTypeDef(
             types: [$hookBasketAdapterType, $mockObjectType],
             unionTypes: false,
@@ -35,7 +35,7 @@ class ServiceBuilderScenarioTest extends TestCase
 
         $constructor = (new MethodDef('__construct'))
             ->addParameter($mockParameter)
-            ->addInstruction(new Assign(
+            ->addInstruction(new AssignOp(
                 subject: ThisContext::to($mockProperty),
                 value: $mockParameter,
             ));

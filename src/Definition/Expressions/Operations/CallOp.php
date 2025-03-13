@@ -3,10 +3,11 @@
 namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
 use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
-use CrazyCodeGen\Definition\Base\ProvidesReference;
+use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Definitions\Structures\FunctionDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Traits\ComputableTrait;
@@ -27,14 +28,16 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
     use ComputableTrait;
 
     public function __construct(
-        public string|Token|Tokenizes|FunctionDef|MethodDef|ProvidesReference $name,
+        public string|Token|Tokenizes|FunctionDef|MethodDef|ProvidesClassReference|ProvidesVariableReference $name,
         /** @var Token[]|Tokenizes[]|Token|Tokenizes $arguments */
-        public int|float|string|bool|array|Token|Tokenizes                                   $arguments = [],
+        public int|float|string|bool|array|Token|Tokenizes                         $arguments = [],
     ) {
         if (is_string($this->name)) {
             $this->name = new Token($this->name);
-        } elseif ($this->name instanceof ProvidesReference) {
-            $this->name = $this->name->getReference();
+        } elseif ($this->name instanceof ProvidesClassReference) {
+            $this->name = $this->name->getClassReference();
+        } elseif ($this->name instanceof ProvidesVariableReference) {
+            $this->name = $this->name->getVariableReference();
         } elseif ($this->name instanceof FunctionDef) {
             $this->name = new Token($this->name->name);
         } elseif ($this->name instanceof MethodDef) {
@@ -44,8 +47,8 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
             $this->arguments = [$this->arguments];
         }
         foreach ($this->arguments as $argumentIndex => $argument) {
-            if ($argument instanceof ProvidesReference) {
-                $this->arguments[$argumentIndex] = $argument->getReference();
+            if ($argument instanceof ProvidesClassReference) {
+                $this->arguments[$argumentIndex] = $argument->getClassReference();
             } elseif ($this->isScalarType($argument)) {
                 $this->arguments[$argumentIndex] = $this->getValOrReturn($argument);
             }

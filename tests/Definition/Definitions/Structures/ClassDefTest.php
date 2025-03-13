@@ -6,12 +6,12 @@ use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ImportDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
-use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
 use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\MultiTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -184,7 +184,7 @@ class ClassDefTest extends TestCase
             properties: [
                 new PropertyDef(
                     name: 'prop1',
-                    type: new SingleTypeDef(type: 'CrazyCodeGen\\Tests\\Test1'),
+                    type: new ClassTypeDef(type: 'CrazyCodeGen\\Tests\\Test1'),
                 ),
                 new PropertyDef(
                     name: 'prop2',

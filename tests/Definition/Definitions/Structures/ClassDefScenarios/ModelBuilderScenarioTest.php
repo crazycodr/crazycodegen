@@ -1,16 +1,16 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\Scenarios;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\ClassDefScenarios;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
-use CrazyCodeGen\Definition\Expressions\Operators\Assignment\Assign;
+use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -22,8 +22,8 @@ class ModelBuilderScenarioTest extends TestCase
 
     public function testAbilityToGenerateModelHelperFromPreviousInternalFramework()
     {
-        $baseModelBuilderType = new SingleTypeDef('Internal\TestFramework\MockingFramework\Builders\BaseModelBuilder');
-        $taxExemptionCategoryModelType = new SingleTypeDef('internal\Baskets\Models\TaxExemptionCategoryModel');
+        $baseModelBuilderType = new ClassTypeDef('Internal\TestFramework\MockingFramework\Builders\BaseModelBuilder');
+        $taxExemptionCategoryModelType = new ClassTypeDef('internal\Baskets\Models\TaxExemptionCategoryModel');
 
         $modelProperty = new PropertyDef('model');
 
@@ -41,11 +41,11 @@ class ModelBuilderScenarioTest extends TestCase
             )));
         $hstExemptionMethod = (new MethodDef('hstExemption'))
             ->setReturnType('static')
-            ->addInstruction(new Assign(
+            ->addInstruction(new AssignOp(
                 subject: ThisContext::to($modelProperty)->to('identifier'),
                 value: 'hst',
             ))
-            ->addInstruction(new Assign(
+            ->addInstruction(new AssignOp(
                 subject: ThisContext::to($modelProperty)->to('name'),
                 value: 'HST',
             ))

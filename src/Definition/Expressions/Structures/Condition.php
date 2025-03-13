@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Expressions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\ProvidesReference;
+use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Expressions\Instruction;
@@ -30,8 +30,8 @@ class Condition extends Tokenizes implements ShouldNotBeNestedIntoInstruction
         /** @var Tokenizes[] $instructions */
         public array          $instructions = [],
     ) {
-        if ($this->condition instanceof ProvidesReference) {
-            $this->condition = $this->condition->getReference();
+        if ($this->condition instanceof ProvidesVariableReference) {
+            $this->condition = $this->condition->getVariableReference();
         }
         foreach ($this->instructions as $instructionIndex => $instruction) {
             if (!$instruction instanceof Instruction) {

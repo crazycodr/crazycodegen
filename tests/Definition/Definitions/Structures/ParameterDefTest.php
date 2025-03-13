@@ -3,7 +3,8 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Rendering\Renderers\Contexts\ChopDownPaddingContext;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -36,7 +37,7 @@ class ParameterDefTest extends TestCase
     {
         $token = new ParameterDef(
             new Token('foo'),
-            new SingleTypeDef('int'),
+            new BuiltInTypeSpec('int'),
         );
 
         $rules = new RenderingRules();
@@ -108,7 +109,7 @@ class ParameterDefTest extends TestCase
     {
         $token = new ParameterDef(
             new Token('foo'),
-            new SingleTypeDef('int'),
+            new BuiltInTypeSpec('int'),
         );
 
         $rules = new RenderingRules();
@@ -126,7 +127,7 @@ class ParameterDefTest extends TestCase
     {
         $token = new ParameterDef(
             new Token('foo'),
-            new SingleTypeDef('int'),
+            new BuiltInTypeSpec('int'),
         );
 
         $rules = new RenderingRules();
@@ -209,7 +210,7 @@ class ParameterDefTest extends TestCase
     {
         $token = new ParameterDef(
             new Token('foo'),
-            new SingleTypeDef('reallyLongType'),
+            new ClassTypeDef('reallyLongType'),
         );
 
         $rules = new RenderingRules();

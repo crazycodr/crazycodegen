@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Definitions\Values;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Definition\Base\ProvidesReference;
+use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
 use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
@@ -32,8 +32,8 @@ class ArrayVal extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDo
         public array $keyValues = [],
     ) {
         foreach ($keyValues as $key => $value) {
-            if ($value instanceof ProvidesReference) {
-                $this->keyValues[$key] = $value->getReference();
+            if ($value instanceof ProvidesClassReference) {
+                $this->keyValues[$key] = $value->getClassReference();
             }
         }
     }

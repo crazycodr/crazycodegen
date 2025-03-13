@@ -3,8 +3,8 @@
 namespace CrazyCodeGen\Definition\Definitions\Values;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\StaticAccessToken;
@@ -17,16 +17,13 @@ class ClassRefVal extends Tokenizes
     use TokenFunctions;
 
     public function __construct(
-        public string|SingleTypeDef $name,
+        public ProvidesClassReference&Tokenizes $name,
     ) {
-        if (is_string($this->name)) {
-            $this->name = new SingleTypeDef($this->name);
-        }
     }
 
     public function getTokens(RenderContext $context, RenderingRules $rules): array
     {
-        $token = [];
+        $tokens = [];
         $tokens[] = $this->name->getTokens($context, $rules);
         $tokens[] = new StaticAccessToken();
         $tokens[] = new ClassToken();

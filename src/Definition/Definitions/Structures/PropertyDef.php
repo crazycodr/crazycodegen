@@ -4,8 +4,12 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesClassReference;
+use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Definitions\Values\StringVal;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeInferenceTrait;
+use CrazyCodeGen\Definition\Traits\ComputableTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
@@ -18,20 +22,32 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class PropertyDef extends Tokenizes
+class PropertyDef extends Tokenizes implements ProvidesVariableReference
 {
     use FlattenFunction;
     use TokenFunctions;
+    use ComputableTrait;
+    use TypeInferenceTrait;
 
     public function __construct(
-        public string|Token                           $name,
-        public null|string|DocBlockDef                $docBlock = null,
-        public null|string|SingleTypeDef|MultiTypeDef $type = null,
-        public VisibilityEnum                         $visibility = VisibilityEnum::PUBLIC,
-        public bool                                   $static = false,
-        public null|int|float|string|bool|Token       $defaultValue = null,
-        public bool                                   $defaultValueIsNull = false,
+        public string|Token                                                      $name,
+        public null|string|DocBlockDef                                           $docBlock = null,
+        public null|string|TypeDef                                               $type = null,
+        public VisibilityEnum                                                    $visibility = VisibilityEnum::PUBLIC,
+        public bool                                                              $static = false,
+        public null|int|float|string|bool|ProvidesClassReference|Token|Tokenizes $defaultValue = null,
+        public bool                                                              $defaultValueIsNull = false,
     ) {
+        if (is_string($this->type)) {
+            $this->type = $this->inferVariableOnlyType($this->type);
+        }
+        if ($this->defaultValue instanceof ProvidesClassReference) {
+            $this->defaultValue = $this->defaultValue->getClassReference();
+        } elseif (is_null($this->defaultValue)) {
+            // Preserve default of null to suppress default value
+        } elseif ($this->isScalarType($this->defaultValue)) {
+            $this->defaultValue = $this->getValOrReturn($this->defaultValue);
+        }
     }
 
     /**
@@ -117,14 +133,7 @@ class PropertyDef extends Tokenizes
     public function renderType(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if (is_string($this->type)) {
-            $tokens[] = $tokensToPad = (new SingleTypeDef(type: $this->type))->getTokens($context, $rules);
-            $tokens[] = new SpacesToken($this->calculatePaddingOrGetRuleSpaces(
-                $tokensToPad,
-                $context->chopDown?->paddingSpacesForTypes,
-                $rules->properties->spacesAfterType
-            ));
-        } elseif (!is_null($this->type)) {
+        if (!is_null($this->type)) {
             $tokens[] = $tokensToPad = $this->type->getTokens($context, $rules);
             $tokens[] = new SpacesToken($this->calculatePaddingOrGetRuleSpaces(
                 $tokensToPad,
@@ -169,14 +178,17 @@ class PropertyDef extends Tokenizes
         } elseif ($this->defaultValue !== null) {
             $tokens[] = new EqualToken();
             $tokens[] = new SpacesToken($rules->properties->spacesAfterEquals);
-            if (is_string($this->defaultValue)) {
-                $tokens[] = (new StringVal($this->defaultValue))->getTokens($context, $rules);
-            } elseif (is_bool($this->defaultValue)) {
-                $tokens[] = new Token($this->defaultValue ? 'true' : 'false');
-            } else {
-                $tokens[] = new Token($this->defaultValue);
+            if ($this->defaultValue instanceof Tokenizes) {
+                $tokens[] = $this->defaultValue->getTokens($context, $rules);
+            } elseif ($this->defaultValue instanceof Token) {
+                $tokens[] = $this->defaultValue;
             }
         }
         return $this->flatten($tokens);
+    }
+
+    public function getVariableReference(): VariableDef
+    {
+        return new VariableDef($this->name);
     }
 }

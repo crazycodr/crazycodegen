@@ -4,6 +4,8 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeInferenceTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -21,15 +23,19 @@ class FunctionDef extends Tokenizes
 {
     use FlattenFunction;
     use TokenFunctions;
+    use TypeInferenceTrait;
 
     public function __construct(
-        public string|Token                           $name,
-        public null|NamespaceDef                      $namespace = null,
-        public null|string|DocBlockDef                $docBlock = null,
-        public null|ParameterListDef                  $arguments = null,
-        public null|string|SingleTypeDef|MultiTypeDef $returnType = null,
-        public null|array                             $bodyInstructions = null,
+        public string|Token                          $name,
+        public null|NamespaceDef                     $namespace = null,
+        public null|string|DocBlockDef               $docBlock = null,
+        public null|ParameterListDef                 $arguments = null,
+        public null|string|TypeDef $returnType = null,
+        public null|array                            $bodyInstructions = null,
     ) {
+        if (is_string($this->returnType)) {
+            $this->returnType = $this->inferVariableOnlyType($this->returnType);
+        }
     }
 
     /**
@@ -118,9 +124,7 @@ class FunctionDef extends Tokenizes
             if ($rules->functions->spacesAfterReturnColon) {
                 $tokens[] = new SpacesToken($rules->functions->spacesAfterReturnColon);
             }
-            if (is_string($this->returnType)) {
-                $tokens[] = (new SingleTypeDef($this->returnType))->getTokens($context, $rules);
-            } else {
+            if ($this->returnType instanceof Tokenizes) {
                 $tokens[] = $this->returnType->getTokens($context, $rules);
             }
         }

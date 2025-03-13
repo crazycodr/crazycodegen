@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Expressions;
 
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -33,7 +33,7 @@ class InstructionTest extends TestCase
     public function testTokenGroupIsRenderedWithTrailingSemiColon()
     {
         $token = new Instruction(
-            new SingleTypeDef('int'),
+            new BuiltInTypeSpec('int'),
         );
 
         $this->assertEquals(
@@ -61,7 +61,7 @@ class InstructionTest extends TestCase
     public function testMixOfTokensAndTokenGroupsIsRenderedWithTrailingSemiColon()
     {
         $token = new Instruction(
-            [new Token(1), new SpacesToken(), new SingleTypeDef('string')],
+            [new Token(1), new SpacesToken(), new BuiltInTypeSpec('string')],
         );
 
         $this->assertEquals(

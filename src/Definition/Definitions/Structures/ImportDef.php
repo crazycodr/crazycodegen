@@ -4,6 +4,7 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
@@ -19,9 +20,12 @@ class ImportDef extends Tokenizes
     use TokenFunctions;
 
     public function __construct(
-        public string|SingleTypeDef $type,
-        public null|string          $alias = null,
+        public string|ClassTypeDef $type,
+        public null|string         $alias = null,
     ) {
+        if (is_string($this->type)) {
+            $this->type = new ClassTypeDef($this->type);
+        }
     }
 
     /**
@@ -34,11 +38,7 @@ class ImportDef extends Tokenizes
         $tokens = [];
         $tokens[] = new UseToken();
         $tokens[] = new SpacesToken($rules->imports->spacesAfterUse);
-        if (is_string($this->type)) {
-            $tokens[] = (new SingleTypeDef($this->type))->getTokens($context, $rules);
-        } else {
-            $tokens[] = $this->type->getTokens($context, $rules);
-        }
+        $tokens[] = $this->type->getTokens($context, $rules);
         if ($this->alias) {
             $tokens[] = new SpacesToken($rules->imports->spacesAfterType);
             $tokens[] = new AsToken();

@@ -1,11 +1,12 @@
 <?php
 
-namespace CrazyCodeGen\Definition\Definitions\Structures;
+namespace CrazyCodeGen\Definition\Definitions\Structures\Types;
 
-use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
-use CrazyCodeGen\Definition\Base\ProvidesReference;
+use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Definitions\Contexts\MemberAccessContext;
+use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
@@ -13,7 +14,7 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class SingleTypeDef extends Tokenizes implements DefinesIfStaticallyAccessed, ProvidesReference
+class ClassTypeDef extends TypeDef implements DefinesIfStaticallyAccessed, ProvidesClassReference
 {
     private null|string $namespace = null;
     private string $shortName;
@@ -60,13 +61,18 @@ class SingleTypeDef extends Tokenizes implements DefinesIfStaticallyAccessed, Pr
         return true;
     }
 
-    public function getReference(): Tokenizes
+    public function getClassReference(): ClassRefVal
     {
-        return new ClassRefVal($this->type);
+        return new ClassRefVal($this);
     }
 
     public function to(PropertyDef|MethodDef|CallOp|MemberAccessContext $what): ChainOp
     {
         return new ChainOp([$this, $what]);
+    }
+
+    public function asNullable(): MultiTypeDef
+    {
+        return new MultiTypeDef([$this, new NullTypeSpec()]);
     }
 }

@@ -6,6 +6,8 @@ use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
@@ -27,17 +29,18 @@ class MethodDef extends Tokenizes
 {
     use FlattenFunction;
     use TokenFunctions;
+    use TypeInferenceTrait;
 
     public function __construct(
-        public string                                 $name,
-        public null|string|array|DocBlockDef          $docBlock = null,
-        public bool                                   $abstract = false,
-        public VisibilityEnum                         $visibility = VisibilityEnum::PUBLIC,
-        public bool                                   $static = false,
-        public null|ParameterListDef                  $parameters = null,
-        public null|string|SingleTypeDef|MultiTypeDef $returnType = null,
+        public string                                $name,
+        public null|string|array|DocBlockDef         $docBlock = null,
+        public bool                                  $abstract = false,
+        public VisibilityEnum                        $visibility = VisibilityEnum::PUBLIC,
+        public bool                                  $static = false,
+        public null|ParameterListDef                 $parameters = null,
+        public null|string|TypeDef $returnType = null,
         /** @var Token|Tokenizes|Token[]|Tokenizes[] $instructions */
-        public array|Token|Tokenizes                  $instructions = [],
+        public array|Token|Tokenizes                 $instructions = [],
     ) {
         $this->setDocBlock($docBlock);
         $this->setReturnType($returnType);
@@ -90,11 +93,11 @@ class MethodDef extends Tokenizes
     }
 
     public function addParameterExploded(
-        string                                 $name,
-        null|string|SingleTypeDef|MultiTypeDef $type,
-        null|int|float|string|bool|Token       $defaultValue = null,
-        bool                                   $defaultValueIsNull = false,
-        bool                                   $isVariadic = false,
+        string                                $name,
+        null|string|TypeDef $type,
+        null|int|float|string|bool|Token      $defaultValue = null,
+        bool                                  $defaultValueIsNull = false,
+        bool                                  $isVariadic = false,
     ): self {
         if ($this->parameters === null) {
             $this->parameters = new ParameterListDef();
@@ -109,10 +112,10 @@ class MethodDef extends Tokenizes
         return $this;
     }
 
-    public function setReturnType(null|string|SingleTypeDef|MultiTypeDef $type): self
+    public function setReturnType(null|string|TypeDef $type): self
     {
         if (is_string($type)) {
-            $type = new SingleTypeDef($type);
+            $type = $this->inferAnyType($type);
         }
         $this->returnType = $type;
         return $this;
@@ -218,11 +221,7 @@ class MethodDef extends Tokenizes
             if ($rules->methods->spacesAfterReturnColon) {
                 $tokens[] = new SpacesToken($rules->methods->spacesAfterReturnColon);
             }
-            if (is_string($this->returnType)) {
-                $tokens[] = (new SingleTypeDef($this->returnType))->getTokens($context, $rules);
-            } else {
-                $tokens[] = $this->returnType->getTokens($context, $rules);
-            }
+            $tokens[] = $this->returnType->getTokens($context, $rules);
         }
         return $tokens;
     }

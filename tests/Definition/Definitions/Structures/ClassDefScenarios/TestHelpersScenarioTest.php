@@ -1,22 +1,22 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\Scenarios;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\ClassDefScenarios;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
-use CrazyCodeGen\Definition\Definitions\Structures\MultiTypeDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Structures\SingleTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\MultiTypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Expressions\Comment;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\IssetOp;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
-use CrazyCodeGen\Definition\Expressions\Operators\Assignment\Assign;
+use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Comparisons\InstanceOfOp;
 use CrazyCodeGen\Definition\Expressions\Operators\LogicalOperators\NotOp;
 use CrazyCodeGen\Definition\Expressions\Structures\Condition;
@@ -32,12 +32,12 @@ class TestHelpersScenarioTest extends TestCase
 
     public function testAbilityToGenerateTestHelperFromPreviousInternalFramework()
     {
-        $testCaseType = new SingleTypeDef('PHPUnit\Framework\TestCase');
-        $serviceBuilderType = new SingleTypeDef('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Auditing\Services\AuditingTrackingServiceManagerBuilder');
-        $configApiSpyBuilderType = new SingleTypeDef('Internal\TestFramework\MockingFramework\MockHelpers\ConfigApiClient\ConfigApiClientSpyBuilder');
-        $configApiClientType = new SingleTypeDef('ConfigApi\ConfigApiClient');
-        $trackingServiceManagerType = new SingleTypeDef('internal\Auditing\Services\AuditingTrackingServiceManager');
-        $configApiManagerType = new SingleTypeDef('internal\managers\ConfigApiManager');
+        $testCaseType = new ClassTypeDef('PHPUnit\Framework\TestCase');
+        $serviceBuilderType = new ClassTypeDef('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Auditing\Services\AuditingTrackingServiceManagerBuilder');
+        $configApiSpyBuilderType = new ClassTypeDef('Internal\TestFramework\MockingFramework\MockHelpers\ConfigApiClient\ConfigApiClientSpyBuilder');
+        $configApiClientType = new ClassTypeDef('ConfigApi\ConfigApiClient');
+        $trackingServiceManagerType = new ClassTypeDef('internal\Auditing\Services\AuditingTrackingServiceManager');
+        $configApiManagerType = new ClassTypeDef('internal\managers\ConfigApiManager');
 
         $configApiClientSpyBuilderProperty = new PropertyDef(
             name: 'configApiClientSpyBuilder',
@@ -62,12 +62,12 @@ class TestHelpersScenarioTest extends TestCase
                     $configApiManagerType->to(new CallOp(name: 'setClient', arguments: [null])),
                 ]
             ))
-            ->addInstruction(new Assign(
+            ->addInstruction(new AssignOp(
                 subject: ThisContext::to($configApiClientBackupProperty),
                 value: $configApiManagerType->to(new CallOp('getClient')),
             ))
             ->addInstruction($configApiManagerType->to(new CallOp(name: 'setClient', arguments: [null])))
-            ->addInstruction(new Assign(
+            ->addInstruction(new AssignOp(
                 subject: ThisContext::to($configApiClientSpyBuilderProperty),
                 value: new NewOp(
                     class: $configApiSpyBuilderType,
@@ -102,7 +102,7 @@ class TestHelpersScenarioTest extends TestCase
             ->addInstruction(new Condition(
                 condition: new NotOp(new IssetOp(ThisContext::to($configApiClientSpyBuilderProperty))),
                 instructions: [
-                    new Assign(
+                    new AssignOp(
                         subject: ThisContext::to($configApiClientSpyBuilderProperty),
                         value: new NewOp(
                             class: $configApiSpyBuilderType,

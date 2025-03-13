@@ -3,7 +3,11 @@
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesClassReference;
+use CrazyCodeGen\Definition\Base\ProvidesClassType;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -18,7 +22,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ExtendsToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ClassDef extends Tokenizes
+class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassReference
 {
     use FlattenFunction;
     use TokenFunctions;
@@ -26,12 +30,12 @@ class ClassDef extends Tokenizes
     public function __construct(
         public string                        $name,
         public null|string|NamespaceDef      $namespace = null,
-        /** @var string[]|SingleTypeDef[]|MultiTypeDef[]|ImportDef[] $imports */
+        /** @var string[]|ClassTypeDef[]|ImportDef[] $imports */
         public array                         $imports = [],
         public null|string|array|DocBlockDef $docBlock = null,
         public bool                          $abstract = false,
-        public null|string|SingleTypeDef     $extends = null,
-        /** @var string[]|SingleTypeDef[] $implements */
+        public null|string|ClassTypeDef      $extends = null,
+        /** @var string[]|ClassTypeDef[] $implements */
         public array                         $implements = [],
         /** @var string[]|PropertyDef[] $properties */
         public array                         $properties = [],
@@ -42,13 +46,8 @@ class ClassDef extends Tokenizes
         foreach ($this->imports as $importIndex => $import) {
             if (is_string($import)) {
                 $this->imports[$importIndex] = new ImportDef($import);
-            } elseif ($import instanceof SingleTypeDef) {
+            } elseif ($import instanceof ClassTypeDef) {
                 $this->imports[$importIndex] = new ImportDef($import->type);
-            } elseif ($import instanceof MultiTypeDef) {
-                foreach ($import->getAllTypes() as $type) {
-                    $this->imports[] = new ImportDef($type);
-                }
-                unset($this->imports[$importIndex]);
             } elseif (!$import instanceof ImportDef) {
                 unset($this->imports[$importIndex]);
             }
@@ -57,8 +56,8 @@ class ClassDef extends Tokenizes
         $this->setExtends($extends);
         foreach ($this->implements as $implementIndex => $implement) {
             if (is_string($implement)) {
-                $this->implements[$implementIndex] = new SingleTypeDef($implement);
-            } elseif (!$implement instanceof SingleTypeDef) {
+                $this->implements[$implementIndex] = new ClassTypeDef($implement);
+            } elseif (!$implement instanceof ClassTypeDef) {
                 unset($this->implements[$implementIndex]);
             }
         }
@@ -87,16 +86,12 @@ class ClassDef extends Tokenizes
         return $this;
     }
 
-    public function addImport(string|SingleTypeDef|MultiTypeDef|ImportDef $import): self
+    public function addImport(string|ClassTypeDef|ImportDef $import): self
     {
         if (is_string($import)) {
             $this->imports[] = new ImportDef($import);
-        } elseif ($import instanceof SingleTypeDef) {
+        } elseif ($import instanceof ClassTypeDef) {
             $this->imports[] = new ImportDef($import->type);
-        } elseif ($import instanceof MultiTypeDef) {
-            foreach ($import->getAllTypes() as $type) {
-                $this->imports[] = new ImportDef($type);
-            }
         }
         return $this;
     }
@@ -117,10 +112,10 @@ class ClassDef extends Tokenizes
         return $this;
     }
 
-    public function setExtends(null|string|SingleTypeDef $extends): self
+    public function setExtends(null|string|ClassTypeDef $extends): self
     {
         if (is_string($extends)) {
-            $extends = new SingleTypeDef($extends);
+            $extends = new ClassTypeDef($extends);
         }
         $this->extends = $extends;
         return $this;
@@ -176,7 +171,7 @@ class ClassDef extends Tokenizes
             $importsLeft--;
             $tokens[] = $import->getTokens($context, $rules);
             if (!$import->alias) {
-                $context->importedClasses[] = $import->type;
+                $context->importedClasses[] = $import->type->type;
             }
             if ($importsLeft > 0) {
                 $tokens[] = new NewLinesToken($rules->classes->newLinesAfterEachImport);
@@ -420,5 +415,18 @@ class ClassDef extends Tokenizes
         }
         $implementsTokenGroup = new ImplementsDef($this->implements);
         return $implementsTokenGroup->renderChopDownScenario($context, $rules);
+    }
+
+    public function getClassReference(): ClassRefVal
+    {
+        return new ClassRefVal($this->getClassType());
+    }
+
+    public function getClassType(): ClassTypeDef
+    {
+        if ($this->namespace) {
+            return new ClassTypeDef($this->namespace->path . '\\' . $this->name);
+        }
+        return new ClassTypeDef($this->name);
     }
 }

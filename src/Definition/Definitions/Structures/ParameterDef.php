@@ -3,8 +3,10 @@
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Base\ProvidesReference;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeDef;
+use CrazyCodeGen\Definition\Definitions\Structures\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Definitions\Values\StringVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -15,18 +17,22 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ParameterDef extends Tokenizes implements ProvidesReference
+class ParameterDef extends Tokenizes implements ProvidesVariableReference
 {
     use FlattenFunction;
     use TokenFunctions;
+    use TypeInferenceTrait;
 
     public function __construct(
-        public string|Token                           $name,
-        public null|string|SingleTypeDef|MultiTypeDef $type = null,
-        public null|int|float|string|bool|Token       $defaultValue = null,
-        public bool                                   $defaultValueIsNull = false,
-        public bool                                   $isVariadic = false,
+        public string|Token                          $name,
+        public null|string|TypeDef $type = null,
+        public null|int|float|string|bool|Token      $defaultValue = null,
+        public bool                                  $defaultValueIsNull = false,
+        public bool                                  $isVariadic = false,
     ) {
+        if (is_string($this->type)) {
+            $this->type = $this->inferAnyType($this->type);
+        }
     }
 
     /**
@@ -50,9 +56,7 @@ class ParameterDef extends Tokenizes implements ProvidesReference
     public function renderType(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if (is_string($this->type)) {
-            $tokens[] = (new SingleTypeDef(type: $this->type))->getTokens($context, $rules);
-        } elseif (!is_null($this->type)) {
+        if ($this->type) {
             $tokens[] = $this->type->getTokens($context, $rules);
         }
         return $this->flatten($tokens);
@@ -147,7 +151,7 @@ class ParameterDef extends Tokenizes implements ProvidesReference
         return [new SpacesToken($rules->parameters->spacesAfterEquals)];
     }
 
-    public function getReference(): Tokenizes
+    public function getVariableReference(): VariableDef
     {
         return new VariableDef($this->name);
     }
