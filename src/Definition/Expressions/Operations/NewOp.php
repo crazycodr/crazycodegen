@@ -34,14 +34,14 @@ class NewOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownT
     ) {
         if (is_string($this->class)) {
             $this->class = new ClassTypeDef($this->class);
-        } elseif ($this->class instanceof ClassTypeDef) {
-            // Do nothing, already a type
         } elseif ($this->class instanceof ProvidesClassType) {
             $this->class = $this->class->getClassType();
         }
         foreach ($this->arguments as $argumentIndex => $argument) {
             if ($this->isInferableValue($argument)) {
                 $this->arguments[$argumentIndex] = $this->inferValue($argument);
+            } elseif (!$argument instanceof Tokenizes) {
+                unset($this->arguments[$argumentIndex]);
             }
         }
     }

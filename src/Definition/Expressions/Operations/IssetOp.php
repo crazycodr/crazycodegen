@@ -4,6 +4,7 @@ namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
@@ -18,10 +19,10 @@ class IssetOp extends Tokenizes
     use TokenFunctions;
 
     public function __construct(
-        public string|Token|Tokenizes $operand,
+        public string|Tokenizes $operand,
     ) {
         if (is_string($this->operand)) {
-            $this->operand = new Token($this->operand);
+            $this->operand = new Expression($this->operand);
         }
     }
 

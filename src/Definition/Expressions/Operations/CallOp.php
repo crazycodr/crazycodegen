@@ -28,9 +28,8 @@ class CallOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDown
 
     public function __construct(
         public string|Expression|ProvidesCallableReference $subject,
-        public array                            $arguments = [],
-    )
-    {
+        public array                                       $arguments = [],
+    ) {
         if ($this->subject instanceof ProvidesCallableReference) {
             $this->subject = $this->subject->getCallableReference();
         } elseif (is_string($this->subject)) {

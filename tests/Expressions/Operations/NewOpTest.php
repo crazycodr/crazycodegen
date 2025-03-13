@@ -6,10 +6,10 @@ use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +20,7 @@ class NewOpTest extends TestCase
     public function testInlineNewKeywordClassnameAndEmptyParenthesesArePresent()
     {
         $token = new NewOp(
-            class: new Token('foo'),
+            class: new Expression('foo'),
         );
 
         $this->assertEquals(
@@ -76,10 +76,10 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testInlineRendersStringArgumentAsSingleToken()
+    public function testInlineRendersStringArgumentAsSingleExpression()
     {
         $token = new NewOp(
-            class: new Token('foo'),
+            class: new Expression('foo'),
             arguments: [1],
         );
 
@@ -94,7 +94,7 @@ class NewOpTest extends TestCase
     public function testInlineRendersTokenizerArgumentAsExpected()
     {
         $token = new NewOp(
-            class: new Token('foo'),
+            class: new Expression('foo'),
             arguments: [new VariableDef('bar')],
         );
 
@@ -106,11 +106,11 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testInlineRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
+    public function testInlineRendersExpressionsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new NewOp(
-            class: new Token('foo'),
-            arguments: [new Token(1), new Token(2), new Token(3)],
+            class: new Expression('foo'),
+            arguments: [new Expression(1), new Expression(2), new Expression(3)],
         );
 
         $this->assertEquals(
@@ -124,7 +124,7 @@ class NewOpTest extends TestCase
     public function testInlineRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new NewOp(
-            class: new Token('foo'),
+            class: new Expression('foo'),
             arguments: [new VariableDef('bar'), new VariableDef('baz')],
         );
 
@@ -139,7 +139,7 @@ class NewOpTest extends TestCase
     public function testInlineRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions()
     {
         $token = new NewOp(
-            class: new Token('foo'),
+            class: new Expression('foo'),
             arguments: [new ArrayVal([1, 2, 3]), new VariableDef('baz')],
         );
 
@@ -154,7 +154,7 @@ class NewOpTest extends TestCase
     public function testChopDownNewKeywordClassnameAndEmptyParenthesesArePresent()
     {
         $token = new NewOp(
-            class: new Token('foo'),
+            class: new Expression('foo'),
         );
 
         $this->assertEquals(
@@ -210,10 +210,10 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testChopDownRendersStringArgumentAsSingleToken()
+    public function testChopDownRendersStringArgumentAsSingleExpression()
     {
         $token = new NewOp(
-            class: new Token('foo'),
+            class: new Expression('foo'),
             arguments: [1],
         );
 
@@ -230,7 +230,7 @@ class NewOpTest extends TestCase
     public function testChopDownRendersTokenizerArgumentAsExpected()
     {
         $token = new NewOp(
-            class: new Token('foo'),
+            class: new Expression('foo'),
             arguments: [new VariableDef('bar')],
         );
 
@@ -244,11 +244,11 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testChopDownRendersTokensArgumentAsListOfItemsSeparatedByCommasNewLinesAndEverythingIsIndented()
+    public function testChopDownRendersExpressionsArgumentAsListOfItemsSeparatedByCommasNewLinesAndEverythingIsIndented()
     {
         $token = new NewOp(
-            class: new Token('foo'),
-            arguments: [new Token(1), new Token(2), new Token(3)],
+            class: new Expression('foo'),
+            arguments: [new Expression(1), new Expression(2), new Expression(3)],
         );
 
         $this->assertEquals(
@@ -266,7 +266,7 @@ class NewOpTest extends TestCase
     public function testChopDownRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpaces()
     {
         $token = new NewOp(
-            class: new Token('foo'),
+            class: new Expression('foo'),
             arguments: [new VariableDef('bar'), new VariableDef('baz')],
         );
 
@@ -284,7 +284,7 @@ class NewOpTest extends TestCase
     public function testChopDownRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheChopDownVersions()
     {
         $token = new NewOp(
-            class: new Token('foo'),
+            class: new Expression('foo'),
             arguments: [new ArrayVal([1, 2, 3]), new VariableDef('baz')],
         );
 

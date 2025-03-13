@@ -6,11 +6,11 @@ use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -22,9 +22,9 @@ class ChainOpTest extends TestCase
     {
         $token = new ChainOp(
             chain: [
-                new Token('$foo'),
-                new Token('bar'),
-                new Token('baz'),
+                new Expression('$foo'),
+                new Expression('bar'),
+                new Expression('baz'),
             ],
         );
 
@@ -36,7 +36,7 @@ class ChainOpTest extends TestCase
         );
     }
 
-    public function testInlineConvertsStringsToTokens()
+    public function testInlineConvertsStringsToExpressions()
     {
         $token = new ChainOp(
             chain: [
@@ -49,34 +49,6 @@ class ChainOpTest extends TestCase
         $this->assertEquals(
             <<<'EOS'
             $foo->bar->baz
-            EOS,
-            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
-    public function testInlineConvertsTokenToArrayOfTokens()
-    {
-        $token = new ChainOp(
-            chain: new Token('$foo'),
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            $foo
-            EOS,
-            $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
-    public function testInlineConvertsTokenGroupToArrayOfTokenGroups()
-    {
-        $token = new ChainOp(
-            chain: new VariableDef('foo'),
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            $foo
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
@@ -154,9 +126,9 @@ class ChainOpTest extends TestCase
     {
         $token = new ChainOp(
             chain: [
-                new Token('$foo'),
-                new Token('bar'),
-                new Token('baz'),
+                new Expression('$foo'),
+                new Expression('bar'),
+                new Expression('baz'),
             ],
         );
 
@@ -183,34 +155,6 @@ class ChainOpTest extends TestCase
             <<<'EOS'
             $foo->bar
                 ->baz
-            EOS,
-            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
-    public function testChopDownConvertsTokenToArrayOfTokens()
-    {
-        $token = new ChainOp(
-            chain: new Token('$foo'),
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            $foo
-            EOS,
-            $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
-        );
-    }
-
-    public function testChopDownConvertsTokenGroupToArrayOfTokenGroups()
-    {
-        $token = new ChainOp(
-            chain: new VariableDef('foo'),
-        );
-
-        $this->assertEquals(
-            <<<'EOS'
-            $foo
             EOS,
             $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );

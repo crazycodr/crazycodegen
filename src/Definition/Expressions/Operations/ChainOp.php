@@ -25,20 +25,15 @@ class ChainOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDow
     use TokenFunctions;
 
     public function __construct(
-        /** @var string|Token|Tokenizes|string[]|Token[]|Tokenizes[] $chain */
-        public string|array|Token|Tokenizes $chain = [],
+        public array $chain = [],
     ) {
-        if (is_string($this->chain)) {
-            $this->chain = new Token($this->chain);
-        }
-        if (!is_array($this->chain)) {
-            $this->chain = [$this->chain];
-        }
         foreach ($this->chain as $chainItemIndex => $chainItem) {
             if (is_string($chainItem)) {
                 $this->chain[$chainItemIndex] = new Expression($chainItem);
             } elseif ($chainItem instanceof PropertyDef) {
                 $this->chain[$chainItemIndex] = new Expression($chainItem->name);
+            } elseif (!$chainItem instanceof Tokenizes) {
+                unset($this->chain[$chainItemIndex]);
             }
         }
     }

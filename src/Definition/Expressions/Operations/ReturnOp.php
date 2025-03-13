@@ -5,6 +5,7 @@ namespace CrazyCodeGen\Definition\Expressions\Operations;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
@@ -17,10 +18,12 @@ class ReturnOp extends Tokenizes
     use ValueInferenceTrait;
 
     public function __construct(
-        public int|float|string|bool|array|Token|Tokenizes $instruction,
+        public mixed $instruction,
     ) {
         if ($this->isInferableValue($instruction)) {
             $this->instruction = $this->inferValue($this->instruction);
+        } elseif (!$this->instruction instanceof Tokenizes) {
+            $this->instruction = new Expression($this->instruction);
         }
     }
 
