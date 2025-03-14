@@ -2,14 +2,14 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Contexts;
 
-use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
+use CrazyCodeGen\Definition\Base\ShouldBeAccessedStatically;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainToTrait;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\SelfToken;
 
-class SelfContext extends Tokenizes implements DefinesIfStaticallyAccessed, MemberAccessContext
+class SelfContext extends Tokenizes implements ShouldBeAccessedStatically, MemberAccessContext
 {
     use ChainToTrait;
 
@@ -18,7 +18,7 @@ class SelfContext extends Tokenizes implements DefinesIfStaticallyAccessed, Memb
         return [new SelfToken()];
     }
 
-    public function shouldAccessWithStatic(): bool
+    public function isAccessedStatically(): bool
     {
         return true;
     }

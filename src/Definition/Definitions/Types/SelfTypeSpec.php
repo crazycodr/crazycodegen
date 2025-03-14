@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Types;
 
-use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
+use CrazyCodeGen\Definition\Base\ShouldBeAccessedStatically;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -10,7 +10,7 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\SelfToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class SelfTypeSpec extends TypeDef implements DefinesIfStaticallyAccessed, ProvidesClassReference
+class SelfTypeSpec extends TypeDef implements ShouldBeAccessedStatically, ProvidesClassReference
 {
     /**
      * @param RenderContext $context
@@ -22,7 +22,7 @@ class SelfTypeSpec extends TypeDef implements DefinesIfStaticallyAccessed, Provi
         return [new SelfToken()];
     }
 
-    public function shouldAccessWithStatic(): bool
+    public function isAccessedStatically(): bool
     {
         return true;
     }

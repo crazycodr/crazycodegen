@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Types;
 
-use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
+use CrazyCodeGen\Definition\Base\ShouldBeAccessedStatically;
 use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
@@ -16,7 +16,7 @@ use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class ClassTypeDef extends TypeDef implements DefinesIfStaticallyAccessed, ProvidesClassReference, ProvidesCallableReference
+class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, ProvidesClassReference, ProvidesCallableReference
 {
     private null|string $namespace = null;
     private string $shortName;
@@ -58,7 +58,7 @@ class ClassTypeDef extends TypeDef implements DefinesIfStaticallyAccessed, Provi
         return $this->namespace;
     }
 
-    public function shouldAccessWithStatic(): bool
+    public function isAccessedStatically(): bool
     {
         return true;
     }

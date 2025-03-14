@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Definition\Expressions\Operations;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Base\DefinesIfStaticallyAccessed;
+use CrazyCodeGen\Definition\Base\ShouldBeAccessedStatically;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
 use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Definition\Definitions\Contexts\MemberAccessContext;
@@ -157,7 +157,7 @@ class ChainOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDow
 
     private function getProperAccessToken(mixed $concerningTokenGroup): Token
     {
-        if ($concerningTokenGroup instanceof DefinesIfStaticallyAccessed && $concerningTokenGroup->shouldAccessWithStatic()) {
+        if ($concerningTokenGroup instanceof ShouldBeAccessedStatically && $concerningTokenGroup->isAccessedStatically()) {
             return new StaticAccessToken();
         }
         return new MemberAccessToken();
