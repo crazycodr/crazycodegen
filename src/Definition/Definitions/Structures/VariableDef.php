@@ -17,7 +17,7 @@ class VariableDef extends Tokenizes implements ProvidesCallableReference
     use FlattenFunction;
 
     public function __construct(
-        public string|Token $name,
+        public string $name,
     ) {
     }
 
@@ -39,8 +39,8 @@ class VariableDef extends Tokenizes implements ProvidesCallableReference
         return $this->flatten($tokens);
     }
 
-    public function getCallableReference(): Expression
+    public function getCallableReference(): Tokenizes
     {
-        return new Expression($this);
+        return $this;
     }
 }

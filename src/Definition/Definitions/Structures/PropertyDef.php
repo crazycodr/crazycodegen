@@ -11,7 +11,6 @@ use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
-use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
@@ -33,7 +32,7 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference, Provid
     public const UNSET_DEFAULT_VALUE = '@!#UNSET@!#';
 
     public function __construct(
-        public string|Token            $name,
+        public string            $name,
         public null|string|DocBlockDef $docBlock = null,
         public null|string|TypeDef     $type = null,
         public VisibilityEnum          $visibility = VisibilityEnum::PUBLIC,
@@ -188,8 +187,8 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference, Provid
         return new VariableDef($this->name);
     }
 
-    public function getCallableReference(): Expression
+    public function getCallableReference(): Tokenizes
     {
-        return new Expression($this->getVariableReference());
+        return $this->getVariableReference();
     }
 }

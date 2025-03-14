@@ -1,4 +1,4 @@
-7<?php
+<?php
 
 namespace CrazyCodeGen\Definition\Expressions\Operations;
 

@@ -28,10 +28,11 @@ class NewOp extends Tokenizes implements ProvidesInlineTokens, ProvidesChopDownT
     use ValueInferenceTrait;
 
     public function __construct(
-        public string|Token|Tokenizes|ClassTypeDef|ClassDef $class,
+        public string|Tokenizes|ClassTypeDef|ClassDef $class,
         /** @var array|Tokenizes[] $arguments */
-        public array                                        $arguments = [],
-    ) {
+        public array                                  $arguments = [],
+    )
+    {
         if (is_string($this->class)) {
             $this->class = new ClassTypeDef($this->class);
         } elseif ($this->class instanceof ProvidesClassType) {

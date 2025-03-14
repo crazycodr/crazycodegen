@@ -9,7 +9,6 @@ use CrazyCodeGen\Definition\Base\ProvidesClassType;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
-use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -432,7 +431,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
         return new ClassTypeDef($this->name);
     }
 
-    public function getCallableReference(): Expression
+    public function getCallableReference(): Tokenizes
     {
         return $this->getClassType()->getCallableReference();
     }

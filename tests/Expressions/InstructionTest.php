@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Tests\Expressions;
 
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -18,9 +19,9 @@ class InstructionTest extends TestCase
 
     public function testSingleTokenIsRenderedWithTrailingSemiColon()
     {
-        $token = new Instruction(
-            new Token(1),
-        );
+        $token = new Instruction([
+            new Expression(1),
+        ]);
 
         $this->assertEquals(
             <<<'EOS'
@@ -32,9 +33,9 @@ class InstructionTest extends TestCase
 
     public function testTokenGroupIsRenderedWithTrailingSemiColon()
     {
-        $token = new Instruction(
+        $token = new Instruction([
             new BuiltInTypeSpec('int'),
-        );
+        ]);
 
         $this->assertEquals(
             <<<'EOS'
@@ -46,9 +47,9 @@ class InstructionTest extends TestCase
 
     public function testArrayOfTokensIsReturnedAsIsWithTrailingSemiColon()
     {
-        $token = new Instruction(
-            [new Token(1), new CommaToken(), new Token(2)],
-        );
+        $token = new Instruction([
+            new Expression('1,2'),
+        ]);
 
         $this->assertEquals(
             <<<'EOS'
@@ -60,9 +61,9 @@ class InstructionTest extends TestCase
 
     public function testMixOfTokensAndTokenGroupsIsRenderedWithTrailingSemiColon()
     {
-        $token = new Instruction(
-            [new Token(1), new SpacesToken(), new BuiltInTypeSpec('string')],
-        );
+        $token = new Instruction([
+            new Expression('1 string'),
+        ]);
 
         $this->assertEquals(
             <<<'EOS'

@@ -9,14 +9,13 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
-class Instruction extends Expression
+class Instruction extends Tokenizes
 {
     use FlattenFunction;
 
-    /** @noinspection PhpMissingParentConstructorInspection */
     public function __construct(
-        /** @var string|Token[]|Token|Tokenizes */
-        public string|array|Token|Tokenizes $instructions,
+        /** @var string|Tokenizes[] */
+        public string|array $expressions,
     ) {
     }
 
@@ -28,7 +27,9 @@ class Instruction extends Expression
     public function getTokens(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        $tokens = array_merge($tokens, parent::getTokens($context, $rules));
+        foreach ($this->expressions as $expression) {
+            $tokens[] = $expression->getTokens($context, $rules);
+        }
         $tokens[] = new SemiColonToken();
         return $this->flatten($tokens);
     }

@@ -28,7 +28,7 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     use TypeInferenceTrait;
 
     public function __construct(
-        public string|Token                          $name,
+        public string                          $name,
         public null|NamespaceDef                     $namespace = null,
         public null|string|DocBlockDef               $docBlock = null,
         public null|ParameterListDef                 $arguments = null,
@@ -213,7 +213,7 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
         return $tokens;
     }
 
-    public function getCallableReference(): Expression
+    public function getCallableReference(): Tokenizes
     {
         return new Expression($this->name);
     }

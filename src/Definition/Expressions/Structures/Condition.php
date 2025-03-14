@@ -35,7 +35,7 @@ class Condition extends Tokenizes implements ShouldNotBeNestedIntoInstruction
         }
         foreach ($this->instructions as $instructionIndex => $instruction) {
             if (!$instruction instanceof Instruction) {
-                $this->instructions[$instructionIndex] = new Instruction($instruction);
+                $this->instructions[$instructionIndex] = new Instruction([$instruction]);
             }
         }
     }

@@ -421,7 +421,7 @@ class ArrayValTest extends TestCase
     public function testTokenGroupValuesAreRenderedIn()
     {
         $token = new ArrayVal([
-            'this' => new Expression([new Token(1), new PlusToken(), new Token(2)]),
+            'this' => new Expression('1+2'),
         ]);
 
         $rules = $this->getRenderingRules();
@@ -440,7 +440,7 @@ class ArrayValTest extends TestCase
     public function testTokenValuesAreSimplyReused()
     {
         $token = new ArrayVal([
-            'this' => new Token('$someDirectIdentifier'),
+            'this' => new Expression('$someDirectIdentifier'),
         ]);
 
         $rules = $this->getRenderingRules();

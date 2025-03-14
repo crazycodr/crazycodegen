@@ -19,7 +19,7 @@ class PropertyDefTest extends TestCase
     public function testRendersVisibilityAndNameWithSpaces()
     {
         $token = new PropertyDef(
-            name: new Token('foo'),
+            name: 'foo',
         );
 
         $rules = $this->getTestRules();
@@ -63,7 +63,7 @@ class PropertyDefTest extends TestCase
     public function testDifferentVisibilityPropertyRendered()
     {
         $token = new PropertyDef(
-            name: new Token('foo'),
+            name: 'foo',
             visibility: VisibilityEnum::PROTECTED,
         );
 
@@ -80,7 +80,7 @@ class PropertyDefTest extends TestCase
     public function testRendersStaticModifierWithSpaces()
     {
         $token = new PropertyDef(
-            name: new Token('foo'),
+            name: 'foo',
             static: true
         );
 
@@ -98,7 +98,7 @@ class PropertyDefTest extends TestCase
     public function testRendersTypeWithSpaces()
     {
         $token = new PropertyDef(
-            name: new Token('foo'),
+            name: 'foo',
             type: 'int'
         );
 
@@ -116,7 +116,7 @@ class PropertyDefTest extends TestCase
     public function testRendersComplexTypeAsExpected()
     {
         $token = new PropertyDef(
-            name: new Token('foo'),
+            name: 'foo',
             type: new MultiTypeDef(types: ['int', 'string', 'bool'])
         );
 
@@ -133,7 +133,7 @@ class PropertyDefTest extends TestCase
     public function testDefaultValueRendersAfterNameWithExpectedSpaces()
     {
         $token = new PropertyDef(
-            name: new Token('foo'),
+            name: 'foo',
             defaultValue: 'Hello world'
         );
 
@@ -152,7 +152,7 @@ class PropertyDefTest extends TestCase
     public function testContextPaddingIsRespectedOverRules()
     {
         $token = new PropertyDef(
-            name: new Token('foo'),
+            name: 'foo',
             type: 'int',
             visibility: VisibilityEnum::PROTECTED,
             static: true,
@@ -177,7 +177,7 @@ class PropertyDefTest extends TestCase
     public function testContextPaddingRendersAtLeastOneSpaceEvenIfSmallerToNotCreateInvalidCode()
     {
         $token = new PropertyDef(
-            name: new Token('foo'),
+            name: 'foo',
             type: 'int',
             visibility: VisibilityEnum::PROTECTED,
             static: true,

@@ -112,12 +112,12 @@ class ConditionTest extends TestCase
             condition: new Expression('true'),
             instructions: [
                 new Instruction(
-                    instructions: [
+                    expressions: [
                         new Expression('1 === (1*3)'),
                     ]
                 ),
                 new Instruction(
-                    instructions: [
+                    expressions: [
                         new ReturnOp(1),
                     ]
                 ),

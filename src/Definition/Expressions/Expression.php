@@ -13,9 +13,9 @@ class Expression extends Tokenizes
     use FlattenFunction;
 
     public function __construct(
-        /** @var string|Token[]|Token|Tokenizes */
-        public string|array|Token|Tokenizes $instructions,
-    ) {
+        public string $expression,
+    )
+    {
     }
 
     /**
@@ -26,21 +26,7 @@ class Expression extends Tokenizes
     public function getTokens(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if ($this->instructions instanceof Tokenizes) {
-            $tokens[] = $this->instructions->getTokens($context, $rules);
-        } elseif ($this->instructions instanceof Token) {
-            $tokens[] = $this->instructions;
-        } elseif (is_string($this->instructions)) {
-            $tokens[] = new Token($this->instructions);
-        } else {
-            foreach ($this->instructions as $instruction) {
-                if ($instruction instanceof Tokenizes) {
-                    $tokens[] = $instruction->getTokens($context, $rules);
-                } else {
-                    $tokens[] = $instruction;
-                }
-            }
-        }
+        $tokens[] = new Token($this->expression);
         return $this->flatten($tokens);
     }
 }

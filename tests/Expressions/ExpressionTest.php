@@ -19,7 +19,7 @@ class ExpressionTest extends TestCase
     public function testSingleTokenIsRenderedAsExpected()
     {
         $token = new Expression(
-            new Token(1),
+            1,
         );
 
         $this->assertEquals(
@@ -32,9 +32,7 @@ class ExpressionTest extends TestCase
 
     public function testTokenGroupIsRenderedAsExpected()
     {
-        $token = new Expression(
-            new BuiltInTypeSpec('int'),
-        );
+        $token = new Expression('int');
 
         $this->assertEquals(
             <<<'EOS'
@@ -44,11 +42,9 @@ class ExpressionTest extends TestCase
         );
     }
 
-    public function testArrayOfTokensIsReturnedAsIs()
+    public function testArrayOfValuesIsReturnedAsIs()
     {
-        $token = new Expression(
-            [new Token(1), new CommaToken(), new Token(2)],
-        );
+        $token = new Expression('1,2');
 
         $this->assertEquals(
             <<<'EOS'
@@ -60,9 +56,7 @@ class ExpressionTest extends TestCase
 
     public function testMixOfTokensAndTokenGroupsIsRendered()
     {
-        $token = new Expression(
-            [new Token(1), new SpacesToken(), new BuiltInTypeSpec('string')],
-        );
+        $token = new Expression('1 string');
 
         $this->assertEquals(
             <<<'EOS'

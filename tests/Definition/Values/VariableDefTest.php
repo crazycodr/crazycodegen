@@ -21,16 +21,6 @@ class VariableDefTest extends TestCase
         );
     }
 
-    public function testStringNameIsTransformedIntoIdentifierAndRendered()
-    {
-        $token = new VariableDef($name = new Token('foo'));
-
-        $this->assertEquals(
-            $name,
-            $token->getTokens(new RenderContext(), new RenderingRules())[1]
-        );
-    }
-
     public function testVariableNameIsRenderedNext()
     {
         $token = new VariableDef('foo');

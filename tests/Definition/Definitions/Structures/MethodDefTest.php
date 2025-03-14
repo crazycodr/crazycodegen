@@ -7,6 +7,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
+use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
@@ -726,26 +727,14 @@ class MethodDefTest extends TestCase
             name: 'myFunction',
             instructions: [
                 new Instruction(
-                    instructions: [
-                        new Token(1),
-                        new SpacesToken(),
-                        new Token('==='),
-                        new SpacesToken(),
-                        [
-                            new ParStartToken(),
-                            new Token(1),
-                            new AsteriskToken(),
-                            new Token(3),
-                            new ParEndToken(),
-                        ],
-                    ]
+                    expressions: [
+                        new Expression('1 === (1*3)')
+                    ],
                 ),
                 new Instruction(
-                    instructions: [
-                        new Token('return'),
-                        new SpacesToken(),
-                        new Token(1),
-                    ]
+                    expressions: [
+                        new Expression('return 1'),
+                    ],
                 ),
             ],
         );

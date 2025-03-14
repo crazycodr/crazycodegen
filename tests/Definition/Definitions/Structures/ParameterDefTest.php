@@ -19,7 +19,7 @@ class ParameterDefTest extends TestCase
     public function testRendersNameAsExpectedWithoutSpacesAround()
     {
         $token = new ParameterDef(
-            new Token('foo')
+            'foo'
         );
 
         $rules = new RenderingRules();
@@ -36,7 +36,7 @@ class ParameterDefTest extends TestCase
     public function testAddsTypeInFrontOfIdentifierAndSeparatesWithSpace()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
             new BuiltInTypeSpec('int'),
         );
 
@@ -54,7 +54,7 @@ class ParameterDefTest extends TestCase
     public function testAddsDefaultValueAfterIdentifierWithSpaceBetweenIdentifierAndEqual()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
             defaultValue: 123,
         );
 
@@ -72,7 +72,7 @@ class ParameterDefTest extends TestCase
     public function testAddsDefaultValueWithSingleQuotesIfString()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
             defaultValue: 'Hello World',
         );
 
@@ -90,7 +90,7 @@ class ParameterDefTest extends TestCase
     public function testAddsDefaultValueWithStringRepresentationIfBool()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
             defaultValue: true,
         );
 
@@ -108,7 +108,7 @@ class ParameterDefTest extends TestCase
     public function testAddsTheConfiguredSpacesBetweenTypeAndIdentifierAsPerRules()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
             new BuiltInTypeSpec('int'),
         );
 
@@ -126,7 +126,7 @@ class ParameterDefTest extends TestCase
     public function testAddsTheConfiguredChopDownSpacesByPaddingTypeProperly()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
             new BuiltInTypeSpec('int'),
         );
 
@@ -148,7 +148,7 @@ class ParameterDefTest extends TestCase
     public function testAddsTheConfiguredChopDownSpacesByPaddingTypeProperlyEvenIfThereIsNoType()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
         );
 
         $rules = new RenderingRules();
@@ -169,7 +169,7 @@ class ParameterDefTest extends TestCase
     public function testAddsTheConfiguredSpacesBetweenIdentifierAndEqualsAsPerRules()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
             defaultValue: 123,
         );
 
@@ -187,7 +187,7 @@ class ParameterDefTest extends TestCase
     public function testAddsTheConfiguredChopDownSpacesByPaddingIdentifier()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
             defaultValue: 123,
         );
 
@@ -209,7 +209,7 @@ class ParameterDefTest extends TestCase
     public function testWhenTypePaddingIsLessThanTypeAtLeastOneSpaceIsAdded()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
             new ClassTypeDef('reallyLongType'),
         );
 
@@ -231,7 +231,7 @@ class ParameterDefTest extends TestCase
     public function testWhenIdentifierPaddingIsLessThanIdentifierAtLeastOneSpaceIsAdded()
     {
         $token = new ParameterDef(
-            new Token('reallyLongIdentifier'),
+            'reallyLongIdentifier',
             defaultValue: 123,
         );
 
@@ -253,7 +253,7 @@ class ParameterDefTest extends TestCase
     public function testWhenVariadicExpansionTokenAppearBeforeVariable()
     {
         $token = new ParameterDef(
-            new Token('reallyLongIdentifier'),
+            'reallyLongIdentifier',
             isVariadic: true,
         );
 
@@ -266,7 +266,7 @@ class ParameterDefTest extends TestCase
     public function testPaddingOnIdentifierTakesVariadicExpansionTokenIntoAccount()
     {
         $token = new ParameterDef(
-            new Token('foo'),
+            'foo',
             defaultValue: 123,
             isVariadic: true,
         );

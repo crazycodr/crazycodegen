@@ -34,16 +34,17 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
     use TypeInferenceTrait;
 
     public function __construct(
-        public string                                $name,
-        public null|string|array|DocBlockDef         $docBlock = null,
-        public bool                                  $abstract = false,
-        public VisibilityEnum                        $visibility = VisibilityEnum::PUBLIC,
-        public bool                                  $static = false,
-        public null|ParameterListDef                 $parameters = null,
-        public null|string|TypeDef $returnType = null,
-        /** @var Token|Tokenizes|Token[]|Tokenizes[] $instructions */
-        public array|Token|Tokenizes                 $instructions = [],
-    ) {
+        public string                        $name,
+        public null|string|array|DocBlockDef $docBlock = null,
+        public bool                          $abstract = false,
+        public VisibilityEnum                $visibility = VisibilityEnum::PUBLIC,
+        public bool                          $static = false,
+        public null|ParameterListDef         $parameters = null,
+        public null|string|TypeDef           $returnType = null,
+        /** @var Tokenizes[] $instructions */
+        public array                         $instructions = [],
+    )
+    {
         $this->setDocBlock($docBlock);
         $this->setReturnType($returnType);
     }
@@ -57,7 +58,7 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
         if (is_string($docBlock)) {
             $docBlock = new DocBlockDef([$docBlock]);
         } elseif (is_array($docBlock)) {
-            $docBlock = array_filter($docBlock, fn ($value) => is_string($value));
+            $docBlock = array_filter($docBlock, fn($value) => is_string($value));
             $docBlock = new DocBlockDef($docBlock);
         }
         $this->docBlock = $docBlock;
@@ -110,7 +111,7 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
         } elseif ($instruction instanceof ShouldNotBeNestedIntoInstruction) {
             $this->instructions[] = $instruction;
         } elseif (!$instruction instanceof Instruction) {
-            $this->instructions[] = new Instruction($instruction);
+            $this->instructions[] = new Instruction([$instruction]);
         } else {
             $this->instructions[] = $instruction;
         }
@@ -331,7 +332,7 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
         return $tokens;
     }
 
-    public function getCallableReference(): Expression
+    public function getCallableReference(): Tokenizes
     {
         return new Expression($this->name);
     }
