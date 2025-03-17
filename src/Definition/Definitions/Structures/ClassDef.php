@@ -2,7 +2,10 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Common\Exceptions\InvalidIdentifierFormatException;
+use CrazyCodeGen\Common\Models\ConversionRule;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Common\Traits\ValidationTrait;
 use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassType;
@@ -27,7 +30,11 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
 {
     use FlattenFunction;
     use TokenFunctions;
+    use ValidationTrait;
 
+    /**
+     * @throws InvalidIdentifierFormatException
+     */
     public function __construct(
         public string                        $name,
         public null|string|NamespaceDef      $namespace = null,
@@ -44,38 +51,26 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
         public array                         $methods = [],
     ) {
         $this->setNamespace($namespace);
-        foreach ($this->imports as $importIndex => $import) {
-            if (is_string($import)) {
-                $this->imports[$importIndex] = new ImportDef($import);
-            } elseif ($import instanceof ClassTypeDef) {
-                $this->imports[$importIndex] = new ImportDef($import->type);
-            } elseif (!$import instanceof ImportDef) {
-                unset($this->imports[$importIndex]);
-            }
-        }
+        $this->imports = $this->convertAndDropNonCompliantValues($this->imports, [
+            new ConversionRule(inputType: 'string', outputType: ImportDef::class),
+            new ConversionRule(inputType: ClassTypeDef::class, outputType: ImportDef::class, propertyPaths: ['type']),
+            new ConversionRule(inputType: ImportDef::class),
+        ]);
         $this->setDocBlock($docBlock);
+        $this->setName($name);
         $this->setExtends($extends);
-        foreach ($this->implements as $implementIndex => $implement) {
-            if (is_string($implement)) {
-                $this->implements[$implementIndex] = new ClassTypeDef($implement);
-            } elseif (!$implement instanceof ClassTypeDef) {
-                unset($this->implements[$implementIndex]);
-            }
-        }
-        foreach ($this->properties as $propertyIndex => $property) {
-            if (is_string($property)) {
-                $this->properties[$propertyIndex] = new PropertyDef($property);
-            } elseif (!$property instanceof PropertyDef) {
-                unset($this->properties[$propertyIndex]);
-            }
-        }
-        foreach ($this->methods as $methodIndex => $method) {
-            if (is_string($method)) {
-                $this->methods[$methodIndex] = new MethodDef($method);
-            } elseif (!$method instanceof MethodDef) {
-                unset($this->methods[$methodIndex]);
-            }
-        }
+        $this->implements = $this->convertAndDropNonCompliantValues($this->implements, [
+            new ConversionRule(inputType: 'string', outputType: ClassTypeDef::class),
+            new ConversionRule(inputType: ClassTypeDef::class),
+        ]);
+        $this->properties = $this->convertAndDropNonCompliantValues($this->properties, [
+            new ConversionRule(inputType: 'string', outputType: PropertyDef::class),
+            new ConversionRule(inputType: PropertyDef::class),
+        ]);
+        $this->methods = $this->convertAndDropNonCompliantValues($this->methods, [
+            new ConversionRule(inputType: 'string', outputType: MethodDef::class),
+            new ConversionRule(inputType: MethodDef::class),
+        ]);
     }
 
     public function setNamespace(null|string|NamespaceDef $namespace): self
@@ -110,6 +105,16 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
             $docBlock = new DocBlockDef($docBlock);
         }
         $this->docBlock = $docBlock;
+        return $this;
+    }
+
+    /**
+     * @throws InvalidIdentifierFormatException
+     */
+    public function setName(string $name): self
+    {
+        $this->assertIsValidIdentifier($name);
+        $this->name = $name;
         return $this;
     }
 

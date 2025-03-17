@@ -15,8 +15,13 @@ class Instruction extends Tokenizes
 
     public function __construct(
         /** @var string|Tokenizes[] */
-        public string|array $expressions,
+        public string|array|Tokenizes $expressions,
     ) {
+        if ($this->expressions instanceof Tokenizes) {
+            $this->expressions = [$this->expressions];
+        } elseif (is_string($this->expressions)) {
+            $this->expressions = [new Expression($this->expressions)];
+        }
     }
 
     /**

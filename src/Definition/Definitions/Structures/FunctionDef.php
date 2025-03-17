@@ -2,12 +2,23 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Common\Exceptions\InvalidIdentifierFormatException;
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Common\Traits\ValidationTrait;
 use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
+use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Traits\HasDocBlockTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasInstructionsTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasNamespaceTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasNameTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasParametersTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasReturnTypeTrait;
 use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -26,18 +37,37 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     use FlattenFunction;
     use TokenFunctions;
     use TypeInferenceTrait;
+    use ValidationTrait;
 
+    // Property helpers
+    use HasNamespaceTrait;
+    use HasDocBlockTrait;
+    use HasNameTrait;
+    use HasParametersTrait;
+    use HasReturnTypeTrait;
+    use HasInstructionsTrait;
+
+    /**
+     * @throws InvalidIdentifierFormatException
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function __construct(
-        public string                          $name,
-        public null|NamespaceDef                     $namespace = null,
-        public null|string|DocBlockDef               $docBlock = null,
-        public null|ParameterListDef                 $arguments = null,
-        public null|string|TypeDef $returnType = null,
-        public null|array                            $bodyInstructions = null,
-    ) {
-        if (is_string($this->returnType)) {
-            $this->returnType = $this->inferType($this->returnType);
-        }
+        string                        $name,
+        null|string|NamespaceDef      $namespace = null,
+        null|string|array|DocBlockDef $docBlock = null,
+        /** @var string[]|ParameterDef[] $parameters */
+        array                         $parameters = [],
+        null|string|TypeDef           $returnType = null,
+        /** @var NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions */
+        array                         $instructions = [],
+    )
+    {
+        $this->setNamespace($namespace);
+        $this->setDocBlock($docBlock);
+        $this->setName($name);
+        $this->setParameters($parameters);
+        $this->setReturnType($returnType);
+        $this->setInstructions($instructions);
     }
 
     /**
@@ -80,8 +110,8 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     {
         $tokens = [];
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
-        if ($this->arguments) {
-            $tokens[] = $this->arguments->getTokens($context, $rules);
+        if ($this->parameters) {
+            $tokens[] = $this->parameters->getTokens($context, $rules);
         } else {
             $tokens[] = (new ParameterListDef())->getTokens($context, $rules);
         }
@@ -187,8 +217,8 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     {
         $tokens = [];
         $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
-        if ($this->arguments) {
-            $tokens[] = $this->arguments->getChopDownTokens($context, $rules);
+        if ($this->parameters) {
+            $tokens[] = $this->parameters->getChopDownTokens($context, $rules);
         } else {
             $tokens[] = (new ParameterListDef())->getChopDownTokens($context, $rules);
         }

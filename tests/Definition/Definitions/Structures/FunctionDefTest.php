@@ -5,7 +5,6 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\FunctionDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -114,13 +113,11 @@ class FunctionDefTest extends TestCase
     {
         $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDef(
-                parameters: [
-                    new ParameterDef(name: 'foo'),
-                    new ParameterDef(name: 'bar', type: 'int'),
-                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
-                ]
-            )
+            parameters: [
+                new ParameterDef(name: 'foo'),
+                new ParameterDef(name: 'bar', type: 'int'),
+                new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
+            ]
         );
 
         $rules = $this->getTestRules();
@@ -368,13 +365,11 @@ class FunctionDefTest extends TestCase
     {
         $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDef(
-                parameters: [
-                    new ParameterDef(name: 'foo'),
-                    new ParameterDef(name: 'bar', type: 'int'),
-                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
-                ]
-            )
+            parameters: [
+                new ParameterDef(name: 'foo'),
+                new ParameterDef(name: 'bar', type: 'int'),
+                new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
+            ]
         );
 
         $rules = $this->getTestRules();
@@ -495,13 +490,11 @@ class FunctionDefTest extends TestCase
     {
         $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDef(
-                parameters: [
-                    new ParameterDef(name: 'foo'),
-                    new ParameterDef(name: 'bar', type: 'int'),
-                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
-                ]
-            )
+            parameters: [
+                new ParameterDef(name: 'foo'),
+                new ParameterDef(name: 'bar', type: 'int'),
+                new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
+            ]
         );
 
         $rules = $this->getTestRules();
@@ -522,13 +515,11 @@ class FunctionDefTest extends TestCase
     {
         $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDef(
-                parameters: [
-                    new ParameterDef(name: 'foo'),
-                    new ParameterDef(name: 'bar', type: 'int'),
-                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
-                ]
-            )
+            parameters: [
+                new ParameterDef(name: 'foo'),
+                new ParameterDef(name: 'bar', type: 'int'),
+                new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
+            ]
         );
 
         $rules = $this->getTestRules();
@@ -548,13 +539,11 @@ class FunctionDefTest extends TestCase
     {
         $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDef(
-                parameters: [
-                    new ParameterDef(name: 'foo'),
-                    new ParameterDef(name: 'bar', type: 'int'),
-                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
-                ]
-            )
+            parameters: [
+                new ParameterDef(name: 'foo'),
+                new ParameterDef(name: 'bar', type: 'int'),
+                new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
+            ]
         );
 
         $rules = $this->getTestRules();
@@ -578,13 +567,11 @@ class FunctionDefTest extends TestCase
     {
         $token = new FunctionDef(
             name: 'myFunction',
-            arguments: new ParameterListDef(
-                parameters: [
-                    new ParameterDef(name: 'foo'),
-                    new ParameterDef(name: 'bar', type: 'int'),
-                    new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
-                ]
-            )
+            parameters: [
+                new ParameterDef(name: 'foo'),
+                new ParameterDef(name: 'bar', type: 'int'),
+                new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
+            ]
         );
 
         $rules = $this->getTestRules();
@@ -636,14 +623,12 @@ class FunctionDefTest extends TestCase
         $token = new FunctionDef(
             name: 'myFunction',
             docBlock: new DocBlockDef(['This is a docblock that should be wrapped and displayed before the function.']),
-            arguments: new ParameterListDef(
-                parameters: [
-                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
-                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
-                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
-                    new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
-                ],
-            ),
+            parameters: [
+                new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments1', type: 'int'),
+                new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments2', type: 'int'),
+                new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments3', type: 'int'),
+                new ParameterDef(name: 'longTokenThatWillContributeToWrappingArguments4', type: 'int'),
+            ],
             returnType: 'int',
         );
 

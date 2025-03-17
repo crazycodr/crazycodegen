@@ -3,10 +3,18 @@
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
+use CrazyCodeGen\Common\Exceptions\InvalidIdentifierFormatException;
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Traits\HasDocBlockTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasInstructionsTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasModifiersTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasNameTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasParametersTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasReturnTypeTrait;
 use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Expressions\Expression;
@@ -33,89 +41,39 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
     use TokenFunctions;
     use TypeInferenceTrait;
 
+    // Property helpers
+    use HasDocBlockTrait;
+    use HasModifiersTrait;
+    use HasNameTrait;
+    use HasParametersTrait;
+    use HasReturnTypeTrait;
+    use HasInstructionsTrait;
+
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     * @throws InvalidIdentifierFormatException
+     */
     public function __construct(
-        public string                        $name,
-        public null|string|array|DocBlockDef $docBlock = null,
-        public bool                          $abstract = false,
-        public VisibilityEnum                $visibility = VisibilityEnum::PUBLIC,
-        public bool                          $static = false,
-        public null|ParameterListDef         $parameters = null,
-        public null|string|TypeDef           $returnType = null,
-        /** @var Tokenizes[] $instructions */
-        public array                         $instructions = [],
+        string                        $name,
+        null|string|array|DocBlockDef $docBlock = null,
+        bool                          $abstract = false,
+        VisibilityEnum                $visibility = VisibilityEnum::PUBLIC,
+        bool                          $static = false,
+        /** @var string[]|ParameterDef[] $parameters */
+        array                         $parameters = [],
+        null|string|TypeDef           $returnType = null,
+        /** @var NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions */
+        array                         $instructions = [],
     )
     {
         $this->setDocBlock($docBlock);
+        $this->setAbstract($abstract);
+        $this->setVisibility($visibility);
+        $this->setStatic($static);
+        $this->setName($name);
+        $this->setParameters($parameters);
         $this->setReturnType($returnType);
-    }
-
-    /**
-     * @param string|string[]|DocBlockDef $docBlock
-     * @return $this
-     */
-    public function setDocBlock(null|string|array|DocBlockDef $docBlock): self
-    {
-        if (is_string($docBlock)) {
-            $docBlock = new DocBlockDef([$docBlock]);
-        } elseif (is_array($docBlock)) {
-            $docBlock = array_filter($docBlock, fn($value) => is_string($value));
-            $docBlock = new DocBlockDef($docBlock);
-        }
-        $this->docBlock = $docBlock;
-        return $this;
-    }
-
-    public function setAbstract(bool $isAbstract): self
-    {
-        $this->abstract = $isAbstract;
-        return $this;
-    }
-
-    public function setVisibility(VisibilityEnum $visibility): self
-    {
-        $this->visibility = $visibility;
-        return $this;
-    }
-
-    public function setStatic(bool $isStatic): self
-    {
-        $this->static = $isStatic;
-        return $this;
-    }
-
-    public function addParameter(string|ParameterDef $parameter): self
-    {
-        if ($this->parameters === null) {
-            $this->parameters = new ParameterListDef();
-        }
-        if (is_string($parameter)) {
-            $parameter = new ParameterDef($parameter);
-        }
-        $this->parameters->parameters[] = $parameter;
-        return $this;
-    }
-
-    public function setReturnType(null|string|TypeDef $type): self
-    {
-        if (is_string($type)) {
-            $type = $this->inferType($type);
-        }
-        $this->returnType = $type;
-        return $this;
-    }
-
-    public function addInstruction(NewLinesToken|Tokenizes|ShouldNotBeNestedIntoInstruction|Instruction $instruction): self
-    {
-        if ($instruction instanceof NewLinesToken) {
-            $this->instructions[] = $instruction;
-        } elseif ($instruction instanceof ShouldNotBeNestedIntoInstruction) {
-            $this->instructions[] = $instruction;
-        } elseif (!$instruction instanceof Instruction) {
-            $this->instructions[] = new Instruction([$instruction]);
-        } else {
-            $this->instructions[] = $instruction;
-        }
-        return $this;
+        $this->setInstructions($instructions);
     }
 
     /**

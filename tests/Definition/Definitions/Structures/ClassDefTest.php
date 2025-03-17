@@ -23,7 +23,7 @@ class ClassDefTest extends TestCase
 {
     use TokenFunctions;
 
-    public function testFunctionKeywordIsRendered()
+    public function testClassKeywordIsRendered()
     {
         $token = new ClassDef(
             name: 'myClass',
@@ -39,49 +39,6 @@ class ClassDefTest extends TestCase
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
-    }
-
-    private function getBaseTestingRules(): RenderingRules
-    {
-        $newRules = new RenderingRules();
-        $newRules->lineLength = 120;
-        $newRules->docBlocks->lineLength = 80;
-        $newRules->parameterLists->spacesAfterSeparator = 1;
-        $newRules->parameterLists->addSeparatorToLastItem = true;
-        $newRules->parameterLists->padTypes = true;
-        $newRules->parameterLists->padIdentifiers = true;
-        $newRules->classes->extendsOnNextLine = WrappingDecision::IF_TOO_LONG;
-        $newRules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
-        $newRules->classes->implementsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
-        $newRules->classes->spacesAfterImplements = 1;
-        $newRules->classes->spacesAfterImplementSeparator = 1;
-        $newRules->classes->openingBrace = BracePositionEnum::DIFF_LINE;
-        $newRules->classes->closingBrace = BracePositionEnum::DIFF_LINE;
-        $newRules->classes->spacesBeforeOpeningBrace = 1;
-        $newRules->classes->newLinesAfterDocBlock = 1;
-        $newRules->classes->newLinesAfterEachImport = 1;
-        $newRules->classes->newLinesAfterAllImports = 2;
-        $newRules->classes->newLinesAfterEachProperty = 1;
-        $newRules->classes->newLinesAfterProperties = 2;
-        $newRules->classes->newLinesAfterEachMethod = 2;
-        $newRules->classes->newLinesAfterClosingBrace = 0;
-        $newRules->methods->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
-        $newRules->methods->openingBrace = BracePositionEnum::DIFF_LINE;
-        $newRules->methods->closingBrace = BracePositionEnum::DIFF_LINE;
-        $newRules->methods->spacesAfterAbstract = 1;
-        $newRules->methods->spacesAfterVisibility = 1;
-        $newRules->methods->spacesAfterStatic = 1;
-        $newRules->methods->spacesAfterFunction = 1;
-        $newRules->methods->spacesAfterIdentifier = 0;
-        $newRules->methods->spacesAfterArguments = 0;
-        $newRules->methods->spacesAfterReturnColon = 1;
-        $newRules->methods->spacesBeforeOpeningBrace = 1;
-        $newRules->properties->spacesAfterVisibility = 1;
-        $newRules->properties->spacesAfterStatic = 1;
-        $newRules->properties->spacesAfterType = 1;
-        $newRules->properties->spacesAfterIdentifier = 1;
-        $newRules->properties->spacesAfterEquals = 1;
-        return $newRules;
     }
 
     public function testClassNameIsRendered()
@@ -125,7 +82,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            namespace: new NamespaceDef('CrazyCodeGen\\Tests'),
+            namespace: new NamespaceDef('CrazyCodeGen\Tests'),
         );
 
         $rules = $this->getBaseTestingRules();
@@ -147,8 +104,8 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             imports: [
-                new ImportDef('CrazyCodeGen\\Tests\\Tests1'),
-                'CrazyCodeGen\\Tests\\Test2',
+                new ImportDef('CrazyCodeGen\Tests\Tests1'),
+                'CrazyCodeGen\Tests\Test2',
             ]
         );
 
@@ -178,31 +135,29 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             imports: [
-                new ImportDef('CrazyCodeGen\\Tests\\Test1'),
-                'CrazyCodeGen\\Tests\\Test2',
+                new ImportDef('CrazyCodeGen\Tests\Test1'),
+                'CrazyCodeGen\Tests\Test2',
             ],
             properties: [
                 new PropertyDef(
                     name: 'prop1',
-                    type: new ClassTypeDef(type: 'CrazyCodeGen\\Tests\\Test1'),
+                    type: new ClassTypeDef(type: 'CrazyCodeGen\Tests\Test1'),
                 ),
                 new PropertyDef(
                     name: 'prop2',
-                    type: new MultiTypeDef(types: ['int', 'CrazyCodeGen\\Tests\\Test2']),
+                    type: new MultiTypeDef(types: ['int', 'CrazyCodeGen\Tests\Test2']),
                 ),
             ],
             methods: [
                 new MethodDef(
                     name: 'method1',
-                    parameters: new ParameterListDef(
-                        parameters: [
-                            new ParameterDef(
-                                name: 'arg1',
-                                type: 'CrazyCodeGen\\Tests\\Test2',
-                            )
-                        ]
-                    ),
-                    returnType: 'CrazyCodeGen\\Tests\\Test1',
+                    parameters: [
+                        new ParameterDef(
+                            name: 'arg1',
+                            type: 'CrazyCodeGen\Tests\Test2',
+                        )
+                    ],
+                    returnType: 'CrazyCodeGen\Tests\Test1',
                 ),
             ]
         );
@@ -260,7 +215,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            extends: 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
+            extends: 'CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit',
         );
 
         $rules = $this->getBaseTestingRules();
@@ -281,7 +236,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            extends: 'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
+            extends: 'CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit',
         );
 
         $rules = $this->getBaseTestingRules();
@@ -303,7 +258,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            extends: 'CrazyCodeGen\\Tests',
+            extends: 'CrazyCodeGen\Tests',
         );
 
         $rules = $this->getBaseTestingRules();
@@ -325,7 +280,7 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests',
+                'CrazyCodeGen\Tests',
             ],
         );
 
@@ -349,8 +304,8 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests1',
-                'CrazyCodeGen\\Tests2',
+                'CrazyCodeGen\Tests1',
+                'CrazyCodeGen\Tests2',
             ],
         );
 
@@ -374,8 +329,8 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests1',
-                'CrazyCodeGen\\Tests2',
+                'CrazyCodeGen\Tests1',
+                'CrazyCodeGen\Tests2',
             ],
         );
 
@@ -402,7 +357,7 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
+                'CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit',
             ],
         );
 
@@ -424,7 +379,7 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests\\LongNamespace\\OfAClass\\ThatDoesNotExist\\AndExplodesCharLimit',
+                'CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit',
             ],
         );
 
@@ -448,7 +403,7 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests',
+                'CrazyCodeGen\Tests',
             ],
         );
 
@@ -472,10 +427,10 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests\\Test1',
-                'CrazyCodeGen\\Tests\\Test2',
-                'CrazyCodeGen\\Tests\\Test3',
-                'CrazyCodeGen\\Tests\\Test4',
+                'CrazyCodeGen\Tests\Test1',
+                'CrazyCodeGen\Tests\Test2',
+                'CrazyCodeGen\Tests\Test3',
+                'CrazyCodeGen\Tests\Test4',
             ],
         );
 
@@ -500,10 +455,10 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests\\Test1',
-                'CrazyCodeGen\\Tests\\Test2',
-                'CrazyCodeGen\\Tests\\Test3',
-                'CrazyCodeGen\\Tests\\Test4',
+                'CrazyCodeGen\Tests\Test1',
+                'CrazyCodeGen\Tests\Test2',
+                'CrazyCodeGen\Tests\Test3',
+                'CrazyCodeGen\Tests\Test4',
             ],
         );
 
@@ -531,8 +486,8 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests\\Test1',
-                'CrazyCodeGen\\Tests\\Test2',
+                'CrazyCodeGen\Tests\Test1',
+                'CrazyCodeGen\Tests\Test2',
             ],
         );
 
@@ -557,8 +512,8 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests\\Test1',
-                'CrazyCodeGen\\Tests\\Test2',
+                'CrazyCodeGen\Tests\Test1',
+                'CrazyCodeGen\Tests\Test2',
             ],
         );
 
@@ -580,10 +535,10 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            extends: 'CrazyCodeGen\\Tests\\Test1',
+            extends: 'CrazyCodeGen\Tests\Test1',
             implements: [
-                'CrazyCodeGen\\Tests\\Test2',
-                'CrazyCodeGen\\Tests\\Test3',
+                'CrazyCodeGen\Tests\Test2',
+                'CrazyCodeGen\Tests\Test3',
             ],
         );
 
@@ -689,7 +644,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            extends: 'CrazyCodeGen\\Tests\\Test1',
+            extends: 'CrazyCodeGen\Tests\Test1',
         );
 
         $rules = $this->getBaseTestingRules();
@@ -715,8 +670,8 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implements: [
-                'CrazyCodeGen\\Tests\\Test1',
-                'CrazyCodeGen\\Tests\\Test2',
+                'CrazyCodeGen\Tests\Test1',
+                'CrazyCodeGen\Tests\Test2',
             ],
         );
 
@@ -839,5 +794,48 @@ class ClassDefTest extends TestCase
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
         );
+    }
+
+    private function getBaseTestingRules(): RenderingRules
+    {
+        $newRules = new RenderingRules();
+        $newRules->lineLength = 120;
+        $newRules->docBlocks->lineLength = 80;
+        $newRules->parameterLists->spacesAfterSeparator = 1;
+        $newRules->parameterLists->addSeparatorToLastItem = true;
+        $newRules->parameterLists->padTypes = true;
+        $newRules->parameterLists->padIdentifiers = true;
+        $newRules->classes->extendsOnNextLine = WrappingDecision::IF_TOO_LONG;
+        $newRules->classes->implementsOnNextLine = WrappingDecision::IF_TOO_LONG;
+        $newRules->classes->implementsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
+        $newRules->classes->spacesAfterImplements = 1;
+        $newRules->classes->spacesAfterImplementSeparator = 1;
+        $newRules->classes->openingBrace = BracePositionEnum::DIFF_LINE;
+        $newRules->classes->closingBrace = BracePositionEnum::DIFF_LINE;
+        $newRules->classes->spacesBeforeOpeningBrace = 1;
+        $newRules->classes->newLinesAfterDocBlock = 1;
+        $newRules->classes->newLinesAfterEachImport = 1;
+        $newRules->classes->newLinesAfterAllImports = 2;
+        $newRules->classes->newLinesAfterEachProperty = 1;
+        $newRules->classes->newLinesAfterProperties = 2;
+        $newRules->classes->newLinesAfterEachMethod = 2;
+        $newRules->classes->newLinesAfterClosingBrace = 0;
+        $newRules->methods->argumentsOnDifferentLines = WrappingDecision::IF_TOO_LONG;
+        $newRules->methods->openingBrace = BracePositionEnum::DIFF_LINE;
+        $newRules->methods->closingBrace = BracePositionEnum::DIFF_LINE;
+        $newRules->methods->spacesAfterAbstract = 1;
+        $newRules->methods->spacesAfterVisibility = 1;
+        $newRules->methods->spacesAfterStatic = 1;
+        $newRules->methods->spacesAfterFunction = 1;
+        $newRules->methods->spacesAfterIdentifier = 0;
+        $newRules->methods->spacesAfterArguments = 0;
+        $newRules->methods->spacesAfterReturnColon = 1;
+        $newRules->methods->spacesBeforeOpeningBrace = 1;
+        $newRules->properties->spacesAfterVisibility = 1;
+        $newRules->properties->spacesAfterStatic = 1;
+        $newRules->properties->spacesAfterType = 1;
+        $newRules->properties->spacesAfterIdentifier = 1;
+        $newRules->properties->spacesAfterEquals = 1;
+        return $newRules;
     }
 }
