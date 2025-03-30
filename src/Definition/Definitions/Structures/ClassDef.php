@@ -3,13 +3,22 @@
 namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Exceptions\InvalidIdentifierFormatException;
-use CrazyCodeGen\Common\Models\ConversionRule;
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Common\Traits\ValidationTrait;
 use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassType;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Traits\HasAbstractModifierTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasDocBlockTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasExtendsTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasImplementationsTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasImportsTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasMethodsTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasNamespaceTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasNameTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasPropertiesTrait;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
@@ -31,118 +40,44 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     use FlattenFunction;
     use TokenFunctions;
     use ValidationTrait;
+    use HasNamespaceTrait;
+    use HasImportsTrait;
+    use HasDocBlockTrait;
+    use HasAbstractModifierTrait;
+    use HasNameTrait;
+    use HasExtendsTrait;
+    use HasImplementationsTrait;
+    use HasPropertiesTrait;
+    use HasMethodsTrait;
 
     /**
      * @throws InvalidIdentifierFormatException
+     * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
-        public string                        $name,
-        public null|string|NamespaceDef      $namespace = null,
+        string                        $name,
+        null|string|NamespaceDef      $namespace = null,
         /** @var string[]|ClassTypeDef[]|ImportDef[] $imports */
-        public array                         $imports = [],
-        public null|string|array|DocBlockDef $docBlock = null,
-        public bool                          $abstract = false,
-        public null|string|ClassTypeDef      $extends = null,
-        /** @var string[]|ClassTypeDef[] $implements */
-        public array                         $implements = [],
+        array                         $imports = [],
+        null|string|array|DocBlockDef $docBlock = null,
+        bool                          $abstract = false,
+        null|string|ClassTypeDef      $extends = null,
+        /** @var string[]|ClassTypeDef[] $implementations */
+        array                         $implementations = [],
         /** @var string[]|PropertyDef[] $properties */
-        public array                         $properties = [],
+        array                         $properties = [],
         /** @var MethodDef[] $methods */
-        public array                         $methods = [],
+        array                         $methods = [],
     ) {
         $this->setNamespace($namespace);
-        $this->imports = $this->convertAndDropNonCompliantValues($this->imports, [
-            new ConversionRule(inputType: 'string', outputType: ImportDef::class),
-            new ConversionRule(inputType: ClassTypeDef::class, outputType: ImportDef::class, propertyPaths: ['type']),
-            new ConversionRule(inputType: ImportDef::class),
-        ]);
+        $this->setImports($imports);
         $this->setDocBlock($docBlock);
+        $this->setAbstract($abstract);
         $this->setName($name);
         $this->setExtends($extends);
-        $this->implements = $this->convertAndDropNonCompliantValues($this->implements, [
-            new ConversionRule(inputType: 'string', outputType: ClassTypeDef::class),
-            new ConversionRule(inputType: ClassTypeDef::class),
-        ]);
-        $this->properties = $this->convertAndDropNonCompliantValues($this->properties, [
-            new ConversionRule(inputType: 'string', outputType: PropertyDef::class),
-            new ConversionRule(inputType: PropertyDef::class),
-        ]);
-        $this->methods = $this->convertAndDropNonCompliantValues($this->methods, [
-            new ConversionRule(inputType: 'string', outputType: MethodDef::class),
-            new ConversionRule(inputType: MethodDef::class),
-        ]);
-    }
-
-    public function setNamespace(null|string|NamespaceDef $namespace): self
-    {
-        if (is_string($namespace)) {
-            $namespace = new NamespaceDef($namespace);
-        }
-        $this->namespace = $namespace;
-        return $this;
-    }
-
-    public function addImport(string|ClassTypeDef|ImportDef $import): self
-    {
-        if (is_string($import)) {
-            $this->imports[] = new ImportDef($import);
-        } elseif ($import instanceof ClassTypeDef) {
-            $this->imports[] = new ImportDef($import->type);
-        }
-        return $this;
-    }
-
-    /**
-     * @param string|string[]|DocBlockDef $docBlock
-     * @return $this
-     */
-    public function setDocBlock(null|string|array|DocBlockDef $docBlock): self
-    {
-        if (is_string($docBlock)) {
-            $docBlock = new DocBlockDef([$docBlock]);
-        } elseif (is_array($docBlock)) {
-            $docBlock = array_filter($docBlock, fn ($value) => is_string($value));
-            $docBlock = new DocBlockDef($docBlock);
-        }
-        $this->docBlock = $docBlock;
-        return $this;
-    }
-
-    /**
-     * @throws InvalidIdentifierFormatException
-     */
-    public function setName(string $name): self
-    {
-        $this->assertIsValidIdentifier($name);
-        $this->name = $name;
-        return $this;
-    }
-
-    public function setExtends(null|string|ClassTypeDef $extends): self
-    {
-        if (is_string($extends)) {
-            $extends = new ClassTypeDef($extends);
-        }
-        $this->extends = $extends;
-        return $this;
-    }
-
-    public function addProperty(string|PropertyDef $property): self
-    {
-        if (is_string($property)) {
-            $property = new PropertyDef($property);
-        }
-        $this->properties[] = $property;
-        return $this;
-    }
-
-    public function addMethod(string|MethodDef $method): self
-    {
-        if (is_string($method)) {
-            $method = new MethodDef($method);
-        }
-        $this->methods[] = $method;
-        return $this;
+        $this->setImplementations($implementations);
+        $this->setProperties($properties);
+        $this->setMethods($methods);
     }
 
     /**
@@ -403,10 +338,10 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     private function getInlineImplementsTokens(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if (empty($this->implements)) {
+        if (empty($this->implementations)) {
             return $tokens;
         }
-        $implementsTokenGroup = new ImplementsDef($this->implements);
+        $implementsTokenGroup = new ImplementationsDef($this->implementations);
         return $implementsTokenGroup->renderInlineScenario($context, $rules);
     }
 
@@ -416,10 +351,10 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     private function getChopDownImplementsTokens(RenderContext $context, RenderingRules $rules): array
     {
         $tokens = [];
-        if (empty($this->implements)) {
+        if (empty($this->implementations)) {
             return $tokens;
         }
-        $implementsTokenGroup = new ImplementsDef($this->implements);
+        $implementsTokenGroup = new ImplementationsDef($this->implementations);
         return $implementsTokenGroup->renderChopDownScenario($context, $rules);
     }
 

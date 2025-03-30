@@ -2,26 +2,56 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Common\Exceptions\InvalidIdentifierFormatException;
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
-use CrazyCodeGen\Definition\Definitions\Structures\ImportDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
-use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
-use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
+use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasImportsTraitTestTrait;
+use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasNamespaceTraitTestTrait;
+use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasNameTraitTestTrait;
 use PHPUnit\Framework\TestCase;
 
 class ClassDefTest extends TestCase
 {
     use TokenFunctions;
+    use HasNamespaceTraitTestTrait;
+    use HasImportsTraitTestTrait;
+    use HasNameTraitTestTrait;
+
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     * @throws InvalidIdentifierFormatException
+     */
+    public function getHasNamespaceTraitTestObject(NamespaceDef|string|null $namespace): ClassDef
+    {
+        return new ClassDef(name: 'valid', namespace: $namespace);
+    }
+
+    /**
+     * @throws InvalidIdentifierFormatException
+     * @throws NoValidConversionRulesMatchedException
+     */
+    public function getHasImportsTraitTestObject(array $imports): ClassDef
+    {
+        return new ClassDef(name: 'valid', imports: $imports);
+    }
+
+    /**
+     * @throws InvalidIdentifierFormatException
+     * @throws NoValidConversionRulesMatchedException
+     */
+    public function getHasNameTraitTestObject(string $identifier): ClassDef
+    {
+        return new ClassDef(name: $identifier);
+    }
 
     public function testClassKeywordIsRendered()
     {
@@ -93,90 +123,6 @@ class ClassDefTest extends TestCase
             
             class myClass
             {
-            }
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    public function testStringsAreConvertedToImportTokenGroupsAndAreRenderedWithProperLinesBetweenThemAndAfterBlock()
-    {
-        $token = new ClassDef(
-            name: 'myClass',
-            imports: [
-                new ImportDef('CrazyCodeGen\Tests\Tests1'),
-                'CrazyCodeGen\Tests\Test2',
-            ]
-        );
-
-        $rules = $this->getBaseTestingRules();
-        $rules->classes->newLinesAfterEachImport = 3;
-        $rules->classes->newLinesAfterAllImports = 4;
-
-        $this->assertEquals(
-            <<<'EOS'
-            use CrazyCodeGen\Tests\Tests1;
-            
-            
-            use CrazyCodeGen\Tests\Test2;
-            
-            
-            
-            class myClass
-            {
-            }
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    public function testImportsShortenTheTypesEvenIfSpecifiedAsStrings()
-    {
-        $token = new ClassDef(
-            name: 'myClass',
-            imports: [
-                new ImportDef('CrazyCodeGen\Tests\Test1'),
-                'CrazyCodeGen\Tests\Test2',
-            ],
-            properties: [
-                new PropertyDef(
-                    name: 'prop1',
-                    type: new ClassTypeDef(type: 'CrazyCodeGen\Tests\Test1'),
-                ),
-                new PropertyDef(
-                    name: 'prop2',
-                    type: new MultiTypeDef(types: ['int', 'CrazyCodeGen\Tests\Test2']),
-                ),
-            ],
-            methods: [
-                new MethodDef(
-                    name: 'method1',
-                    parameters: [
-                        new ParameterDef(
-                            name: 'arg1',
-                            type: 'CrazyCodeGen\Tests\Test2',
-                        )
-                    ],
-                    returnType: 'CrazyCodeGen\Tests\Test1',
-                ),
-            ]
-        );
-
-        $rules = $this->getBaseTestingRules();
-
-        $this->assertEquals(
-            <<<'EOS'
-            use CrazyCodeGen\Tests\Test1;
-            use CrazyCodeGen\Tests\Test2;
-            
-            class myClass
-            {
-                public Test1 $prop1;
-                public int|Test2 $prop2;
-            
-                public function method1(Test2 $arg1): Test1
-                {
-                }
             }
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
@@ -279,7 +225,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests',
             ],
         );
@@ -303,7 +249,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests1',
                 'CrazyCodeGen\Tests2',
             ],
@@ -328,7 +274,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests1',
                 'CrazyCodeGen\Tests2',
             ],
@@ -356,7 +302,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit',
             ],
         );
@@ -378,7 +324,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit',
             ],
         );
@@ -402,7 +348,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests',
             ],
         );
@@ -426,7 +372,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests\Test1',
                 'CrazyCodeGen\Tests\Test2',
                 'CrazyCodeGen\Tests\Test3',
@@ -454,7 +400,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests\Test1',
                 'CrazyCodeGen\Tests\Test2',
                 'CrazyCodeGen\Tests\Test3',
@@ -485,7 +431,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests\Test1',
                 'CrazyCodeGen\Tests\Test2',
             ],
@@ -511,7 +457,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests\Test1',
                 'CrazyCodeGen\Tests\Test2',
             ],
@@ -536,7 +482,7 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             extends: 'CrazyCodeGen\Tests\Test1',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests\Test2',
                 'CrazyCodeGen\Tests\Test3',
             ],
@@ -669,7 +615,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            implements: [
+            implementations: [
                 'CrazyCodeGen\Tests\Test1',
                 'CrazyCodeGen\Tests\Test2',
             ],

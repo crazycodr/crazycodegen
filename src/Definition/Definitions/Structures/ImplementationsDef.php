@@ -15,7 +15,7 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ImplementsToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 
-class ImplementsDef extends Tokenizes
+class ImplementationsDef extends Tokenizes
 {
     use FlattenFunction;
     use TokenFunctions;

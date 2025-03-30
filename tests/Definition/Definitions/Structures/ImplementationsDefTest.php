@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
-use CrazyCodeGen\Definition\Definitions\Structures\ImplementsDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ImplementationsDef;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
@@ -11,13 +11,13 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ImplementsDefTest extends TestCase
+class ImplementationsDefTest extends TestCase
 {
     use TokenFunctions;
 
     public function testInlineScenarioRendersImplementsKeyword()
     {
-        $token = new ImplementsDef(
+        $token = new ImplementationsDef(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -35,7 +35,7 @@ class ImplementsDefTest extends TestCase
 
     public function testInlineScenarioRendersEachImplementationUsingSingleTypeTokenGroupOrOriginal()
     {
-        $token = new ImplementsDef(
+        $token = new ImplementationsDef(
             implementations: ['\\JsonSerializable', new ClassTypeDef('\\ArrayAccess')],
         );
 
@@ -55,7 +55,7 @@ class ImplementsDefTest extends TestCase
 
     public function testInlineScenarioAddsConfiguredSpacesBetweenImplementsAndFirstItem()
     {
-        $token = new ImplementsDef(
+        $token = new ImplementationsDef(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -75,7 +75,7 @@ class ImplementsDefTest extends TestCase
 
     public function testInlineScenarioAddsConfiguredSpacesAfterEachImplementsExceptLastOne()
     {
-        $token = new ImplementsDef(
+        $token = new ImplementationsDef(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -95,7 +95,7 @@ class ImplementsDefTest extends TestCase
 
     public function testChopDownScenarioRendersImplementsKeywordAndFirstItemOnSameLine()
     {
-        $token = new ImplementsDef(
+        $token = new ImplementationsDef(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 
@@ -116,7 +116,7 @@ class ImplementsDefTest extends TestCase
 
     public function testChopDownScenarioRendersConfiguredSpacesAfterImplementsAddPadsAccordingly()
     {
-        $token = new ImplementsDef(
+        $token = new ImplementationsDef(
             implementations: ['\\JsonSerializable', '\\ArrayAccess'],
         );
 

@@ -9,9 +9,11 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Traits\HasAbstractModifierTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasDocBlockTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasInstructionsTrait;
-use CrazyCodeGen\Definition\Definitions\Traits\HasModifiersTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasStaticModifierTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasVisibilityModifierTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasNameTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasParametersTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasReturnTypeTrait;
@@ -43,7 +45,9 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
 
     // Property helpers
     use HasDocBlockTrait;
-    use HasModifiersTrait;
+    use HasAbstractModifierTrait;
+    use HasVisibilityModifierTrait;
+    use HasStaticModifierTrait;
     use HasNameTrait;
     use HasParametersTrait;
     use HasReturnTypeTrait;

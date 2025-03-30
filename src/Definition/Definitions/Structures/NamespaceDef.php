@@ -19,6 +19,7 @@ class NamespaceDef extends Tokenizes
     public function __construct(
         public string $path,
     ) {
+
     }
 
     /**
