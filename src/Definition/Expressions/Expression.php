@@ -14,8 +14,7 @@ class Expression extends Tokenizes
 
     public function __construct(
         public string $expression,
-    )
-    {
+    ) {
     }
 
     /**

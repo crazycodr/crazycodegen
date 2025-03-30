@@ -60,8 +60,7 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
         null|string|TypeDef           $returnType = null,
         /** @var NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions */
         array                         $instructions = [],
-    )
-    {
+    ) {
         $this->setNamespace($namespace);
         $this->setDocBlock($docBlock);
         $this->setName($name);

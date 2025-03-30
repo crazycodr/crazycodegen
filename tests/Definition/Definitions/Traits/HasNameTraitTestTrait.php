@@ -11,7 +11,7 @@ trait HasNameTraitTestTrait
     /**
      * @throws InvalidIdentifierFormatException
      */
-    public abstract function getHasNameTraitTestObject(string $identifier): mixed;
+    abstract public function getHasNameTraitTestObject(string $identifier): mixed;
 
     public static function providesClassNameMustBeAValidIdentifier(): array
     {

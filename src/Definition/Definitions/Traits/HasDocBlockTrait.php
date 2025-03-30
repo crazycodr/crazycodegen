@@ -22,7 +22,7 @@ trait HasDocBlockTrait
         $this->docBlock = $this->convertOrThrow($docBlock, rules: [
             new ConversionRule(inputType: 'null'),
             new ConversionRule(inputType: 'string', outputType: DocBlockDef::class),
-            new ConversionRule(inputType: 'array', outputType: DocBlockDef::class, filter: fn($value) => is_string($value)),
+            new ConversionRule(inputType: 'array', outputType: DocBlockDef::class, filter: fn ($value) => is_string($value)),
             new ConversionRule(inputType: DocBlockDef::class),
         ]);
         return $this;

@@ -68,8 +68,7 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
         null|string|TypeDef           $returnType = null,
         /** @var NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions */
         array                         $instructions = [],
-    )
-    {
+    ) {
         $this->setDocBlock($docBlock);
         $this->setAbstract($abstract);
         $this->setVisibility($visibility);

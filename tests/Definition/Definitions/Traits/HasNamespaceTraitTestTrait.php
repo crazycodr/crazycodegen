@@ -12,7 +12,7 @@ trait HasNamespaceTraitTestTrait
     /**
      * @throws InvalidIdentifierFormatException
      */
-    public abstract function getHasNamespaceTraitTestObject(null|string|NamespaceDef $namespace): mixed;
+    abstract public function getHasNamespaceTraitTestObject(null|string|NamespaceDef $namespace): mixed;
 
     public static function providesNamespaceScenarios(): array
     {

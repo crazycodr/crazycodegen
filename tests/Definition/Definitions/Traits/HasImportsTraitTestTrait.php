@@ -15,7 +15,7 @@ trait HasImportsTraitTestTrait
      *
      * @throws InvalidIdentifierFormatException
      */
-    public abstract function getHasImportsTraitTestObject(array $imports): mixed;
+    abstract public function getHasImportsTraitTestObject(array $imports): mixed;
 
     public static function providesImportScenarios(): array
     {

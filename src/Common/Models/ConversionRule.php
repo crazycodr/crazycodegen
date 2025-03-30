@@ -10,8 +10,7 @@ class ConversionRule
         /** @var string[] $propertyPaths */
         public array       $propertyPaths = [],
         public mixed       $filter = null,
-    )
-    {
+    ) {
         if (!is_callable($this->filter)) {
             $this->filter = null;
         }
