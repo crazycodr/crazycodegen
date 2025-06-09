@@ -1,4 +1,4 @@
-# Simple expressions and rendering rules
+# Expressions and rendering rules
 
 The framework allows you to set up very simple to very complex expressions. Your expressions can be defined as a string or as a series of expression objects.
 

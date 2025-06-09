@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Contexts;
 
 use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;

@@ -1,10 +1,10 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Values;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
-use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;

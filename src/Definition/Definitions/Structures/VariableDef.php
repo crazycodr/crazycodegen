@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\DollarToken;

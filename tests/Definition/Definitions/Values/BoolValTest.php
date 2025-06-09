@@ -1,36 +1,36 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Values;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
-use CrazyCodeGen\Definition\Definitions\Values\StringVal;
+use CrazyCodeGen\Definition\Definitions\Values\BoolVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class StringValTest extends TestCase
+class BoolValTest extends TestCase
 {
     use TokenFunctions;
 
-    public function testStringIsAlwaysRenderedWithSingleQuotes()
+    public function testBoolValReturnsTrueTokenWhenTrue()
     {
-        $token = new StringVal('Hello world');
+        $token = new BoolVal(true);
 
         $this->assertEquals(
             <<<'EOS'
-            'Hello world'
+            true
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
-    public function testSingleQuotesAreEscaped()
+    public function testBoolValReturnsFalseTokenWhenFalse()
     {
-        $token = new StringVal('Hello world can\'t be escaped');
+        $token = new BoolVal(false);
 
         $this->assertEquals(
             <<<'EOS'
-            'Hello world can\'t be escaped'
+            false
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );

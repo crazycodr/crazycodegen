@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Tests\Expressions;
 
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
-use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;

@@ -6,7 +6,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
-use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
@@ -39,7 +39,7 @@ class NewOpTest extends TestCase
 
         $this->assertEquals(
             <<<'EOS'
-            new foo()
+            new \foo()
             EOS,
             $this->renderTokensToString($token->getInlineTokens(new RenderContext(), new RenderingRules()))
         );
@@ -173,7 +173,7 @@ class NewOpTest extends TestCase
 
         $this->assertEquals(
             <<<'EOS'
-            new foo()
+            new \foo()
             EOS,
             $this->renderTokensToString($token->getChopDownTokens(new RenderContext(), new RenderingRules()))
         );

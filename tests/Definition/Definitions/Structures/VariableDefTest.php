@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Values;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;

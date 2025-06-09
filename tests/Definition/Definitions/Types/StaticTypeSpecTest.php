@@ -2,45 +2,31 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
-use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Types\StaticTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ClassTypeDefTest extends TestCase
+class StaticTypeSpecTest extends TestCase
 {
     use TokenFunctions;
 
     public function testTypeIsRenderedAsExpected()
     {
-        $token = new ClassTypeDef('CrazyCodeGen\\Tokens\\Token');
+        $token = new StaticTypeSpec();
         $this->assertEquals(
             <<<'EOS'
-            CrazyCodeGen\Tokens\Token
+            static
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
-    public function testShortNameIsRenderedAsAnIdentifierWhenShortenIsTurnedOn()
-    {
-        $token = new ClassTypeDef('CrazyCodeGen\\Tokens\\Token');
-        $context = new RenderContext();
-        $context->importedClasses[] = 'CrazyCodeGen\\Tokens\\Token';
-
-        $this->assertEquals(
-            <<<'EOS'
-            Token
-            EOS,
-            $this->renderTokensToString($token->getTokens($context, new RenderingRules()))
-        );
-    }
-
     public function testCanResolveClassReference()
     {
-        $token = new ClassTypeDef('Token');
+        $token = new StaticTypeSpec();
 
         $this->assertEquals(new ClassRefVal($token), $token->getClassReference());
     }

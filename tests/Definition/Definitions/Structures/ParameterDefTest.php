@@ -223,7 +223,7 @@ class ParameterDefTest extends TestCase
         $context->chopDown->paddingSpacesForIdentifiers = 3;
 
         $this->assertEquals(
-            'reallyLongType $foo',
+            '\reallyLongType $foo',
             $this->renderTokensToString($token->getTokens($context, $rules)),
         );
     }

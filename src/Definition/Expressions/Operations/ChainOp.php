@@ -10,7 +10,7 @@ use CrazyCodeGen\Definition\Base\ProvidesInlineTokens;
 use CrazyCodeGen\Definition\Definitions\Contexts\MemberAccessContext;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\MemberAccessToken;

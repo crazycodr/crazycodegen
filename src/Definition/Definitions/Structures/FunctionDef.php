@@ -17,7 +17,7 @@ use CrazyCodeGen\Definition\Definitions\Traits\HasParametersTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasReturnTypeTrait;
 use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
-use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;

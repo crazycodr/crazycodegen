@@ -43,19 +43,9 @@ class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, Provid
         if (in_array($this->type, $context->importedClasses)) {
             $tokens[] = new Token($this->shortName);
         } else {
-            $tokens[] = new Token($this->type);
+            $tokens[] = new Token($this->namespace . '\\' . $this->shortName);
         }
         return $tokens;
-    }
-
-    public function getShortName(): string
-    {
-        return $this->shortName;
-    }
-
-    public function getNamespace(): null|string
-    {
-        return $this->namespace;
     }
 
     public function isAccessedStatically(): bool

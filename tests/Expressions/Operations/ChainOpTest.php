@@ -6,7 +6,7 @@ use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
-use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;

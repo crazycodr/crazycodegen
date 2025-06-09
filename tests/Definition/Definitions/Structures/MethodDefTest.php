@@ -6,7 +6,7 @@ use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
-use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;

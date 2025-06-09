@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Definition\Expressions;
+namespace CrazyCodeGen\Definition;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;

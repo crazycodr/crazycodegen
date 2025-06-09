@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Tests\Expressions\Structures;
 
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
-use CrazyCodeGen\Definition\Expressions\Expression;
+use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Structures\Condition;
 use CrazyCodeGen\Definition\Expressions\Structures\ConditionChain;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;

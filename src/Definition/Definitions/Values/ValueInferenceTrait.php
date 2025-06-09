@@ -2,6 +2,8 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Values;
 
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+
 trait ValueInferenceTrait
 {
     public function isInferableValue(mixed $value): bool
@@ -23,6 +25,9 @@ trait ValueInferenceTrait
         }
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function inferValue(mixed $value): BaseVal
     {
         if (is_int($value)) {

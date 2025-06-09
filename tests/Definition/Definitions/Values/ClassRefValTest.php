@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
+namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
@@ -9,39 +9,36 @@ use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
-class ClassTypeDefTest extends TestCase
+class ClassRefValTest extends TestCase
 {
     use TokenFunctions;
 
-    public function testTypeIsRenderedAsExpected()
+    public function testTypeIsRenderedAlongWithClassSuffix()
     {
-        $token = new ClassTypeDef('CrazyCodeGen\\Tokens\\Token');
+        $type = new ClassTypeDef('Foo\\Bar\\Baz');
+        $token = new ClassRefVal($type);
+
         $this->assertEquals(
             <<<'EOS'
-            CrazyCodeGen\Tokens\Token
+            Foo\Bar\Baz::class
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
         );
     }
 
-    public function testShortNameIsRenderedAsAnIdentifierWhenShortenIsTurnedOn()
+    public function testTypeIsRenderedAsShortIfImportedInContext()
     {
-        $token = new ClassTypeDef('CrazyCodeGen\\Tokens\\Token');
+        $type = new ClassTypeDef('Foo\\Bar\\Baz');
+        $token = new ClassRefVal($type);
+
         $context = new RenderContext();
-        $context->importedClasses[] = 'CrazyCodeGen\\Tokens\\Token';
+        $context->importedClasses[] = 'Foo\\Bar\\Baz';
 
         $this->assertEquals(
             <<<'EOS'
-            Token
+            Baz::class
             EOS,
             $this->renderTokensToString($token->getTokens($context, new RenderingRules()))
         );
-    }
-
-    public function testCanResolveClassReference()
-    {
-        $token = new ClassTypeDef('Token');
-
-        $this->assertEquals(new ClassRefVal($token), $token->getClassReference());
     }
 }
