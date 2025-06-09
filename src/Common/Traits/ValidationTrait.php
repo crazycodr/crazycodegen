@@ -15,11 +15,29 @@ trait ValidationTrait
     /**
      * @throws InvalidIdentifierFormatException
      */
-    public function assertIsValidIdentifier(string $name): void
+    public function assertIsValidIdentifier(null|string $name): null|string
     {
+        if (is_null($name)) {
+            return null;
+        }
         if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {
             throw new InvalidIdentifierFormatException($name);
         }
+        return $name;
+    }
+
+    /**
+     * @throws InvalidIdentifierFormatException
+     */
+    public function assertIsValidNamespacedIdentifier(null|string $name): null|string
+    {
+        if (is_null($name)) {
+            return null;
+        }
+        if (!preg_match('/^([a-zA-Z_][a-zA-Z0-9_]*\\\\)*[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {
+            throw new InvalidIdentifierFormatException($name);
+        }
+        return $name;
     }
 
     /**
@@ -32,7 +50,10 @@ trait ValidationTrait
     {
         $ruleMatched = false;
         foreach ($rules as $rule) {
-            if ($rule->inputType === 'null' && is_null($value)) {
+            if ($rule->inputType === 'mixed') {
+                $ruleMatched = true;
+                break;
+            } elseif ($rule->inputType === 'null' && is_null($value)) {
                 $ruleMatched = true;
                 break;
             } elseif ($rule->inputType === 'string' && is_string($value)) {
@@ -60,6 +81,9 @@ trait ValidationTrait
                         $properties[] = $this->propertyAccess->getValue($value, $propertyPath);
                     }
                     $value = new $rule->outputType($properties);
+                } elseif (isset($rule->filter)) {
+                    $callable = $rule->filter;
+                    $value = $callable($value);
                 } elseif (!is_null($rule->outputType)) {
                     $value = new $rule->outputType($value);
                 }
@@ -86,6 +110,20 @@ trait ValidationTrait
             } catch (NoValidConversionRulesMatchedException) {
                 unset($values[$key]);
             }
+        }
+        return $values;
+    }
+
+    /**
+     * @param array $values
+     * @param ConversionRule[] $rules
+     * @return array
+     * @throws NoValidConversionRulesMatchedException
+     */
+    public function convertOrThrowForEachValues(array $values, array $rules): array
+    {
+        foreach ($values as $key => $value) {
+            $values[$key] = $this->convertOrThrow($value, $rules);
         }
         return $values;
     }

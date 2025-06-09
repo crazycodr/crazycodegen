@@ -69,6 +69,14 @@ trait TokenFunctions
         return false;
     }
 
+    private function calculatePaddingSize(string $expression, int $paddingSize): int
+    {
+        if ($paddingSize >= strlen($expression)) {
+            return $paddingSize - strlen($expression);
+        }
+        return strlen($expression);
+    }
+
     /**
      * @param RenderingRules $rules
      * @param int $customSize

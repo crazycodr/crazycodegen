@@ -11,6 +11,7 @@ class RenderContext
         public string                 $indents = '',
         public int                    $argumentDefinitionTypePaddingSize = 0,
         public int                    $argumentDefinitionIdentifierPaddingSize = 0,
+        public int                    $arrayIdentifierPaddingSize = 0,
         public bool                   $forcedWrap = false,
         public bool                   $forcedChopDown = false,
         public ChopDownPaddingContext $chopDown = new ChopDownPaddingContext(),

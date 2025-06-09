@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Expressions\Structures;
 
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Definition\Expressions\Structures\Condition;
 use CrazyCodeGen\Definition\Expressions\Structures\ConditionChain;
@@ -15,6 +16,9 @@ class ConditionChainTest extends TestCase
 {
     use TokenFunctions;
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testSingleConditionIsRenderedAsExpected()
     {
         $token = new ConditionChain([
@@ -38,6 +42,9 @@ class ConditionChainTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testSecondConditionWithoutConditionActuallyGeneratesAnElseCase()
     {
         $token = new ConditionChain([
@@ -68,6 +75,9 @@ class ConditionChainTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testSecondConditionWithConditionGeneratesAnElseIfCase()
     {
         $token = new ConditionChain([
@@ -99,6 +109,9 @@ class ConditionChainTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testMultipleConditionsGeneratesChainOfConditions()
     {
         $token = new ConditionChain([
@@ -137,6 +150,9 @@ class ConditionChainTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testBracePositionRuleChangesProvidesExpectedStructure()
     {
         $token = new ConditionChain([

@@ -2,14 +2,13 @@
 
 namespace CrazyCodeGen\Tests\Definition\Values;
 
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Expressions\Expression;
 use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
 use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
 use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
 use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\PlusToken;
-use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -17,6 +16,9 @@ class ArrayValTest extends TestCase
 {
     use TokenFunctions;
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testLongFormUsedWhenConfigurationSaysSoAndNoKeysArePrintedBecauseTheyAreSequential()
     {
         $token = new ArrayVal([1, 2, 3]);
@@ -32,6 +34,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testShortFormUsedWhenConfigurationSaysSoAndNoKeysArePrintedBecauseTheyAreSequential()
     {
         $token = new ArrayVal([1, 2, 3]);
@@ -46,6 +51,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testIntKeysNotInSequentialOrderGetsAddedToArray()
     {
         $token = new ArrayVal([0 => 1, 2 => 2, 3 => 3]);
@@ -60,6 +68,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testStringKeysGetsAllKeysAddedToArray()
     {
         $token = new ArrayVal(['0' => 1, 2 => 2, 'hello' => 3]);
@@ -74,6 +85,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testNumericalIntKeysAreTransformedToIntKeysBecauseOfPhp()
     {
         $token = new ArrayVal(['0' => 1, '2' => 2, 'hello' => 3]);
@@ -88,6 +102,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testSpacesAfterIdentifiersAreRespected()
     {
         $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
@@ -103,6 +120,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testSpacesAfterOperatorsAreRespected()
     {
         $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
@@ -118,6 +138,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testSpacesAfterValuesAreRespected()
     {
         $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
@@ -133,6 +156,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testSpacesAfterSeparatorsAreRespected()
     {
         $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
@@ -148,6 +174,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testWrappingIsDoneWhenLineIsTooLong()
     {
         $token = new ArrayVal([
@@ -172,6 +201,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testWrappingIsDoneEvenIfLineNotTooLong()
     {
         $token = new ArrayVal([
@@ -195,6 +227,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testWrappingIsNotDoneEvenIfLineTooLong()
     {
         $token = new ArrayVal([
@@ -215,6 +250,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testOpeningBraceOnSameLineIfWrappingIndentsAllOtherItemsButFirst()
     {
         $token = new ArrayVal([
@@ -239,6 +277,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testOpeningBraceOnDiffLineIfWrappingIsPropertyIndented()
     {
         $token = new ArrayVal([
@@ -264,6 +305,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testClosingBraceOnSameLineIfWrappingHidesLastItemComma()
     {
         $token = new ArrayVal([
@@ -288,6 +332,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testClosingBraceOnDiffLineIfWrappingShowsLastItemCommaIfConfigured()
     {
         $token = new ArrayVal([
@@ -314,6 +361,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testWrappedConfigDoesNotFeatureSpacesAfterSeparatorAndHidesLastSeparatorWhenConfigured()
     {
         $token = new ArrayVal([
@@ -338,7 +388,10 @@ class ArrayValTest extends TestCase
         );
     }
 
-    public function testPaddingOfIdentifiersIsAppliedIfConfigured()
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
+    public function testPaddingOfIdentifiersIsAppliedIfConfiguredButAppliesOnlyWhenChoppingDown()
     {
         $token = new ArrayVal([
             'this' => 1,
@@ -348,12 +401,13 @@ class ArrayValTest extends TestCase
 
         $rules = $this->getRenderingRules();
         $rules->arrays->wrap = WrappingDecision::ALWAYS;
+        $rules->arrays->padIdentifiers = true;
 
         $this->assertEquals(
             <<<'EOS'
             [
-                'this' => 1,
-                'is' => 2,
+                'this'  => 1,
+                'is'    => 2,
                 'short' => 3,
             ]
             EOS,
@@ -361,6 +415,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testStringValuesAreProperlyConverted()
     {
         $token = new ArrayVal([
@@ -380,6 +437,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testBoolValuesAreProperlyConverted()
     {
         $token = new ArrayVal([
@@ -399,6 +459,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testNullValuesAreProperlyConverted()
     {
         $token = new ArrayVal([
@@ -418,6 +481,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testTokenGroupValuesAreRenderedIn()
     {
         $token = new ArrayVal([
@@ -437,6 +503,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testTokenValuesAreSimplyReused()
     {
         $token = new ArrayVal([
@@ -456,6 +525,9 @@ class ArrayValTest extends TestCase
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testNestedTokenGroupsAreProperlyIndented()
     {
         $token = new ArrayVal([

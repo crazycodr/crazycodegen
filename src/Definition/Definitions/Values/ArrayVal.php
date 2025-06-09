@@ -2,7 +2,10 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Values;
 
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Models\ConversionRule;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Common\Traits\ValidationTrait;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Base\ProvidesChopDownTokens;
@@ -27,75 +30,39 @@ class ArrayVal extends BaseVal implements ProvidesInlineTokens, ProvidesChopDown
 {
     use FlattenFunction;
     use TokenFunctions;
+    use ValidationTrait;
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function __construct(
         public array $keyValues = [],
     ) {
-        foreach ($keyValues as $key => $value) {
-            if ($value instanceof ProvidesClassReference) {
-                $this->keyValues[$key] = $value->getClassReference();
-            }
-        }
+        $this->keyValues = $this->convertOrThrowForEachValues($this->keyValues, [
+            new ConversionRule(
+                inputType: ProvidesClassReference::class,
+                filter: fn (ProvidesClassReference $value) => $value->getClassReference()
+            ),
+            new ConversionRule(inputType: 'mixed'),
+        ]);
     }
 
     /**
-     * @return Token[]
+     * @param RenderingRules $rules
+     * @param array $identifierTokens
+     * @param RenderContext $context
+     * @param array $tokens
+     * @return array
      */
-    public function getChopDownTokens(RenderContext $context, RenderingRules $rules): array
+    private function renderSpacesAfterIdentifier(RenderingRules $rules, array $identifierTokens, RenderContext $context, array $tokens): array
     {
-        $tokens = [];
-        $tokens = $this->addOpeningTokens($rules, $tokens);
-        $keysAllInSequentialOrder = $this->areAllKeysInNumericalSequentialOrder();
-        $keyValues = $this->keyValues;
-        reset($keyValues);
-        if ($rules->arrays->openingBrace === BracePositionEnum::SAME_LINE) {
-            $firstKey = key($keyValues);
-            $firstValue = current($keyValues);
-            array_shift($keyValues);
-            $tokens[] = $this->renderEntry(
-                context: $context,
-                rules: $rules,
-                key: $keysAllInSequentialOrder ? null : $firstKey,
-                value: $firstValue,
-                addSeparator: (
-                    count($keyValues) === 0
-                    && $rules->arrays->addSeparatorToLastItem
-                    && $rules->arrays->closingBrace === BracePositionEnum::DIFF_LINE
-                ) || count($keyValues) !== 0,
-                addSpacingAfterSeparator: false
-            );
-            if (count($keyValues) > 0) {
-                $tokens[] = new NewLinesToken();
-            }
+        if ($rules->arrays->padIdentifiers) {
+            $spacesToApply = $this->calculatePaddingSize($this->renderTokensToString($identifierTokens), $context->arrayIdentifierPaddingSize);
+            $tokens[] = new SpacesToken($spacesToApply ?: $rules->arrays->spacesAfterIdentifiers);
         } else {
-            $tokens[] = new NewLinesToken();
+            $tokens[] = new SpacesToken($rules->arrays->spacesAfterIdentifiers);
         }
-        $entriesLeft = count($keyValues);
-        $innerEntriesTokens = [];
-        foreach ($keyValues as $key => $value) {
-            $entriesLeft--;
-            $innerEntriesTokens[] = $this->renderEntry(
-                context: $context,
-                rules: $rules,
-                key: $keysAllInSequentialOrder ? null : $key,
-                value: $value,
-                addSeparator: (
-                    $entriesLeft === 0
-                    && $rules->arrays->addSeparatorToLastItem
-                    && $rules->arrays->closingBrace === BracePositionEnum::DIFF_LINE
-                ) || $entriesLeft !== 0,
-                addSpacingAfterSeparator: false,
-            );
-            if ($entriesLeft > 0) {
-                $innerEntriesTokens[] = new NewLinesToken();
-            }
-        }
-        $tokens = array_merge($tokens, $this->insertIndentationTokens($rules, $innerEntriesTokens));
-        if ($rules->arrays->closingBrace !== BracePositionEnum::SAME_LINE) {
-            $tokens[] = new NewLinesToken();
-        }
-        $tokens = $this->addClosingTokens($rules, $tokens);
-        return $this->flatten($tokens);
+        return $tokens;
     }
 
     /**
@@ -146,6 +113,104 @@ class ArrayVal extends BaseVal implements ProvidesInlineTokens, ProvidesChopDown
     }
 
     /**
+     * @return Token[]
+     */
+    public function getChopDownTokens(RenderContext $context, RenderingRules $rules): array
+    {
+        $keysAllInSequentialOrder = $this->areAllKeysInNumericalSequentialOrder();
+        $keyValues = $this->keyValues;
+        reset($keyValues);
+
+        $tokens = [];
+        $tokens = $this->addOpeningTokens($rules, $tokens);
+        $context = $this->getAdjustedContextWithIdentifierPadding($rules, $keyValues, $context, $keysAllInSequentialOrder);
+        $innerEntriesTokens = $this->getInnerEntriesTokens($keyValues, $context, $rules, $keysAllInSequentialOrder);
+        $tokens = $this->convertAndFlattenEntries($innerEntriesTokens, $rules, $tokens);
+        if ($rules->arrays->closingBrace !== BracePositionEnum::SAME_LINE) {
+            $tokens[] = new NewLinesToken();
+        }
+        $tokens = $this->addClosingTokens($rules, $tokens);
+
+        return $this->flatten($tokens);
+    }
+
+    /**
+     * @param array $keyValues
+     * @param RenderContext $context
+     * @param RenderingRules $rules
+     * @param bool $keysAllInSequentialOrder
+     * @return array
+     */
+    private function getInnerEntriesTokens(
+        array $keyValues,
+        RenderContext $context,
+        RenderingRules $rules,
+        bool $keysAllInSequentialOrder
+    ): array {
+        $entriesLeft = count($keyValues);
+        $innerEntriesTokens = [];
+        foreach ($keyValues as $key => $value) {
+            $entriesLeft--;
+            $innerEntriesTokens[] = $this->renderEntry(
+                context: $context,
+                rules: $rules,
+                key: $keysAllInSequentialOrder ? null : $key,
+                value: $value,
+                addSeparator: (
+                    $entriesLeft === 0
+                    && $rules->arrays->addSeparatorToLastItem
+                    && $rules->arrays->closingBrace === BracePositionEnum::DIFF_LINE
+                ) || $entriesLeft !== 0,
+                addSpacingAfterSeparator: false,
+            );
+        }
+        return $innerEntriesTokens;
+    }
+
+    /**
+     * @param array $innerEntriesTokens
+     * @param RenderingRules $rules
+     * @param array $tokens
+     * @return array
+     */
+    private function convertAndFlattenEntries(array $innerEntriesTokens, RenderingRules $rules, array $tokens): array
+    {
+        foreach ($innerEntriesTokens as $index => $innerEntryTokens) {
+            if ($index === 0 && $rules->arrays->openingBrace === BracePositionEnum::SAME_LINE) {
+                $tokens[] = $this->flatten($innerEntryTokens);
+            } elseif ($index === 0 && $rules->arrays->openingBrace !== BracePositionEnum::SAME_LINE) {
+                $tokens[] = new NewLinesToken();
+                $tokens[] = $this->flatten($this->insertIndentationTokens($rules, $innerEntryTokens));
+            } elseif ($index !== 0) {
+                $tokens[] = new NewLinesToken();
+                $tokens[] = $this->flatten($this->insertIndentationTokens($rules, $innerEntryTokens));
+            }
+        }
+        return $tokens;
+    }
+
+    /**
+     * @param RenderingRules $rules
+     * @param array $keyValues
+     * @param RenderContext $context
+     * @param bool $keysAllInSequentialOrder
+     * @return RenderContext
+     */
+    private function getAdjustedContextWithIdentifierPadding(
+        RenderingRules $rules,
+        array $keyValues,
+        RenderContext $context,
+        bool $keysAllInSequentialOrder
+    ): RenderContext {
+        if ($rules->arrays->padIdentifiers) {
+            $longestIdentifier = $this->getLongestIdentifier($keyValues, $context, $rules, $keysAllInSequentialOrder);
+            $context = clone $context;
+            $context->arrayIdentifierPaddingSize = $longestIdentifier;
+        }
+        return $context;
+    }
+
+    /**
      * @param RenderContext $context
      * @param RenderingRules $rules
      * @param int|string|null $key
@@ -164,13 +229,13 @@ class ArrayVal extends BaseVal implements ProvidesInlineTokens, ProvidesChopDown
     ): array {
         $tokens = [];
         if (is_string($key)) {
-            $tokens[] = (new StringVal($key))->getTokens($context, $rules);
-            $tokens[] = new SpacesToken($rules->arrays->spacesAfterIdentifiers);
+            $tokens[] = $identifierTokens = (new StringVal($key))->getTokens($context, $rules);
+            $tokens = $this->renderSpacesAfterIdentifier($rules, $identifierTokens, $context, $tokens);
             $tokens[] = new ArrayAssignToken();
             $tokens[] = new SpacesToken($rules->arrays->spacesAfterOperators);
         } elseif (!is_null($key)) {
-            $tokens[] = new Token($key);
-            $tokens[] = new SpacesToken($rules->arrays->spacesAfterIdentifiers);
+            $tokens[] = $identifierTokens = [new Token($key)];
+            $tokens = $this->renderSpacesAfterIdentifier($rules, $identifierTokens, $context, $tokens);
             $tokens[] = new ArrayAssignToken();
             $tokens[] = new SpacesToken($rules->arrays->spacesAfterOperators);
         }
@@ -189,7 +254,27 @@ class ArrayVal extends BaseVal implements ProvidesInlineTokens, ProvidesChopDown
         return $tokens;
     }
 
-    public function areAllKeysInNumericalSequentialOrder(): bool
+    /**
+     * @param RenderContext $context
+     * @param RenderingRules $rules
+     * @param int|string|null $key
+     * @return Token[]
+     */
+    private function renderIdentifierOnly(
+        RenderContext   $context,
+        RenderingRules  $rules,
+        null|int|string $key,
+    ): array {
+        $tokens = [];
+        if (is_string($key)) {
+            $tokens[] = (new StringVal($key))->getTokens($context, $rules);
+        } elseif (!is_null($key)) {
+            $tokens[] = new Token($key);
+        }
+        return $this->flatten($tokens);
+    }
+
+    private function areAllKeysInNumericalSequentialOrder(): bool
     {
         $keys = array_keys($this->keyValues);
         $keysAllInSequentialOrder = true;
@@ -209,7 +294,7 @@ class ArrayVal extends BaseVal implements ProvidesInlineTokens, ProvidesChopDown
      * @param array $tokens
      * @return array
      */
-    public function addOpeningTokens(RenderingRules $rules, array $tokens): array
+    private function addOpeningTokens(RenderingRules $rules, array $tokens): array
     {
         if ($rules->arrays->useShortForm) {
             $tokens[] = new SquareStartToken();
@@ -225,7 +310,7 @@ class ArrayVal extends BaseVal implements ProvidesInlineTokens, ProvidesChopDown
      * @param array $tokens
      * @return array
      */
-    public function addClosingTokens(RenderingRules $rules, array $tokens): array
+    private function addClosingTokens(RenderingRules $rules, array $tokens): array
     {
         if ($rules->arrays->useShortForm) {
             $tokens[] = new SquareEndToken();
@@ -258,5 +343,34 @@ class ArrayVal extends BaseVal implements ProvidesInlineTokens, ProvidesChopDown
             $tokens[] = new Token($value);
         }
         return $tokens;
+    }
+
+    /**
+     * @param array $keyValues
+     * @param RenderContext $context
+     * @param RenderingRules $rules
+     * @param bool $keysAllInSequentialOrder
+     * @return int
+     */
+    private function getLongestIdentifier(
+        array $keyValues,
+        RenderContext $context,
+        RenderingRules $rules,
+        bool $keysAllInSequentialOrder
+    ): int {
+        $longestIdentifier = 0;
+        foreach ($keyValues as $key => $value) {
+            $identifierTokens = $this->renderIdentifierOnly(
+                $context,
+                $rules,
+                $keysAllInSequentialOrder ? null : $key,
+            );
+            if (empty($identifierTokens)) {
+                continue;
+            }
+            $renderedIdentifier = $this->renderTokensToString($identifierTokens);
+            $longestIdentifier = max($longestIdentifier, strlen($renderedIdentifier) + $rules->arrays->spacesAfterIdentifiers);
+        }
+        return $longestIdentifier;
     }
 }
