@@ -31,9 +31,7 @@ class MethodDefTest extends TestCase
 
         $this->assertEquals(
             <<<'EOS'
-            abstract    public function myFunction()
-            {
-            }
+            abstract    public function myFunction();
             EOS,
             $this->renderTokensToString($token->renderInlineScenario(new RenderContext(), $rules))
         );

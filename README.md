@@ -2,25 +2,19 @@
 
 **CrazyCodeGen** is a modular, extensible PHP code generation framework. Unlike fluent-style builders, it focuses on composable expression trees and token-based rendering, designed to evolve with PHP versions.
 
----
-
 ## 🚀 Features
 
 - Declarative structure for values, operators, and PHP constructs
 - Fully pluggable rendering system (tokens, formatting, rules)
 - Layered architecture for easy extension
 - Token-based emission system — not tied to templates or hardcoded output
-- PHP 8+ compatible, PSR-4 autoloading
-
----
+- PHP 8+ compatible, PSR-4 auto loading
 
 ## 📦 Installation
 
 ```bash
 composer require crazycodr/crazycodegen
 ```
-
----
 
 ## 📐 Class generation example
 
@@ -63,63 +57,13 @@ $rules->docBlocks->lineLength = 125;
 echo $classDef->getTokens(new RenderContext(), $rules);
 ```
 
----
-
 ## 📚 Documentation
 
-- [Architecture Overview](docs/Architecture.md)
-- [Using the Library](docs/Usage.md)
-- [Extending CrazyCodeGen](docs/Extending.md)
-- [API Details: Definition](docs/API/Definition.md)
-- [API Details: Rendering](docs/API/Rendering.md)
-
----
-
-## 🏗 Architecture Overview
-
-### Definition Layer
-- Models PHP values, types, operations, and expressions
-- Traits like `CanBeCalled`, `CanBeAssigned`, etc. define semantic capabilities
-- Contexts and Factories orchestrate token-to-structure parsing
-
-### Rendering Layer
-- Tokenizes expressions using `Token`, `KeywordToken`, `CharacterToken`
-- Applies formatting rules for spacing, syntax, and PSR-like styles
-- Rendering contexts allow customization of output modes
-
-### Core Flow
-```
-Tokens → Definition Structures → Expression Tree → Tokens → Rendered PHP Code
-```
-
----
-
-## 💡 Examples
-
-### Generating a Function Call
-```php
-use CrazyCodeGen\Definition\Structures\FunctionCall;
-use CrazyCodeGen\Definition\Values\Literal;
-
-$call = new FunctionCall('max', [new Literal(5), new Literal(9)]);
-echo Token::renderTokens($call->toTokens());
-// Outputs: max(5, 9)
-```
-
-### Assigning to a Variable
-```php
-use CrazyCodeGen\Definition\Structures\Assignment;
-use CrazyCodeGen\Definition\Values\VariableReference;
-
-$assign = new Assignment(
-    new VariableReference('result'),
-    new Literal(42)
-);
-echo Token::renderTokens($assign->toTokens());
-// Outputs: $result = 42;
-```
-
----
+- [Structure definitions (Classes, methods, properties, etc)](docs/Using/Definitions/Structures/StructureDefinitions.md)
+- [Type definitions](docs/Using/Definitions/TypeDefinitions.md)
+- [Value definitions](docs/Using/Definitions/ValueDefinitions.md)
+- [Expressions](docs/Using/Expressions.md)
+- [Instructions](docs/Using/Instructions.md)
 
 ## 🧪 Tests
 
@@ -128,8 +72,6 @@ Run tests with:
 ```bash
 vendor/bin/phpunit
 ```
-
----
 
 ## 📝 License
 

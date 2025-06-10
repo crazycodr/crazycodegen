@@ -29,6 +29,7 @@ use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\AbstractToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\FunctionToken;
@@ -121,7 +122,11 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
             $tokens[] = (new ParameterListDef())->getTokens($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
-        $tokens = $this->addInlineBraceTokensAndInstructions($context, $rules, $tokens);
+        if (!$this->abstract) {
+            $tokens = $this->addInlineBraceTokensAndInstructions($context, $rules, $tokens);
+        } else {
+            $tokens[] = new SemiColonToken();
+        }
         return $this->flatten($tokens);
     }
 
@@ -264,7 +269,9 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
             $tokens[] = (new ParameterListDef())->getChopDownTokens($context, $rules);
         }
         $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
-        $tokens = $this->addChopDownBraceTokensAndInstructions($context, $rules, $tokens);
+        if (!$this->abstract) {
+            $tokens = $this->addChopDownBraceTokensAndInstructions($context, $rules, $tokens);
+        }
         return $this->flatten($tokens);
     }
 
