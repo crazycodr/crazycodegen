@@ -72,7 +72,6 @@ trait TokenFunctions
                     $tokens[] = $instruction;
                 } else {
                     $tokens = array_merge($tokens, $this->convertSimpleFlexibleTokenValueToTokens($context, $instruction));
-//                    $tokens[] = new NewLinesToken();
                 }
             }
         } elseif ($instructions instanceof NewLinesToken) {
