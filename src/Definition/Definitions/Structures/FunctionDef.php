@@ -56,7 +56,7 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
         null|string|NamespaceDef      $namespace = null,
         null|string|array|DocBlockDef $docBlock = null,
         array                         $parameters = [],
-        null|string|TypeDef           $returnType = null,
+        null|TypeDef                  $returnType = null,
         array                         $instructions = [],
     ) {
         $this->setNamespace($namespace);

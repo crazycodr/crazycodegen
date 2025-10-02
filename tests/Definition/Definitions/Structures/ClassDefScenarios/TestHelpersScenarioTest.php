@@ -11,6 +11,8 @@ use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
 use CrazyCodeGen\Definition\Expressions\Comment;
@@ -58,7 +60,7 @@ class TestHelpersScenarioTest extends TestCase
         );
 
         $setUpMethod = (new MethodDef('setUp'))
-            ->setReturnType('void')
+            ->setReturnType(new BuiltInTypeSpec(BuiltInTypesEnum::void))
             ->addInstruction(ParentContext::to(new CallOp('setUp')))
             ->addInstruction(new ConditionChain([
                 new Condition(
@@ -86,7 +88,7 @@ class TestHelpersScenarioTest extends TestCase
                 ),
             ));
         $tearDownMethod = (new MethodDef('tearDown'))
-            ->setReturnType('void')
+            ->setReturnType(new BuiltInTypeSpec(BuiltInTypesEnum::void))
             ->addInstruction(
                 ThisContext::to($configApiClientSpyBuilderProperty)
                     ->to(new CallOp('getService'))

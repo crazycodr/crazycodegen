@@ -9,6 +9,8 @@ use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
@@ -46,7 +48,7 @@ class ServiceBuilderScenarioTest extends TestCase
                 value: $mockParameter,
             ));
         $getMockedClassesMethod = (new MethodDef('getMockedClasses'))
-            ->setReturnType('array')
+            ->setReturnType(new BuiltInTypeSpec(BuiltInTypesEnum::array))
             ->setStatic(true)
             ->addInstruction(new ReturnOp([$hookBasketAdapterType]));
         $getServiceMethod = (new MethodDef('getService'))

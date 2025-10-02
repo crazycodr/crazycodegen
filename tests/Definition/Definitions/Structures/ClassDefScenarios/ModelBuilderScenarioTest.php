@@ -10,6 +10,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Types\StaticTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
@@ -47,7 +48,7 @@ class ModelBuilderScenarioTest extends TestCase
                 ],
             )));
         $hstExemptionMethod = (new MethodDef('hstExemption'))
-            ->setReturnType('static')
+            ->setReturnType(new StaticTypeSpec())
             ->addInstruction(new AssignOp(
                 subject: ThisContext::to($modelProperty)->to('identifier'),
                 value: 'hst',

@@ -65,7 +65,7 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
         VisibilityEnum                $visibility = VisibilityEnum::PUBLIC,
         bool                          $static = false,
         array                         $parameters = [],
-        null|string|TypeDef           $returnType = null,
+        null|TypeDef                  $returnType = null,
         array                         $instructions = [],
     ) {
         $this->setDocBlock($docBlock);
