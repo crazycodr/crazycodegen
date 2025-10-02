@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -37,7 +37,7 @@ class BuiltInTypeSpecTest extends TestCase
             <<<'EOS'
             int
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
 
         $token = new BuiltInTypeSpec('bool');
@@ -45,7 +45,7 @@ class BuiltInTypeSpecTest extends TestCase
             <<<'EOS'
             bool
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
 
         $token = new BuiltInTypeSpec('false');
@@ -53,7 +53,7 @@ class BuiltInTypeSpecTest extends TestCase
             <<<'EOS'
             false
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
 
         $token = new BuiltInTypeSpec('mixed');
@@ -61,7 +61,7 @@ class BuiltInTypeSpecTest extends TestCase
             <<<'EOS'
             mixed
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }

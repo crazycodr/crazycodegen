@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Values;
 
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
 
 class NullVal extends BaseVal
@@ -11,7 +11,7 @@ class NullVal extends BaseVal
     {
     }
 
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         return [new NullToken()];
     }

@@ -22,7 +22,7 @@ use CrazyCodeGen\Definition\Definitions\Traits\HasNameTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasPropertiesTrait;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
@@ -84,14 +84,14 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     /**
      * @return Token[]
      */
-    private function getSimpleExtendsTokens(TokenizationContext $context): array
+    private function getExtendsTokens(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->extends) {
             $tokens[] = new SpacesToken();
             $tokens[] = new ExtendsToken();
             $tokens[] = new SpacesToken();
-            $tokens[] = $this->extends->getSimpleTokens($context);
+            $tokens[] = $this->extends->getTokens($context);
         }
         return $this->flatten($tokens);
     }
@@ -99,39 +99,39 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->namespace) {
-            $tokens[] = $this->namespace->getSimpleTokens($context);
+            $tokens[] = $this->namespace->getTokens($context);
         }
 
         $previousImportedClasses = $context->importedClasses;
         foreach ($this->imports as $import) {
-            $tokens[] = $import->getSimpleTokens($context);
+            $tokens[] = $import->getTokens($context);
             if (!$import->alias) {
                 $context->importedClasses[] = $import->type->type;
             }
         }
 
         if ($this->docBlock) {
-            $tokens[] = $this->docBlock->getSimpleTokens($context);
+            $tokens[] = $this->docBlock->getTokens($context);
         }
 
-        $tokens[] = $this->getSimpleDeclarationTokens();
-        $tokens[] = $this->getSimpleExtendsTokens($context);
-        $tokens[] = $this->addSpaceIfNotEmpty($this->getSimpleImplementsTokens($context));
+        $tokens[] = $this->getDeclarationTokens();
+        $tokens[] = $this->getExtendsTokens($context);
+        $tokens[] = $this->addSpaceIfNotEmpty($this->getImplementsTokens($context));
 
         $tokens[] = new BraceStartToken();
 
         foreach ($this->constants as $constant) {
-            $tokens[] = $constant->getSimpleTokens($context);
+            $tokens[] = $constant->getTokens($context);
         }
         foreach ($this->properties as $property) {
-            $tokens[] = $property->getSimpleTokens($context);
+            $tokens[] = $property->getTokens($context);
         }
         foreach ($this->methods as $method) {
-            $tokens[] = $method->getSimpleTokens($context);
+            $tokens[] = $method->getTokens($context);
         }
         $tokens[] = new BraceEndToken();
 
@@ -143,7 +143,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     /**
      * @return Token[]
      */
-    private function getSimpleDeclarationTokens(): array
+    private function getDeclarationTokens(): array
     {
         $tokens = [];
         if ($this->abstract) {
@@ -159,14 +159,14 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     /**
      * @return Token[]
      */
-    private function getSimpleImplementsTokens(TokenizationContext $context): array
+    private function getImplementsTokens(RenderingContext $context): array
     {
         $tokens = [];
         if (empty($this->implementations)) {
             return $tokens;
         }
         $implementsTokenGroup = new ImplementationsDef($this->implementations);
-        return $implementsTokenGroup->getSimpleTokens($context);
+        return $implementsTokenGroup->getTokens($context);
     }
 
     public function getClassReference(): ClassRefVal

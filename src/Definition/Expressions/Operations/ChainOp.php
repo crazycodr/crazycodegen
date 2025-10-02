@@ -9,7 +9,7 @@ use CrazyCodeGen\Definition\Definitions\Contexts\MemberAccessContext;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Expression;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\MemberAccessToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\StaticAccessToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -37,17 +37,17 @@ class ChainOp extends Tokenizes
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         $firstItem = null;
         $previousItem = null;
         foreach ($this->chain as $chainItem) {
             if ($firstItem === null) {
-                $tokens[] = $firstItem = $this->renderSimpleChainItemTokens($context, $chainItem);
+                $tokens[] = $firstItem = $this->renderChainItemTokens($context, $chainItem);
             } else {
                 $tokens[] = $this->getProperAccessToken($previousItem);
-                $tokens[] = $this->renderSimpleChainItemTokens($context, $chainItem);
+                $tokens[] = $this->renderChainItemTokens($context, $chainItem);
             }
             $previousItem = $chainItem;
         }
@@ -55,16 +55,16 @@ class ChainOp extends Tokenizes
     }
 
     /**
-     * @param TokenizationContext $context
+     * @param RenderingContext $context
      * @param mixed $chainItem
      * @return Token[]
      */
-    public function renderSimpleChainItemTokens(TokenizationContext $context, mixed $chainItem): array
+    public function renderChainItemTokens(RenderingContext $context, mixed $chainItem): array
     {
         if ($chainItem instanceof Token) {
             return [$chainItem];
         } elseif ($chainItem instanceof Tokenizes) {
-            return $chainItem->getSimpleTokens($context);
+            return $chainItem->getTokens($context);
         }
         return [];
     }

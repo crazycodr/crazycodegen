@@ -6,7 +6,7 @@ use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ExclamationToken;
 
 class NotOp extends Tokenizes
@@ -26,11 +26,11 @@ class NotOp extends Tokenizes
         }
     }
 
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         $tokens[] = new ExclamationToken();
-        $tokens[] = $this->operand->getSimpleTokens($context);
+        $tokens[] = $this->operand->getTokens($context);
         return $this->flatten($tokens);
     }
 }

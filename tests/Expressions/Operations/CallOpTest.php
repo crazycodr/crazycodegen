@@ -7,7 +7,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +26,7 @@ class CallOpTest extends TestCase
             <<<'EOS'
             setUp()
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -43,7 +43,7 @@ class CallOpTest extends TestCase
             <<<'EOS'
             setUp()
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -61,7 +61,7 @@ class CallOpTest extends TestCase
             <<<'EOS'
             setUp($bar)
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -79,7 +79,7 @@ class CallOpTest extends TestCase
             <<<'EOS'
             setUp(1,2,3)
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -97,7 +97,7 @@ class CallOpTest extends TestCase
             <<<'EOS'
             setUp($bar,$baz)
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -115,7 +115,7 @@ class CallOpTest extends TestCase
             <<<'EOS'
             setUp([1,2,3],$baz)
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }

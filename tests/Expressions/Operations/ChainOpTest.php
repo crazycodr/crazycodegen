@@ -9,7 +9,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -31,7 +31,7 @@ class ChainOpTest extends TestCase
             <<<'EOS'
             $foo->bar->baz
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -49,7 +49,7 @@ class ChainOpTest extends TestCase
             <<<'EOS'
             $foo->bar->baz
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -65,7 +65,7 @@ class ChainOpTest extends TestCase
             <<<'EOS'
             $foo
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -81,7 +81,7 @@ class ChainOpTest extends TestCase
             <<<'EOS'
             foo
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -99,7 +99,7 @@ class ChainOpTest extends TestCase
             <<<'EOS'
             $this->foo->bar
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -117,7 +117,7 @@ class ChainOpTest extends TestCase
             <<<'EOS'
             parent::setUp()->bar
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }

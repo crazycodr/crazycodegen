@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Definition\Expressions;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\MultiLineCloseCommentToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\MultiLineOpenCommentToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
@@ -26,7 +26,7 @@ class Comment extends Tokenizes implements ShouldNotBeNestedIntoInstruction
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->useMultiline) {

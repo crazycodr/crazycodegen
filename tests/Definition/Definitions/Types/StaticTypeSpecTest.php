@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
 use CrazyCodeGen\Definition\Definitions\Types\StaticTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class StaticTypeSpecTest extends TestCase
             <<<'EOS'
             static
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 

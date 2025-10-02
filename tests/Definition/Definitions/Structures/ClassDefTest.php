@@ -10,7 +10,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasImportsTraitTestTrait;
 use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasNamespaceTraitTestTrait;
@@ -61,7 +61,7 @@ class ClassDefTest extends TestCase
             <<<'EOS'
             class myClass{}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -75,7 +75,7 @@ class ClassDefTest extends TestCase
             <<<'EOS'
             class myClass{}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -90,7 +90,7 @@ class ClassDefTest extends TestCase
             <<<'EOS'
             abstract class myClass{}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -109,7 +109,7 @@ class ClassDefTest extends TestCase
             <<<'EOS'
             namespace CrazyCodeGen\Tests;class myClass{}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -132,7 +132,7 @@ class ClassDefTest extends TestCase
              */
             class myClass{}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -147,7 +147,7 @@ class ClassDefTest extends TestCase
             <<<'EOS'
             class myClass extends CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit{}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -170,7 +170,7 @@ class ClassDefTest extends TestCase
             <<<'EOS'
             class myClass implements CrazyCodeGen\Tests,CrazyCodeGen\Tests2,CrazyCodeGen\Tests3{}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -192,7 +192,7 @@ class ClassDefTest extends TestCase
             <<<'EOS'
             class myClass{public const $const1=1;public const $const2=2;}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -215,7 +215,7 @@ class ClassDefTest extends TestCase
             <<<'EOS'
             class myClass{public $prop1;public $prop2;public $prop3;}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -238,7 +238,7 @@ class ClassDefTest extends TestCase
             <<<'EOS'
             class myClass{public function method1(){}public function method2(){}public function method3(){}}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }

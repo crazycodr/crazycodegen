@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Values;
 
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SingleQuoteToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
@@ -16,7 +16,7 @@ class StringVal extends BaseVal
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         return [
             new SingleQuoteToken(),

@@ -6,7 +6,7 @@ use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Structures\Condition;
 use CrazyCodeGen\Definition\Expressions\Structures\ConditionChain;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -33,7 +33,7 @@ class ConditionChainTest extends TestCase
             if($foo === "bar"){true;}
             
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -61,7 +61,7 @@ class ConditionChainTest extends TestCase
             if($foo === "bar"){true;}else{false;}
             
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -90,7 +90,7 @@ class ConditionChainTest extends TestCase
             if($foo === "bar"){true;}elseif($bar === "baz"){false;}
             
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -124,7 +124,7 @@ class ConditionChainTest extends TestCase
             if($foo === "bar"){true;}elseif($bar === "baz"){false;}else{"foo";}
             
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -158,7 +158,7 @@ class ConditionChainTest extends TestCase
             if($foo === "bar"){true;}elseif($bar === "baz"){false;}else{"foo";}
             
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }

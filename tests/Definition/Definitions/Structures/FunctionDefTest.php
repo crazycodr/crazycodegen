@@ -7,7 +7,7 @@ use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\FunctionDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -25,7 +25,7 @@ class FunctionDefTest extends TestCase
             <<<'EOS'
             function myFunction(){}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -49,7 +49,7 @@ class FunctionDefTest extends TestCase
             <<<'EOS'
             function myFunction($foo,int $bar,bool $baz=true){}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -65,7 +65,7 @@ class FunctionDefTest extends TestCase
             <<<'EOS'
             function myFunction():string{}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -89,7 +89,7 @@ class FunctionDefTest extends TestCase
              */
             function myFunction(){}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }

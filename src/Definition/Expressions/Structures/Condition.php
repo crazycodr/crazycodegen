@@ -7,7 +7,7 @@ use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Expressions\Instruction;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
@@ -39,20 +39,20 @@ class Condition extends Tokenizes implements ShouldNotBeNestedIntoInstruction
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
 
         if (!is_null($this->condition)) {
             $tokens[] = new IfToken();
             $tokens[] = new ParStartToken();
-            $tokens[] = $this->convertSimpleFlexibleTokenValueToTokens($context, $this->condition);
+            $tokens[] = $this->convertFlexibleTokenValueToTokens($context, $this->condition);
             $tokens[] = new ParEndToken();
         }
         $tokens[] = new BraceStartToken();
 
         foreach ($this->instructions as $instruction) {
-            $tokens[] = $instruction->getSimpleTokens($context);
+            $tokens[] = $instruction->getTokens($context);
         }
 
         $tokens[] = new BraceEndToken();

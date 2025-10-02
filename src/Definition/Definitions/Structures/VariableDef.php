@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\DollarToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
@@ -21,7 +21,7 @@ class VariableDef extends Tokenizes implements ProvidesCallableReference
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         $tokens[] = new DollarToken();

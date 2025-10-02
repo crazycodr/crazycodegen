@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Definition\Expressions;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Expression;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
@@ -29,11 +29,11 @@ class Instruction extends Tokenizes
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         foreach ($this->expressions as $expression) {
-            $tokens[] = $expression->getSimpleTokens($context);
+            $tokens[] = $expression->getTokens($context);
         }
         $tokens = $this->flatten($tokens);
         $lastToken = $tokens[array_key_last($tokens)];

@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
 use CrazyCodeGen\Definition\Definitions\Values\NullVal;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class NullValTest extends TestCase
             <<<'EOS'
             null
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }

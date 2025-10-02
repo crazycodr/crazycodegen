@@ -2,7 +2,7 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Types;
 
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ArrayToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\BoolToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\CallableToken;
@@ -64,7 +64,7 @@ class BuiltInTypeSpec extends TypeDef
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         return match ($this->scalarType) {
             // Scalar types

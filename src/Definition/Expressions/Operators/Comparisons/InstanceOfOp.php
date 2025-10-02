@@ -6,7 +6,7 @@ use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\InstanceOfToken;
 
@@ -30,14 +30,14 @@ class InstanceOfOp extends Tokenizes
         }
     }
 
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
-        $tokens[] = $this->left->getSimpleTokens($context);
+        $tokens[] = $this->left->getTokens($context);
         $tokens[] = new SpacesToken();
         $tokens[] = new InstanceOfToken();
         $tokens[] = new SpacesToken();
-        $tokens[] = $this->right->getSimpleTokens($context);
+        $tokens[] = $this->right->getTokens($context);
         return $this->flatten($tokens);
     }
 }

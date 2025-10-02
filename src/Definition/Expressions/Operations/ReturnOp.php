@@ -7,7 +7,7 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Definition\Expression;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ReturnToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -33,12 +33,12 @@ class ReturnOp extends Tokenizes
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         $tokens[] = new ReturnToken();
         $tokens[] = new SpacesToken();
-        $tokens[] = $this->instruction->getSimpleTokens($context);
+        $tokens[] = $this->instruction->getTokens($context);
         return $this->flatten($tokens);
     }
 }

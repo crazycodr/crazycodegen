@@ -12,7 +12,7 @@ use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
@@ -58,20 +58,20 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference, Provid
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
 
         if ($this->docBlock) {
-            $tokens[] = $this->docBlock->getSimpleTokens($context);
+            $tokens[] = $this->docBlock->getTokens($context);
         }
 
         $tokens[] = new VisibilityToken($this->visibility);
         $tokens[] = new SpacesToken();
-        $tokens[] = $this->renderSimpleModifiers();
-        $tokens[] = $this->renderSimpleType($context);
-        $tokens[] = (new VariableDef($this->name))->getSimpleTokens($context);
-        $tokens[] = $this->renderSimpleDefaultValue($context);
+        $tokens[] = $this->renderModifiers();
+        $tokens[] = $this->renderType($context);
+        $tokens[] = (new VariableDef($this->name))->getTokens($context);
+        $tokens[] = $this->renderDefaultValue($context);
         $tokens[] = new SemicolonToken();
         return $this->flatten($tokens);
     }
@@ -79,7 +79,7 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference, Provid
     /**
      * @return Token[]
      */
-    public function renderSimpleModifiers(): array
+    public function renderModifiers(): array
     {
         $tokens = [];
         if ($this->static) {
@@ -92,11 +92,11 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference, Provid
     /**
      * @return Token[]
      */
-    public function renderSimpleType(TokenizationContext $context): array
+    public function renderType(RenderingContext $context): array
     {
         $tokens = [];
         if (!is_null($this->type)) {
-            $tokens[] = $this->type->getSimpleTokens($context);
+            $tokens[] = $this->type->getTokens($context);
             $tokens[] = new SpacesToken();
         }
         return $this->flatten($tokens);
@@ -105,12 +105,12 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference, Provid
     /**
      * @return Token[]
      */
-    public function renderSimpleDefaultValue(TokenizationContext $context): array
+    public function renderDefaultValue(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->defaultValue !== self::UNSET_DEFAULT_VALUE) {
             $tokens[] = new EqualToken();
-            $tokens[] = $this->defaultValue->getSimpleTokens($context);
+            $tokens[] = $this->defaultValue->getTokens($context);
         }
         return $this->flatten($tokens);
     }

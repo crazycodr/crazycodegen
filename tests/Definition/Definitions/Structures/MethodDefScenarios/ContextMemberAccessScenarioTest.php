@@ -13,8 +13,8 @@ use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
-use CrazyCodeGen\Rendering\Formatters\PhpCsFixerFormatter;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Tests\Common\Formatters\PhpCsFixerFormatter;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -56,8 +56,8 @@ class ContextMemberAccessScenarioTest extends TestCase
             ->addProperty($modelProperty)
             ->addMethod($getMethod);
 
-        $simpleCode = $this->renderTokensToString($classDef->getSimpleTokens(new TokenizationContext()));
-        $newCode = (new PhpCsFixerFormatter())->format($simpleCode);
+        $code = $this->renderTokensToString($classDef->getTokens(new RenderingContext()));
+        $newCode = (new PhpCsFixerFormatter())->format($code);
 
         $this->assertEquals(
             <<<'EOS'
@@ -94,8 +94,8 @@ class ContextMemberAccessScenarioTest extends TestCase
             ->setNamespace('Internal\Project\Models')
             ->addMethod($constructor);
 
-        $simpleCode = $this->renderTokensToString($classDef->getSimpleTokens(new TokenizationContext()));
-        $newCode = (new PhpCsFixerFormatter())->format($simpleCode);
+        $code = $this->renderTokensToString($classDef->getTokens(new RenderingContext()));
+        $newCode = (new PhpCsFixerFormatter())->format($code);
 
         $this->assertEquals(
             <<<'EOS'

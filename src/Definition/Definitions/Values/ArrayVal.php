@@ -8,7 +8,7 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Common\Traits\ValidationTrait;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ArrayAssignToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SquareEndToken;
@@ -40,7 +40,7 @@ class ArrayVal extends BaseVal
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         $tokens[] = new SquareStartToken();
@@ -48,7 +48,7 @@ class ArrayVal extends BaseVal
         $entriesLeft = count($this->keyValues);
         foreach ($this->keyValues as $key => $value) {
             $entriesLeft--;
-            $tokens[] = $this->renderSimpleEntry(
+            $tokens[] = $this->renderEntry(
                 $context,
                 key: $keysAllInSequentialOrder ? null : $key,
                 value: $value,
@@ -60,27 +60,27 @@ class ArrayVal extends BaseVal
     }
 
     /**
-     * @param TokenizationContext $context
+     * @param RenderingContext $context
      * @param int|string|null $key
      * @param mixed $value
      * @param bool $addSeparator
      * @return Token[]
      */
-    private function renderSimpleEntry(
-        TokenizationContext $context,
-        null|int|string $key,
-        mixed           $value,
-        bool            $addSeparator,
+    private function renderEntry(
+        RenderingContext $context,
+        null|int|string  $key,
+        mixed            $value,
+        bool             $addSeparator,
     ): array {
         $tokens = [];
         if (is_string($key)) {
-            $tokens[] = (new StringVal($key))->getSimpleTokens($context);
+            $tokens[] = (new StringVal($key))->getTokens($context);
             $tokens[] = new ArrayAssignToken();
         } elseif (!is_null($key)) {
             $tokens[] = [new Token($key)];
             $tokens[] = new ArrayAssignToken();
         }
-        $valueTokens = $this->getSimpleTokensForValue($context, $value);
+        $valueTokens = $this->getTokensForValue($context, $value);
         $tokens = array_merge($tokens, $valueTokens);
         if ($addSeparator) {
             $tokens[] = new CommaToken();
@@ -104,23 +104,23 @@ class ArrayVal extends BaseVal
     }
 
     /**
-     * @param TokenizationContext $context
+     * @param RenderingContext $context
      * @param mixed $value
      * @return array
      */
-    private function getSimpleTokensForValue(
-        TokenizationContext $context,
-        mixed $value
+    private function getTokensForValue(
+        RenderingContext $context,
+        mixed            $value
     ): array {
         $tokens = [];
         if (is_string($value)) {
-            $tokens[] = (new StringVal($value))->getSimpleTokens($context);
+            $tokens[] = (new StringVal($value))->getTokens($context);
         } elseif (is_bool($value)) {
             $tokens[] = new Token($value ? 'true' : 'false');
         } elseif (is_null($value)) {
             $tokens[] = new Token('null');
         } elseif ($value instanceof Tokenizes) {
-            $tokens[] = $value->getSimpleTokens($context);
+            $tokens[] = $value->getTokens($context);
         } elseif ($value instanceof Token) {
             $tokens[] = $value;
         } else {

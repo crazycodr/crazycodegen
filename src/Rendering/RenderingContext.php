@@ -2,10 +2,10 @@
 
 namespace CrazyCodeGen\Rendering;
 
-class TokenizationContext
+class RenderingContext
 {
     public function __construct(
-        public array                  $importedClasses = [],
+        public array $importedClasses = [],
     ) {
     }
 }

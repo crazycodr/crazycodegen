@@ -9,7 +9,7 @@ use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Definition\Expression;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
 
 class AssignOp extends Tokenizes
@@ -40,12 +40,12 @@ class AssignOp extends Tokenizes
         }
     }
 
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
-        $tokens[] =  $this->subject->getSimpleTokens($context);
+        $tokens[] =  $this->subject->getTokens($context);
         $tokens[] =  new EqualToken();
-        $tokens[] =  $this->value->getSimpleTokens($context);
+        $tokens[] =  $this->value->getTokens($context);
         return $this->flatten($tokens);
     }
 }

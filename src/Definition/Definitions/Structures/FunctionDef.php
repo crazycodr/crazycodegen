@@ -19,7 +19,7 @@ use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ColonToken;
@@ -67,25 +67,25 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     }
 
     /**
-     * @param TokenizationContext $context
+     * @param RenderingContext $context
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->namespace) {
-            $tokens[] = $this->namespace->getSimpleTokens($context);
+            $tokens[] = $this->namespace->getTokens($context);
         }
         if ($this->docBlock) {
-            $tokens[] = $this->docBlock->getSimpleTokens($context);
+            $tokens[] = $this->docBlock->getTokens($context);
         }
-        $tokens[] = $this->getSimpleFunctionDeclarationTokens();
+        $tokens[] = $this->getFunctionDeclarationTokens();
         if ($this->parameters) {
-            $tokens[] = $this->parameters->getSimpleTokens($context);
+            $tokens[] = $this->parameters->getTokens($context);
         } else {
-            $tokens[] = (new ParameterListDef())->getSimpleTokens($context);
+            $tokens[] = (new ParameterListDef())->getTokens($context);
         }
-        $tokens[] = $this->addSimpleReturnTypeTokens($context);
+        $tokens[] = $this->addReturnTypeTokens($context);
         $tokens[] = new BraceStartToken();
         $tokens[] = new BraceEndToken();
         return $this->flatten($tokens);
@@ -94,7 +94,7 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     /**
      * @return array
      */
-    public function getSimpleFunctionDeclarationTokens(): array
+    public function getFunctionDeclarationTokens(): array
     {
         $tokens = [];
         $tokens[] = new FunctionToken();
@@ -108,16 +108,16 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     }
 
     /**
-     * @param TokenizationContext $context
+     * @param RenderingContext $context
      * @return Token[]
      */
-    public function addSimpleReturnTypeTokens(TokenizationContext $context): array
+    public function addReturnTypeTokens(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->returnType) {
             $tokens[] = new ColonToken();
             if ($this->returnType instanceof Tokenizes) {
-                $tokens[] = $this->returnType->getSimpleTokens($context);
+                $tokens[] = $this->returnType->getTokens($context);
             }
         }
         return $this->flatten($tokens);

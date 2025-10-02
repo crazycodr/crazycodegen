@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Definition;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
 class Expression extends Tokenizes
@@ -17,10 +17,10 @@ class Expression extends Tokenizes
     }
 
     /**
-     * @param TokenizationContext $context
+     * @param RenderingContext $context
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         $tokens[] = new Token($this->expression);

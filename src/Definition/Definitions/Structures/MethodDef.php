@@ -21,7 +21,7 @@ use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ColonToken;
@@ -80,21 +80,21 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->docBlock) {
-            $tokens[] = $this->docBlock->getSimpleTokens($context);
+            $tokens[] = $this->docBlock->getTokens($context);
         }
-        $tokens[] = $this->getSimpleFunctionDeclarationTokens();
+        $tokens[] = $this->getFunctionDeclarationTokens();
         if ($this->parameters) {
-            $tokens[] = $this->parameters->getSimpleTokens($context);
+            $tokens[] = $this->parameters->getTokens($context);
         } else {
-            $tokens[] = (new ParameterListDef())->getSimpleTokens($context);
+            $tokens[] = (new ParameterListDef())->getTokens($context);
         }
-        $tokens[] = $this->addSimpleReturnTypeTokens($context);
+        $tokens[] = $this->addReturnTypeTokens($context);
         if (!$this->abstract) {
-            $tokens[] = $this->addSimpleBraceTokensAndInstructions($context);
+            $tokens[] = $this->addBraceTokensAndInstructions($context);
         } else {
             $tokens[] = new SemiColonToken();
         }
@@ -104,7 +104,7 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
     /**
      * @return Token[]
      */
-    public function getSimpleFunctionDeclarationTokens(): array
+    public function getFunctionDeclarationTokens(): array
     {
         $tokens = [];
         if ($this->abstract) {
@@ -126,12 +126,12 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
     /**
      * @return Token[]
      */
-    public function addSimpleReturnTypeTokens(TokenizationContext $context): array
+    public function addReturnTypeTokens(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->returnType) {
             $tokens[] = new ColonToken();
-            $tokens[] = $this->returnType->getSimpleTokens($context);
+            $tokens[] = $this->returnType->getTokens($context);
         }
         return $this->flatten($tokens);
     }
@@ -139,11 +139,11 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
     /**
      * @return Token[]
      */
-    public function addSimpleBraceTokensAndInstructions(TokenizationContext $context): array
+    public function addBraceTokensAndInstructions(RenderingContext $context): array
     {
         $tokens = [];
         $tokens[] = new BraceStartToken();
-        $tokens = array_merge($tokens, $this->renderSimpleInstructionsFromFlexibleTokenValue($context, $this->instructions));
+        $tokens = array_merge($tokens, $this->renderInstructionsFromFlexibleTokenValue($context, $this->instructions));
         $tokens[] = new BraceEndToken();
         return $this->flatten($tokens);
     }

@@ -9,7 +9,7 @@ use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Definition\Expression;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
@@ -46,11 +46,11 @@ class CallOp extends Tokenizes
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->subject instanceof Tokenizes) {
-            $tokens[] = $this->subject->getSimpleTokens($context);
+            $tokens[] = $this->subject->getTokens($context);
         } else {
             $tokens[] = $this->subject;
         }
@@ -62,7 +62,7 @@ class CallOp extends Tokenizes
             if ($argument instanceof Token) {
                 $argumentTokens[] = $argument;
             } else {
-                $argumentTokens[] = $argument->getSimpleTokens($context);
+                $argumentTokens[] = $argument->getTokens($context);
             }
             if ($argumentsLeft > 0) {
                 $argumentTokens[] = new CommaToken();

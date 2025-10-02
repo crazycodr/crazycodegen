@@ -9,7 +9,7 @@ use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
@@ -49,13 +49,13 @@ class NewOp extends Tokenizes
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         $tokens[] = new NewToken();
         $tokens[] = new SpacesToken();
         if ($this->class instanceof Tokenizes) {
-            $tokens[] = $this->class->getSimpleTokens($context);
+            $tokens[] = $this->class->getTokens($context);
         } else {
             $tokens[] = $this->class;
         }
@@ -67,7 +67,7 @@ class NewOp extends Tokenizes
             if ($argument instanceof Token) {
                 $argumentTokens[] = $argument;
             } else {
-                $argumentTokens[] = $argument->getSimpleTokens($context);
+                $argumentTokens[] = $argument->getTokens($context);
             }
             if ($argumentsLeft > 0) {
                 $argumentTokens[] = new CommaToken();

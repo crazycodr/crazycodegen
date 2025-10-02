@@ -12,8 +12,8 @@ use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
-use CrazyCodeGen\Rendering\Formatters\PhpCsFixerFormatter;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Tests\Common\Formatters\PhpCsFixerFormatter;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -65,8 +65,8 @@ class ServiceBuilderScenarioTest extends TestCase
             ->addMethod($getMockedClassesMethod)
             ->addMethod($getServiceMethod);
 
-        $simpleCode = $this->renderTokensToString($classDef->getSimpleTokens(new TokenizationContext()));
-        $newCode = (new PhpCsFixerFormatter())->format($simpleCode);
+        $code = $this->renderTokensToString($classDef->getTokens(new RenderingContext()));
+        $newCode = (new PhpCsFixerFormatter())->format($code);
 
         $this->assertEquals(
             <<<'EOS'

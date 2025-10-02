@@ -10,7 +10,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -31,7 +31,7 @@ class NewOpTest extends TestCase
             <<<'EOS'
             new foo()
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -45,7 +45,7 @@ class NewOpTest extends TestCase
             <<<'EOS'
             new \foo()
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -63,7 +63,7 @@ class NewOpTest extends TestCase
             <<<'EOS'
             new CrazyCodeGen\Tests\foo()
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -77,14 +77,14 @@ class NewOpTest extends TestCase
             class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
         );
 
-        $context = new TokenizationContext();
+        $context = new RenderingContext();
         $context->importedClasses[] = 'CrazyCodeGen\Tests\foo';
 
         $this->assertEquals(
             <<<'EOS'
             new foo()
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens($context))
+            $this->renderTokensToString($token->getTokens($context))
         );
     }
 
@@ -102,7 +102,7 @@ class NewOpTest extends TestCase
             <<<'EOS'
             new foo(1)
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -120,7 +120,7 @@ class NewOpTest extends TestCase
             <<<'EOS'
             new foo($bar)
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -138,7 +138,7 @@ class NewOpTest extends TestCase
             <<<'EOS'
             new foo(1,2,3)
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -156,7 +156,7 @@ class NewOpTest extends TestCase
             <<<'EOS'
             new foo($bar,$baz)
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -174,7 +174,7 @@ class NewOpTest extends TestCase
             <<<'EOS'
             new foo([1,2,3],$baz)
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }

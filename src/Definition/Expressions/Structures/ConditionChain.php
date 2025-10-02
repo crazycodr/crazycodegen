@@ -7,7 +7,7 @@ use CrazyCodeGen\Common\Models\ConversionRule;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Common\Traits\ValidationTrait;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ElseToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -44,13 +44,13 @@ class ConditionChain extends Tokenizes
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         $conditionsLeft = count($this->chain);
         foreach ($this->chain as $condition) {
             $conditionsLeft--;
-            $tokens[] = $condition->getSimpleTokens($context);
+            $tokens[] = $condition->getTokens($context);
             if ($conditionsLeft > 0) {
                 $tokens[] = new ElseToken();
             } else {

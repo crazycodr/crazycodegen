@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +17,7 @@ class DocBlockDefTest extends TestCase
             texts: [],
         );
 
-        $this->assertEquals([], $token->getSimpleTokens(new TokenizationContext()));
+        $this->assertEquals([], $token->getTokens(new RenderingContext()));
     }
 
     public function testEmptyTextsAreIgnoredButCanStillGenerateEmptyDocBlock()
@@ -32,7 +32,7 @@ class DocBlockDefTest extends TestCase
              */
             
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -53,7 +53,7 @@ class DocBlockDefTest extends TestCase
              */
             
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -71,7 +71,7 @@ class DocBlockDefTest extends TestCase
              */
             
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -89,7 +89,7 @@ class DocBlockDefTest extends TestCase
              */
             
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -107,7 +107,7 @@ class DocBlockDefTest extends TestCase
              */
             
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }

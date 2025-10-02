@@ -3,7 +3,7 @@
 namespace CrazyCodeGen\Definition\Definitions\Types;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\AmpersandToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
@@ -36,7 +36,7 @@ class MultiTypeDef extends TypeDef
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->nestedTypes) {
@@ -51,7 +51,7 @@ class MultiTypeDef extends TypeDef
                     $tokens[] = new AmpersandToken();
                 }
             }
-            $tokens[] = $type->getSimpleTokens($context);
+            $tokens[] = $type->getTokens($context);
             $hasToken = true;
         }
         if ($this->nestedTypes) {

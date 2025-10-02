@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Expression;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             [1,2,3]
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -39,7 +39,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             [0=>1,2=>2,3=>3]
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -54,7 +54,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             [0=>1,2=>2,'hello'=>3]
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -69,7 +69,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             [0=>1,2=>2,'hello'=>3]
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -88,7 +88,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             ['thisIsAPrettyLongKey'=>1,'thisAlsoContributesToWrapping'=>2,'shortButWraps'=>3]
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -105,7 +105,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             ['this'=>'is a string']
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -122,7 +122,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             ['this'=>true]
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -139,7 +139,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             ['this'=>null]
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -156,7 +156,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             ['this'=>1+2]
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -173,7 +173,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             ['this'=>$someDirectIdentifier]
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -194,7 +194,7 @@ class ArrayValTest extends TestCase
             <<<'EOS'
             ['hello'=>['foo'=>'bar','bar'=>'baz'],'world'=>123]
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }

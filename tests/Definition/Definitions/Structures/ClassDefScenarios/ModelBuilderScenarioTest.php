@@ -12,8 +12,8 @@ use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
-use CrazyCodeGen\Rendering\Formatters\PhpCsFixerFormatter;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Tests\Common\Formatters\PhpCsFixerFormatter;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -71,8 +71,8 @@ class ModelBuilderScenarioTest extends TestCase
             ->addMethod($hstExemptionMethod)
             ->addMethod($getMethod);
 
-        $simpleCode = $this->renderTokensToString($classDef->getSimpleTokens(new TokenizationContext()));
-        $newCode = (new PhpCsFixerFormatter())->format($simpleCode);
+        $code = $this->renderTokensToString($classDef->getTokens(new RenderingContext()));
+        $newCode = (new PhpCsFixerFormatter())->format($code);
 
         $this->assertEquals(
             <<<'EOS'

@@ -7,7 +7,7 @@ use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\SelfTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\StaticTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ class TypeInferenceTraitTest extends TestCase
             <<<'EOS'
             int
             EOS,
-            $this->renderTokensToString($type->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($type->getTokens(new RenderingContext()))
         );
     }
 
@@ -36,7 +36,7 @@ class TypeInferenceTraitTest extends TestCase
             <<<'EOS'
             static
             EOS,
-            $this->renderTokensToString($type->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($type->getTokens(new RenderingContext()))
         );
 
         $type = $this->inferType('self');
@@ -45,7 +45,7 @@ class TypeInferenceTraitTest extends TestCase
             <<<'EOS'
             self
             EOS,
-            $this->renderTokensToString($type->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($type->getTokens(new RenderingContext()))
         );
     }
 
@@ -57,7 +57,7 @@ class TypeInferenceTraitTest extends TestCase
             <<<'EOS'
             Foo\Bar\Baz
             EOS,
-            $this->renderTokensToString($type->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($type->getTokens(new RenderingContext()))
         );
     }
 }

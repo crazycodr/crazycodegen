@@ -13,7 +13,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
 class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, ProvidesClassReference, ProvidesCallableReference
@@ -37,7 +37,7 @@ class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, Provid
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         if (in_array($this->type, $context->importedClasses)) {

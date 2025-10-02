@@ -1,6 +1,6 @@
 <?php
 
-namespace CrazyCodeGen\Rendering\Formatters;
+namespace CrazyCodeGen\Tests\Common\Formatters;
 
 use PhpCsFixer\Config;
 use PhpCsFixer\Console\ConfigurationResolver;

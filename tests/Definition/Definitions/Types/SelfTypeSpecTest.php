@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
 use CrazyCodeGen\Definition\Definitions\Types\SelfTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class SelfTypeSpecTest extends TestCase
             <<<'EOS'
             self
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 

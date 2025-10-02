@@ -4,7 +4,7 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
@@ -25,14 +25,14 @@ class ParameterListDef extends Tokenizes
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
         $tokens[] = new ParStartToken();
         $parametersLeft = count($this->parameters);
         foreach ($this->parameters as $parameter) {
             $parametersLeft--;
-            $tokens[] = $parameter->getSimpleTokens($context);
+            $tokens[] = $parameter->getTokens($context);
             if ($parametersLeft > 0) {
                 $tokens[] = new CommaToken();
             }

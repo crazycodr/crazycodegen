@@ -22,8 +22,8 @@ use CrazyCodeGen\Definition\Expressions\Operators\Comparisons\InstanceOfOp;
 use CrazyCodeGen\Definition\Expressions\Operators\LogicalOperators\NotOp;
 use CrazyCodeGen\Definition\Expressions\Structures\Condition;
 use CrazyCodeGen\Definition\Expressions\Structures\ConditionChain;
-use CrazyCodeGen\Rendering\Formatters\PhpCsFixerFormatter;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Tests\Common\Formatters\PhpCsFixerFormatter;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -165,8 +165,8 @@ class TestHelpersScenarioTest extends TestCase
             ->addMethod($getConfigApiSpyBuilderMethod)
             ->addMethod($getAuditingTrackingServiceManagerBuilderMethod);
 
-        $simpleCode = $this->renderTokensToString($classDef->getSimpleTokens(new TokenizationContext()));
-        $newCode = (new PhpCsFixerFormatter())->format($simpleCode);
+        $code = $this->renderTokensToString($classDef->getTokens(new RenderingContext()));
+        $newCode = (new PhpCsFixerFormatter())->format($code);
 
         $this->assertEquals(
             <<<'EOS'

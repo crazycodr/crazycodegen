@@ -5,7 +5,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Contexts;
 use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class ParentContextTest extends TestCase
 
         $this->assertEquals(
             'parent',
-            $this->renderTokensToString($context->getSimpleTokens(new TokenizationContext())),
+            $this->renderTokensToString($context->getTokens(new RenderingContext())),
         );
     }
 

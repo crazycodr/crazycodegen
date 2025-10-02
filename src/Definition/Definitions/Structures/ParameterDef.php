@@ -10,7 +10,7 @@ use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ExpansionToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
@@ -50,23 +50,23 @@ class ParameterDef extends Tokenizes implements ProvidesVariableReference, Provi
     /**
      * @return Token[]
      */
-    public function getSimpleTokens(TokenizationContext $context): array
+    public function getTokens(RenderingContext $context): array
     {
         $tokens = [];
-        $tokens[] = $this->renderSimpleType($context);
-        $tokens[] = $this->renderSimpleIdentifier($context);
-        $tokens[] = $this->renderSimpleDefaultValue($context);
+        $tokens[] = $this->renderType($context);
+        $tokens[] = $this->renderIdentifier($context);
+        $tokens[] = $this->renderDefaultValue($context);
         return $this->flatten($tokens);
     }
 
     /**
      * @return Token[]
      */
-    public function renderSimpleType(TokenizationContext $context): array
+    public function renderType(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->type) {
-            $tokens[] = $this->type->getSimpleTokens($context);
+            $tokens[] = $this->type->getTokens($context);
             $tokens[] = new SpacesToken();
         }
         return $this->flatten($tokens);
@@ -75,25 +75,25 @@ class ParameterDef extends Tokenizes implements ProvidesVariableReference, Provi
     /**
      * @return Token[]
      */
-    public function renderSimpleIdentifier(TokenizationContext $context): array
+    public function renderIdentifier(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->isVariadic) {
             $tokens[] = new ExpansionToken();
         }
-        $tokens[] = (new VariableDef($this->name))->getSimpleTokens($context);
+        $tokens[] = (new VariableDef($this->name))->getTokens($context);
         return $this->flatten($tokens);
     }
 
     /**
      * @return Token[]
      */
-    public function renderSimpleDefaultValue(TokenizationContext $context): array
+    public function renderDefaultValue(RenderingContext $context): array
     {
         $tokens = [];
         if ($this->defaultValue !== self::UNSET_DEFAULT_VALUE) {
             $tokens[] = new EqualToken();
-            $tokens[] = $this->defaultValue->getSimpleTokens($context);
+            $tokens[] = $this->defaultValue->getTokens($context);
         }
         return $this->flatten($tokens);
     }

@@ -10,7 +10,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
-use CrazyCodeGen\Rendering\TokenizationContext;
+use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +29,7 @@ class MethodDefTest extends TestCase
             <<<'EOS'
             abstract public function myFunction();
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -43,7 +43,7 @@ class MethodDefTest extends TestCase
             <<<'EOS'
             public function myFunction(){}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -58,7 +58,7 @@ class MethodDefTest extends TestCase
             <<<'EOS'
             public static function myFunction(){}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -73,7 +73,7 @@ class MethodDefTest extends TestCase
             <<<'EOS'
             protected function myFunction(){}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -87,7 +87,7 @@ class MethodDefTest extends TestCase
             <<<'EOS'
             public function myFunction(){}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -110,7 +110,7 @@ class MethodDefTest extends TestCase
             <<<'EOS'
             public function myFunction($foo,int $bar,bool $baz=true){}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -125,7 +125,7 @@ class MethodDefTest extends TestCase
             <<<'EOS'
             public function myFunction():string{}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -148,7 +148,7 @@ class MethodDefTest extends TestCase
              */
             public function myFunction(){}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 
@@ -178,7 +178,7 @@ class MethodDefTest extends TestCase
             <<<'EOS'
             public function myFunction(){1 === (1*3);return 1;}
             EOS,
-            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
     }
 }
