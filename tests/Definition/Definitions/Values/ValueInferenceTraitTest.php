@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Definitions\Values\BoolVal;
 use CrazyCodeGen\Definition\Definitions\Values\FloatVal;
@@ -18,8 +19,9 @@ class ValueInferenceTraitTest extends TestCase
 {
     use TokenFunctions;
     use ValueInferenceTrait;
+    use FlattenFunction;
 
-    public function testValueCanOrCannotBeProperlyInferredOn()
+    public function testValueCanOrCannotBeProperlyInferredOn(): void
     {
         $this->assertTrue($this->isInferableValue(null));
         $this->assertTrue($this->isInferableValue(1));
@@ -35,7 +37,7 @@ class ValueInferenceTraitTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testValueIsInferredProperly()
+    public function testValueIsInferredProperly(): void
     {
         $this->assertInstanceOf(NullVal::class, $this->inferValue(null));
         $this->assertInstanceOf(IntVal::class, $this->inferValue(1));

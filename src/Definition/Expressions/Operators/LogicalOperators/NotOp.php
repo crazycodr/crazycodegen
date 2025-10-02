@@ -14,15 +14,19 @@ class NotOp extends Tokenizes
     use FlattenFunction;
     use ValueInferenceTrait;
 
+    public readonly Tokenizes $operand;
+
     /**
      * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
-        public int|float|string|bool|Tokenizes $operand,
+        int|float|string|bool|Tokenizes $operand,
         public bool                            $doubled = false,
     ) {
-        if ($this->isInferableValue($this->operand)) {
-            $this->operand = $this->inferValue($this->operand);
+        if ($operand instanceof Tokenizes) {
+            $this->operand = $operand;
+        } else {
+            $this->operand = $this->inferValue($operand);
         }
     }
 

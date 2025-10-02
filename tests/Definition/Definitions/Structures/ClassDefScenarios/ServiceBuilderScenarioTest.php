@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\ClassDefScenarios;
 
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
@@ -20,11 +21,12 @@ use PHPUnit\Framework\TestCase;
 class ServiceBuilderScenarioTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testAbilityToGenerateTestBuilderClassFromPreviousInternalFramework()
+    public function testAbilityToGenerateTestBuilderClassFromPreviousInternalFramework(): void
     {
         $baseMockBuilderType = new ClassTypeDef('Internal\TestFramework\MockingFramework\Builders\BaseMockBuilder');
         $mockObjectType = new ClassTypeDef('PHPUnit\Framework\MockObject\MockObject');

@@ -2,6 +2,8 @@
 
 namespace CrazyCodeGen\Tests\Expressions;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
@@ -12,11 +14,12 @@ use PHPUnit\Framework\TestCase;
 class InstructionTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testSingleTokenIsRenderedWithTrailingSemiColon()
+    public function testSingleTokenIsRenderedWithTrailingSemiColon(): void
     {
         $token = new Instruction([
-            new Expression(1),
+            new Expression('1'),
         ]);
 
         $this->assertEquals(
@@ -27,10 +30,10 @@ class InstructionTest extends TestCase
         );
     }
 
-    public function testTokenGroupIsRenderedWithTrailingSemiColon()
+    public function testTokenGroupIsRenderedWithTrailingSemiColon(): void
     {
         $token = new Instruction([
-            new BuiltInTypeSpec('int'),
+            new BuiltInTypeSpec(BuiltInTypesEnum::int),
         ]);
 
         $this->assertEquals(
@@ -41,7 +44,7 @@ class InstructionTest extends TestCase
         );
     }
 
-    public function testArrayOfTokensIsReturnedAsIsWithTrailingSemiColon()
+    public function testArrayOfTokensIsReturnedAsIsWithTrailingSemiColon(): void
     {
         $token = new Instruction([
             new Expression('1,2'),
@@ -55,7 +58,7 @@ class InstructionTest extends TestCase
         );
     }
 
-    public function testMixOfTokensAndTokenGroupsIsRenderedWithTrailingSemiColon()
+    public function testMixOfTokensAndTokenGroupsIsRenderedWithTrailingSemiColon(): void
     {
         $token = new Instruction([
             new Expression('1 string'),

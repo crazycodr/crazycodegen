@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Tests\Expressions\Structures;
 
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Structures\Condition;
 use CrazyCodeGen\Definition\Expressions\Structures\ConditionChain;
@@ -13,11 +14,12 @@ use PHPUnit\Framework\TestCase;
 class ConditionChainTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testSingleConditionIsRenderedAsExpected()
+    public function testSingleConditionIsRenderedAsExpected(): void
     {
         $token = new ConditionChain([
             new Condition(
@@ -40,7 +42,7 @@ class ConditionChainTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testSecondConditionWithoutConditionActuallyGeneratesAnElseCase()
+    public function testSecondConditionWithoutConditionActuallyGeneratesAnElseCase(): void
     {
         $token = new ConditionChain([
             new Condition(
@@ -68,7 +70,7 @@ class ConditionChainTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testSecondConditionWithConditionGeneratesAnElseIfCase()
+    public function testSecondConditionWithConditionGeneratesAnElseIfCase(): void
     {
         $token = new ConditionChain([
             new Condition(
@@ -97,7 +99,7 @@ class ConditionChainTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testMultipleConditionsGeneratesChainOfConditions()
+    public function testMultipleConditionsGeneratesChainOfConditions(): void
     {
         $token = new ConditionChain([
             new Condition(
@@ -131,7 +133,7 @@ class ConditionChainTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testBracePositionRuleChangesProvidesExpectedStructure()
+    public function testBracePositionRuleChangesProvidesExpectedStructure(): void
     {
         $token = new ConditionChain([
             new Condition(

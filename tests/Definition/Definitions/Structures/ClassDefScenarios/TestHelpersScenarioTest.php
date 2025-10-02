@@ -4,6 +4,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\ClassDefScenarios
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
@@ -31,11 +32,12 @@ use PHPUnit\Framework\TestCase;
 class TestHelpersScenarioTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testAbilityToGenerateTestHelperFromPreviousInternalFramework()
+    public function testAbilityToGenerateTestHelperFromPreviousInternalFramework(): void
     {
         $testCaseType = new ClassTypeDef('PHPUnit\Framework\TestCase');
         $serviceBuilderType = new ClassTypeDef('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Auditing\Services\AuditingTrackingServiceManagerBuilder');

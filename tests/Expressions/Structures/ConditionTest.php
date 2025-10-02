@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Tests\Expressions\Structures;
 
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
@@ -14,8 +15,9 @@ use PHPUnit\Framework\TestCase;
 class ConditionTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testComplexConditionWithDifferentTokensAndTokenGroupsIsRenderedAsIsAndInsideParentheses()
+    public function testComplexConditionWithDifferentTokensAndTokenGroupsIsRenderedAsIsAndInsideParentheses(): void
     {
         $token = new Condition(
             condition: new Expression('1 === (1*3)'),
@@ -35,7 +37,7 @@ class ConditionTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testComplexTrueInstructionsAreRenderedInBody()
+    public function testComplexTrueInstructionsAreRenderedInBody(): void
     {
         $token = new Condition(
             condition: new Expression('true'),

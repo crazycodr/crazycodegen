@@ -4,6 +4,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Exceptions\InvalidIdentifierFormatException;
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\FunctionDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
@@ -14,8 +15,9 @@ use PHPUnit\Framework\TestCase;
 class FunctionDefTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testFunctionRendersAsExpected()
+    public function testFunctionRendersAsExpected(): void
     {
         $token = new FunctionDef(
             name: 'myFunction',
@@ -33,7 +35,7 @@ class FunctionDefTest extends TestCase
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testArgumentsAreRenderedAsExpected()
+    public function testArgumentsAreRenderedAsExpected(): void
     {
         $token = new FunctionDef(
             name: 'myFunction',
@@ -53,7 +55,7 @@ class FunctionDefTest extends TestCase
         );
     }
 
-    public function testReturnTypeRenderedAsExpected()
+    public function testReturnTypeRenderedAsExpected(): void
     {
         $token = new FunctionDef(
             name: 'myFunction',
@@ -73,7 +75,7 @@ class FunctionDefTest extends TestCase
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testDocBlockIsProperlyRendered()
+    public function testDocBlockIsProperlyRendered(): void
     {
         $token = new FunctionDef(
             name: 'myFunction',

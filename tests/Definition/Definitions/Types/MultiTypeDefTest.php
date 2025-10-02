@@ -2,6 +2,8 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
 use CrazyCodeGen\Rendering\RenderingContext;
@@ -11,12 +13,13 @@ use PHPUnit\Framework\TestCase;
 class MultiTypeDefTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testTypesAreJoinedWithPipeWhenUnionIsTrueByDefault()
+    public function testTypesAreJoinedWithPipeWhenUnionIsTrueByDefault(): void
     {
         $token = new MultiTypeDef([
-            new BuiltInTypeSpec('string'),
-            new BuiltInTypeSpec('int'),
+            new BuiltInTypeSpec(BuiltInTypesEnum::string),
+            new BuiltInTypeSpec(BuiltInTypesEnum::int),
         ]);
 
         $this->assertEquals(
@@ -27,12 +30,12 @@ class MultiTypeDefTest extends TestCase
         );
     }
 
-    public function testTypesAreJoinedWithAmpersandWhenUnionIsFalse()
+    public function testTypesAreJoinedWithAmpersandWhenUnionIsFalse(): void
     {
         $token = new MultiTypeDef(
             [
-                new BuiltInTypeSpec('string'),
-                new BuiltInTypeSpec('int'),
+                new BuiltInTypeSpec(BuiltInTypesEnum::string),
+                new BuiltInTypeSpec(BuiltInTypesEnum::int),
             ],
             unionTypes: false
         );
@@ -45,7 +48,7 @@ class MultiTypeDefTest extends TestCase
         );
     }
 
-    public function testStringTypesAreConvertedToSingleTypeTokenGroupsAndRendered()
+    public function testStringTypesAreConvertedToSingleTypeTokenGroupsAndRendered(): void
     {
         $token = new MultiTypeDef(['string', 'int']);
 
@@ -57,7 +60,7 @@ class MultiTypeDefTest extends TestCase
         );
     }
 
-    public function testParenthesesAreAddedAroundTokensWhenNestedIsTurnedOn()
+    public function testParenthesesAreAddedAroundTokensWhenNestedIsTurnedOn(): void
     {
         $token = new MultiTypeDef(['string', 'int'], nestedTypes: true);
 
@@ -69,7 +72,7 @@ class MultiTypeDefTest extends TestCase
         );
     }
 
-    public function testIfInnerTypeIsMultiTypeItGetsRenderedAtTheCorrectPlaceAndAllParenthesesAreRendered()
+    public function testIfInnerTypeIsMultiTypeItGetsRenderedAtTheCorrectPlaceAndAllParenthesesAreRendered(): void
     {
         $token = new MultiTypeDef(
             [

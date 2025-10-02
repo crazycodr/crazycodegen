@@ -15,18 +15,25 @@ class InstanceOfOp extends Tokenizes
     use FlattenFunction;
     use ValueInferenceTrait;
 
+    public readonly Tokenizes $left;
+    public readonly Tokenizes $right;
+
     /**
      * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
-        public Tokenizes|int|float|string|bool $left,
-        public Tokenizes|int|float|string|bool $right,
+        Tokenizes|int|float|string|bool $left,
+        Tokenizes|int|float|string|bool $right,
     ) {
-        if ($this->isInferableValue($this->left)) {
-            $this->left = $this->inferValue($this->left);
+        if ($left instanceof Tokenizes) {
+            $this->left = $left;
+        } else {
+            $this->left = $this->inferValue($left);
         }
-        if ($this->isInferableValue($this->right)) {
-            $this->right = $this->inferValue($this->right);
+        if ($right instanceof Tokenizes) {
+            $this->right = $right;
+        } else {
+            $this->right = $this->inferValue($right);
         }
     }
 

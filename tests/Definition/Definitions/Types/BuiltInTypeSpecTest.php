@@ -2,6 +2,8 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -10,29 +12,14 @@ use PHPUnit\Framework\TestCase;
 class BuiltInTypeSpecTest extends TestCase
 {
     use TokenFunctions;
-
-    public function testBuiltInTypeReplacedWithStringWhenNotSupported()
-    {
-        $type = new BuiltInTypeSpec('unknown');
-        $this->assertEquals('string', $type->scalarType);
-    }
-
-    public function testSupportsReturnsTrueForSupportedType()
-    {
-        $this->assertTrue(BuiltInTypeSpec::supports('int'));
-    }
-
-    public function testSupportsReturnsFalseForUnsupportedType()
-    {
-        $this->assertFalse(BuiltInTypeSpec::supports('unknown'));
-    }
+    use FlattenFunction;
 
     /**
      * Not testing all possible cases
      */
-    public function testReturnTheExpectedTokensPerType()
+    public function testReturnTheExpectedTokensPerType(): void
     {
-        $token = new BuiltInTypeSpec('int');
+        $token = new BuiltInTypeSpec(BuiltInTypesEnum::int);
         $this->assertEquals(
             <<<'EOS'
             int
@@ -40,7 +27,7 @@ class BuiltInTypeSpecTest extends TestCase
             $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
 
-        $token = new BuiltInTypeSpec('bool');
+        $token = new BuiltInTypeSpec(BuiltInTypesEnum::bool);
         $this->assertEquals(
             <<<'EOS'
             bool
@@ -48,7 +35,7 @@ class BuiltInTypeSpecTest extends TestCase
             $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
 
-        $token = new BuiltInTypeSpec('false');
+        $token = new BuiltInTypeSpec(BuiltInTypesEnum::false);
         $this->assertEquals(
             <<<'EOS'
             false
@@ -56,7 +43,7 @@ class BuiltInTypeSpecTest extends TestCase
             $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
 
-        $token = new BuiltInTypeSpec('mixed');
+        $token = new BuiltInTypeSpec(BuiltInTypesEnum::mixed);
         $this->assertEquals(
             <<<'EOS'
             mixed

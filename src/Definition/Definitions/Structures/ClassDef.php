@@ -49,24 +49,25 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     use HasMethodsTrait;
 
     /**
-     * @throws InvalidIdentifierFormatException
+     * @param string[]|ClassTypeDef[]|ImportDef[] $imports
+     * @param null|string|string[]|DocBlockDef $docBlock
+     * @param string[]|ClassTypeDef[] $implementations
+     * @param string[]|ConstantDef[] $constants
+     * @param string[]|PropertyDef[] $properties
+     * @param MethodDef[] $methods
      * @throws NoValidConversionRulesMatchedException
+     * @throws InvalidIdentifierFormatException
      */
     public function __construct(
         string                        $name,
         null|string|NamespaceDef      $namespace = null,
-        /** @var string[]|ClassTypeDef[]|ImportDef[] $imports */
         array                         $imports = [],
         null|string|array|DocBlockDef $docBlock = null,
         bool                          $abstract = false,
         null|string|ClassTypeDef      $extends = null,
-        /** @var string[]|ClassTypeDef[] $implementations */
         array                         $implementations = [],
-        /** @var string[]|ConstantDef[] $constants */
         array                         $constants = [],
-        /** @var string[]|PropertyDef[] $properties */
         array                         $properties = [],
-        /** @var MethodDef[] $methods */
         array                         $methods = [],
     ) {
         $this->setNamespace($namespace);

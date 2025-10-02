@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Contexts;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Contexts\StaticContext;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
@@ -12,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 class StaticContextTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
     public function testYieldsStaticToken(): void
     {

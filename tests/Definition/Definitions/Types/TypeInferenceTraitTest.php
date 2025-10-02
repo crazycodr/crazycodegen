@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\SelfTypeSpec;
@@ -15,8 +16,9 @@ class TypeInferenceTraitTest extends TestCase
 {
     use TokenFunctions;
     use TypeInferenceTrait;
+    use FlattenFunction;
 
-    public function testBuiltInTypeIsInferredAsExpected()
+    public function testBuiltInTypeIsInferredAsExpected(): void
     {
         $type = $this->inferType('int');
         $this->assertInstanceOf(BuiltInTypeSpec::class, $type);
@@ -28,7 +30,7 @@ class TypeInferenceTraitTest extends TestCase
         );
     }
 
-    public function testStaticOrSelfTypesAreInferredAsExpected()
+    public function testStaticOrSelfTypesAreInferredAsExpected(): void
     {
         $type = $this->inferType('static');
         $this->assertInstanceOf(StaticTypeSpec::class, $type);
@@ -49,7 +51,7 @@ class TypeInferenceTraitTest extends TestCase
         );
     }
 
-    public function testOtherStringIsInferredAsExpected()
+    public function testOtherStringIsInferredAsExpected(): void
     {
         $type = $this->inferType('Foo\\Bar\\Baz');
         $this->assertInstanceOf(ClassTypeDef::class, $type);

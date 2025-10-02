@@ -17,6 +17,9 @@ trait HasImportsTraitTestTrait
      */
     abstract public function getHasImportsTraitTestObject(array $imports): mixed;
 
+    /**
+     * @return array<string, mixed[]>
+     */
     public static function providesImportScenarios(): array
     {
         return [
@@ -49,10 +52,12 @@ trait HasImportsTraitTestTrait
     }
 
     /**
+     * @param array<string> $imports
+     * @param mixed[] $expectation
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    #[DataProvider(methodName: 'providesImportScenarios')]
+    #[DataProvider('providesImportScenarios')]
     public function testImportIsConvertedAsExpected(array $imports, array $expectation): void
     {
         $tested = $this->getHasImportsTraitTestObject($imports);

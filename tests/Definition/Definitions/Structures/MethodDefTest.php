@@ -5,6 +5,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Exceptions\InvalidIdentifierFormatException;
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
@@ -17,8 +18,9 @@ use PHPUnit\Framework\TestCase;
 class MethodDefTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testDeclarationRendersAbstractKeyword()
+    public function testDeclarationRendersAbstractKeyword(): void
     {
         $token = new MethodDef(
             name: 'myFunction',
@@ -33,7 +35,7 @@ class MethodDefTest extends TestCase
         );
     }
 
-    public function testDeclarationRendersPublicVisibilityByDefault()
+    public function testDeclarationRendersPublicVisibilityByDefault(): void
     {
         $token = new MethodDef(
             name: 'myFunction',
@@ -47,7 +49,7 @@ class MethodDefTest extends TestCase
         );
     }
 
-    public function testDeclarationRendersStaticKeyword()
+    public function testDeclarationRendersStaticKeyword(): void
     {
         $token = new MethodDef(
             name: 'myFunction',
@@ -62,7 +64,7 @@ class MethodDefTest extends TestCase
         );
     }
 
-    public function testDeclarationRendersVisibility()
+    public function testDeclarationRendersVisibility(): void
     {
         $token = new MethodDef(
             name: 'myFunction',
@@ -77,7 +79,7 @@ class MethodDefTest extends TestCase
         );
     }
 
-    public function testInlineDefinitionRendersFunctionKeyword()
+    public function testInlineDefinitionRendersFunctionKeyword(): void
     {
         $token = new MethodDef(
             name: 'myFunction',
@@ -95,7 +97,7 @@ class MethodDefTest extends TestCase
      * @throws NoValidConversionRulesMatchedException
      * @throws InvalidIdentifierFormatException
      */
-    public function testRendersArgumentListAsExpected()
+    public function testRendersArgumentListAsExpected(): void
     {
         $token = new MethodDef(
             name: 'myFunction',
@@ -114,7 +116,7 @@ class MethodDefTest extends TestCase
         );
     }
 
-    public function testRendersReturnTypeAsExpected()
+    public function testRendersReturnTypeAsExpected(): void
     {
         $token = new MethodDef(
             name: 'myFunction',
@@ -133,7 +135,7 @@ class MethodDefTest extends TestCase
      * @throws NoValidConversionRulesMatchedException
      * @throws InvalidIdentifierFormatException
      */
-    public function testDocBlockIsProperlyRendered()
+    public function testDocBlockIsProperlyRendered(): void
     {
         $token = new MethodDef(
             name: 'myFunction',
@@ -156,7 +158,7 @@ class MethodDefTest extends TestCase
      * @throws NoValidConversionRulesMatchedException
      * @throws InvalidIdentifierFormatException
      */
-    public function testInstructionsAreRenderedAsExpected()
+    public function testInstructionsAreRenderedAsExpected(): void
     {
         $token = new MethodDef(
             name: 'myFunction',

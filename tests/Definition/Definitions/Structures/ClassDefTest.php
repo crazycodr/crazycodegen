@@ -4,6 +4,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Exceptions\InvalidIdentifierFormatException;
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ConstantDef;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
@@ -20,6 +21,7 @@ use PHPUnit\Framework\TestCase;
 class ClassDefTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
     use HasNamespaceTraitTestTrait;
     use HasImportsTraitTestTrait;
     use HasNameTraitTestTrait;
@@ -51,7 +53,7 @@ class ClassDefTest extends TestCase
         return new ClassDef(name: $identifier);
     }
 
-    public function testClassKeywordIsRendered()
+    public function testClassKeywordIsRendered(): void
     {
         $token = new ClassDef(
             name: 'myClass',
@@ -65,7 +67,7 @@ class ClassDefTest extends TestCase
         );
     }
 
-    public function testClassNameIsRendered()
+    public function testClassNameIsRendered(): void
     {
         $token = new ClassDef(
             name: 'myClass',
@@ -79,7 +81,7 @@ class ClassDefTest extends TestCase
         );
     }
 
-    public function testAbstractKeywordIsRendered()
+    public function testAbstractKeywordIsRendered(): void
     {
         $token = new ClassDef(
             name: 'myClass',
@@ -98,7 +100,7 @@ class ClassDefTest extends TestCase
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testNamespaceIsRendered()
+    public function testNamespaceIsRendered(): void
     {
         $token = new ClassDef(
             name: 'myClass',
@@ -117,7 +119,7 @@ class ClassDefTest extends TestCase
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testDocBlockIsProperlyRendered()
+    public function testDocBlockIsProperlyRendered(): void
     {
         $token = new ClassDef(
             name: 'myClass',
@@ -136,7 +138,7 @@ class ClassDefTest extends TestCase
         );
     }
 
-    public function testExtendsIsRendered()
+    public function testExtendsIsRendered(): void
     {
         $token = new ClassDef(
             name: 'myClass',
@@ -155,7 +157,7 @@ class ClassDefTest extends TestCase
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testImplementsAreProperlyRendered()
+    public function testImplementsAreProperlyRendered(): void
     {
         $token = new ClassDef(
             name: 'myClass',
@@ -178,7 +180,7 @@ class ClassDefTest extends TestCase
      * @throws NoValidConversionRulesMatchedException
      * @throws InvalidIdentifierFormatException
      */
-    public function testConstantsAreRenderedAsExpected()
+    public function testConstantsAreRenderedAsExpected(): void
     {
         $token = new ClassDef(
             name: 'myClass',
@@ -200,7 +202,7 @@ class ClassDefTest extends TestCase
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testPropertiesAsExpected()
+    public function testPropertiesAsExpected(): void
     {
         $token = new ClassDef(
             name: 'myClass',
@@ -223,7 +225,7 @@ class ClassDefTest extends TestCase
      * @throws NoValidConversionRulesMatchedException
      * @throws InvalidIdentifierFormatException
      */
-    public function testMethodsAreRenderedAsExpected()
+    public function testMethodsAreRenderedAsExpected(): void
     {
         $token = new ClassDef(
             name: 'myClass',

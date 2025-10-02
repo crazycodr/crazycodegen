@@ -14,6 +14,9 @@ trait HasNamespaceTraitTestTrait
      */
     abstract public function getHasNamespaceTraitTestObject(null|string|NamespaceDef $namespace): mixed;
 
+    /**
+     * @return array<string, mixed[]>
+     */
     public static function providesNamespaceScenarios(): array
     {
         return [
@@ -27,7 +30,7 @@ trait HasNamespaceTraitTestTrait
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    #[DataProvider(methodName: 'providesNamespaceScenarios')]
+    #[DataProvider('providesNamespaceScenarios')]
     public function testNamespaceIsConvertedAsExpected(null|string|NamespaceDef $ns, null|NamespaceDef $expectation): void
     {
         $tested = $this->getHasNamespaceTraitTestObject($ns);

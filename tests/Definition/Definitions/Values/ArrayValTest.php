@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Rendering\RenderingContext;
@@ -12,11 +13,12 @@ use PHPUnit\Framework\TestCase;
 class ArrayValTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testNoKeysArePrintedBecauseTheyAreSequential()
+    public function testNoKeysArePrintedBecauseTheyAreSequential(): void
     {
         $token = new ArrayVal([1, 2, 3]);
 
@@ -31,7 +33,7 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testIntKeysNotInSequentialOrderGetsAddedToArray()
+    public function testIntKeysNotInSequentialOrderGetsAddedToArray(): void
     {
         $token = new ArrayVal([0 => 1, 2 => 2, 3 => 3]);
 
@@ -46,7 +48,7 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testStringKeysGetsAllKeysAddedToArray()
+    public function testStringKeysGetsAllKeysAddedToArray(): void
     {
         $token = new ArrayVal(['0' => 1, 2 => 2, 'hello' => 3]);
 
@@ -61,7 +63,7 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testNumericalIntKeysAreTransformedToIntKeysBecauseOfPhp()
+    public function testNumericalIntKeysAreTransformedToIntKeysBecauseOfPhp(): void
     {
         $token = new ArrayVal(['0' => 1, '2' => 2, 'hello' => 3]);
 
@@ -76,7 +78,7 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testWrappingIsDoneWhenLineIsTooLong()
+    public function testWrappingIsDoneWhenLineIsTooLong(): void
     {
         $token = new ArrayVal([
             'thisIsAPrettyLongKey' => 1,
@@ -95,7 +97,7 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testStringValuesAreProperlyConverted()
+    public function testStringValuesAreProperlyConverted(): void
     {
         $token = new ArrayVal([
             'this' => 'is a string',
@@ -112,7 +114,7 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testBoolValuesAreProperlyConverted()
+    public function testBoolValuesAreProperlyConverted(): void
     {
         $token = new ArrayVal([
             'this' => true,
@@ -129,7 +131,7 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testNullValuesAreProperlyConverted()
+    public function testNullValuesAreProperlyConverted(): void
     {
         $token = new ArrayVal([
             'this' => null,
@@ -146,7 +148,7 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testTokenGroupValuesAreRenderedIn()
+    public function testTokenGroupValuesAreRenderedIn(): void
     {
         $token = new ArrayVal([
             'this' => new Expression('1+2'),
@@ -163,7 +165,7 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testTokenValuesAreSimplyReused()
+    public function testTokenValuesAreSimplyReused(): void
     {
         $token = new ArrayVal([
             'this' => new Expression('$someDirectIdentifier'),
@@ -180,7 +182,7 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testNestedTokenGroupsAreProperlyIndented()
+    public function testNestedTokenGroupsAreProperlyIndented(): void
     {
         $token = new ArrayVal([
             'hello' => new ArrayVal([

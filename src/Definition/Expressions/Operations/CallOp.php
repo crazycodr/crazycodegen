@@ -26,7 +26,8 @@ class CallOp extends Tokenizes
      * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
-        public string|Expression|ProvidesCallableReference $subject,
+        public string|Expression|ProvidesCallableReference|Tokenizes $subject,
+        /** @var mixed[]|ProvidesClassReference[] $arguments */
         public array                                       $arguments = [],
     ) {
         if ($this->subject instanceof ProvidesCallableReference) {

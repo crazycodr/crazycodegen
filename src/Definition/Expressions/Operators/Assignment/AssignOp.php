@@ -17,26 +17,31 @@ class AssignOp extends Tokenizes
     use FlattenFunction;
     use ValueInferenceTrait;
 
+    public readonly Tokenizes $subject;
+    public readonly Tokenizes $value;
+
     /**
      * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
-        public string|Tokenizes|ProvidesVariableReference                                       $subject,
-        public mixed $value,
+        string|Tokenizes|ProvidesVariableReference $subject,
+        mixed $value,
     ) {
-        if (is_string($this->subject)) {
-            $this->subject = new Expression($this->subject);
-        } elseif ($this->subject instanceof ProvidesVariableReference) {
-            $this->subject = $this->subject->getVariableReference();
+        if (is_string($subject)) {
+            $this->subject = new Expression($subject);
+        } elseif ($subject instanceof ProvidesVariableReference) {
+            $this->subject = $subject->getVariableReference();
+        } else {
+            $this->subject = $subject;
         }
-        if ($this->isInferableValue($this->value)) {
-            $this->value = $this->inferValue($this->value);
-        } elseif ($this->value instanceof ProvidesClassReference) {
-            $this->value = $this->value->getClassReference();
-        } elseif ($this->value instanceof ProvidesVariableReference) {
-            $this->value = $this->value->getVariableReference();
-        } elseif (!$this->value instanceof Tokenizes) {
-            $this->value = $this->inferValue(null);
+        if ($value instanceof ProvidesClassReference) {
+            $this->value = $value->getClassReference();
+        } elseif ($value instanceof ProvidesVariableReference) {
+            $this->value = $value->getVariableReference();
+        } elseif ($value instanceof Tokenizes) {
+            $this->value = $value;
+        } else {
+            $this->value = $this->inferValue($value);
         }
     }
 

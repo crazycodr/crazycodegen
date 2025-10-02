@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Rendering\RenderingContext;
@@ -11,8 +12,9 @@ use PHPUnit\Framework\TestCase;
 class ClassRefValTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testTypeIsRenderedAlongWithClassSuffix()
+    public function testTypeIsRenderedAlongWithClassSuffix(): void
     {
         $type = new ClassTypeDef('Foo\\Bar\\Baz');
         $token = new ClassRefVal($type);
@@ -25,7 +27,7 @@ class ClassRefValTest extends TestCase
         );
     }
 
-    public function testTypeIsRenderedAsShortIfImportedInContext()
+    public function testTypeIsRenderedAsShortIfImportedInContext(): void
     {
         $type = new ClassTypeDef('Foo\\Bar\\Baz');
         $token = new ClassRefVal($type);

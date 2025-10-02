@@ -13,6 +13,9 @@ trait HasNameTraitTestTrait
      */
     abstract public function getHasNameTraitTestObject(string $identifier): mixed;
 
+    /**
+     * @return array<string, mixed[]>
+     */
     public static function providesClassNameMustBeAValidIdentifier(): array
     {
         return [
@@ -33,13 +36,16 @@ trait HasNameTraitTestTrait
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    #[DataProvider(methodName: 'providesClassNameMustBeAValidIdentifier')]
+    #[DataProvider('providesClassNameMustBeAValidIdentifier')]
     public function testClassNameMustBeAValidIdentifier(string $identifier): void
     {
         $tested = $this->getHasNameTraitTestObject($identifier);
         $this->assertEquals($identifier, $tested->name);
     }
 
+    /**
+     * @return array<string, mixed[]>
+     */
     public static function providesClassNameMustThrownWhenInvalidIdentifier(): array
     {
         return [
@@ -54,7 +60,7 @@ trait HasNameTraitTestTrait
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    #[DataProvider(methodName: 'providesClassNameMustThrownWhenInvalidIdentifier')]
+    #[DataProvider('providesClassNameMustThrownWhenInvalidIdentifier')]
     public function testClassNameMustThrownWhenInvalidIdentifier(string $identifier): void
     {
         $this->expectException(InvalidIdentifierFormatException::class);

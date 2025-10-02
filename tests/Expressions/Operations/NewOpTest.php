@@ -4,6 +4,7 @@ namespace CrazyCodeGen\Tests\Expressions\Operations;
 
 use CrazyCodeGen\Common\Exceptions\InvalidIdentifierFormatException;
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
@@ -17,11 +18,12 @@ use PHPUnit\Framework\TestCase;
 class NewOpTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testNewKeywordClassnameAndEmptyParenthesesArePresent()
+    public function testNewKeywordClassnameAndEmptyParenthesesArePresent(): void
     {
         $token = new NewOp(
             class: new Expression('foo'),
@@ -35,7 +37,7 @@ class NewOpTest extends TestCase
         );
     }
 
-    public function testStringClassNameIsConvertedAndOutputAsExpected()
+    public function testStringClassNameIsConvertedAndOutputAsExpected(): void
     {
         $token = new NewOp(
             class: 'foo'
@@ -53,7 +55,7 @@ class NewOpTest extends TestCase
      * @throws NoValidConversionRulesMatchedException
      * @throws InvalidIdentifierFormatException
      */
-    public function testClassTokenizerGetConvertedToSimpleClassName()
+    public function testClassTokenizerGetConvertedToSimpleClassName(): void
     {
         $token = new NewOp(
             class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
@@ -71,7 +73,7 @@ class NewOpTest extends TestCase
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testClassTokenizerGetShortNameRenderedWhenClassIsImportedInContext()
+    public function testClassTokenizerGetShortNameRenderedWhenClassIsImportedInContext(): void
     {
         $token = new NewOp(
             class: new ClassDef(name: 'foo', namespace: new NamespaceDef('CrazyCodeGen\Tests')),
@@ -91,7 +93,7 @@ class NewOpTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testRendersStringArgumentAsSingleExpression()
+    public function testRendersStringArgumentAsSingleExpression(): void
     {
         $token = new NewOp(
             class: new Expression('foo'),
@@ -109,7 +111,7 @@ class NewOpTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testRendersTokenizerArgumentAsExpected()
+    public function testRendersTokenizerArgumentAsExpected(): void
     {
         $token = new NewOp(
             class: new Expression('foo'),
@@ -127,11 +129,11 @@ class NewOpTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testRendersExpressionsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
+    public function testRendersExpressionsArgumentAsListOfItemsSeparatedByCommasAndSpaces(): void
     {
         $token = new NewOp(
             class: new Expression('foo'),
-            arguments: [new Expression(1), new Expression(2), new Expression(3)],
+            arguments: [new Expression('1'), new Expression('2'), new Expression('3')],
         );
 
         $this->assertEquals(
@@ -145,7 +147,7 @@ class NewOpTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpaces()
+    public function testRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpaces(): void
     {
         $token = new NewOp(
             class: new Expression('foo'),
@@ -163,7 +165,7 @@ class NewOpTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions()
+    public function testRendersTokenizersArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions(): void
     {
         $token = new NewOp(
             class: new Expression('foo'),

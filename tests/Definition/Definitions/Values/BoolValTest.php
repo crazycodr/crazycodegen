@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Values\BoolVal;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -10,8 +11,9 @@ use PHPUnit\Framework\TestCase;
 class BoolValTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testBoolValReturnsTrueTokenWhenTrue()
+    public function testBoolValReturnsTrueTokenWhenTrue(): void
     {
         $token = new BoolVal(true);
 
@@ -23,7 +25,7 @@ class BoolValTest extends TestCase
         );
     }
 
-    public function testBoolValReturnsFalseTokenWhenFalse()
+    public function testBoolValReturnsFalseTokenWhenFalse(): void
     {
         $token = new BoolVal(false);
 

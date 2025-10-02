@@ -4,6 +4,10 @@ namespace CrazyCodeGen\Common\Traits;
 
 trait FlattenFunction
 {
+    /**
+     * @param mixed[] $array
+     * @return mixed[]
+     */
     public function flatten(array $array): array
     {
         $result = [];

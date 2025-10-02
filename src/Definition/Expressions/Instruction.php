@@ -15,14 +15,23 @@ class Instruction extends Tokenizes
 {
     use FlattenFunction;
 
+    /**
+     * @var Tokenizes[]
+     */
+    public readonly array $expressions;
+
+    /**
+     * @param string|Tokenizes|Tokenizes[] $expressions
+     */
     public function __construct(
-        /** @var string|Tokenizes[] */
-        public string|array|Tokenizes $expressions,
+        string|array|Tokenizes $expressions,
     ) {
-        if ($this->expressions instanceof Tokenizes) {
-            $this->expressions = [$this->expressions];
-        } elseif (is_string($this->expressions)) {
-            $this->expressions = [new Expression($this->expressions)];
+        if ($expressions instanceof Tokenizes) {
+            $this->expressions = [$expressions];
+        } elseif (is_string($expressions)) {
+            $this->expressions = [new Expression($expressions)];
+        } else {
+            $this->expressions = $expressions;
         }
     }
 

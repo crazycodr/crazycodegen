@@ -17,15 +17,21 @@ class ImplementationsDef extends Tokenizes
     use FlattenFunction;
     use TokenFunctions;
 
-    public function __construct(
-        /** @var string[]|ClassTypeDef[] $implementations */
-        public array $implementations,
-    ) {
-        foreach ($this->implementations as $implementationIndex => $implementation) {
+    /**
+     * @var ClassTypeDef[]
+     */
+    public array $implementations;
+
+    /**
+     * @param string[]|ClassTypeDef[] $implementations
+     */
+    public function __construct(array $implementations)
+    {
+        foreach ($implementations as $implementationIndex => $implementation) {
             if (is_string($implementation)) {
                 $this->implementations[$implementationIndex] = new ClassTypeDef($implementation);
-            } elseif (!$implementation instanceof ClassTypeDef) {
-                unset($this->implementations[$implementationIndex]);
+            } elseif ($implementation instanceof ClassTypeDef) {
+                $this->implementations[$implementationIndex] = $implementation;
             }
         }
     }

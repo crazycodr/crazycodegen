@@ -48,7 +48,7 @@ class PhpCsFixerFormatter
         $fixers = (new ConfigurationResolver(
             $config,
             [], // no CLI args
-            getcwd(),
+            (string)getcwd(),
             new ToolInfo()
         ))->getFixers();
 

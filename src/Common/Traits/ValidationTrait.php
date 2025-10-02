@@ -84,9 +84,9 @@ trait ValidationTrait
     }
 
     /**
-     * @param array $values
+     * @param mixed[] $values
      * @param ConversionRule[] $rules
-     * @return array
+     * @return mixed[]
      * @throws NoValidConversionRulesMatchedException
      */
     public function convertOrThrowForEachValues(array $values, array $rules): array

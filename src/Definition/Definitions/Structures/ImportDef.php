@@ -18,12 +18,16 @@ class ImportDef extends Tokenizes
     use FlattenFunction;
     use TokenFunctions;
 
+    public readonly ClassTypeDef $type;
+
     public function __construct(
-        public string|ClassTypeDef $type,
+        string|ClassTypeDef $type,
         public null|string         $alias = null,
     ) {
-        if (is_string($this->type)) {
-            $this->type = new ClassTypeDef($this->type);
+        if (is_string($type)) {
+            $this->type = new ClassTypeDef($type);
+        } else {
+            $this->type = $type;
         }
     }
 

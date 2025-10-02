@@ -45,6 +45,9 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     use HasInstructionsTrait;
 
     /**
+     * @param null|string|string[]|DocBlockDef $docBlock
+     * @param string[]|ParameterDef[] $parameters
+     * @param NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
@@ -52,10 +55,8 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
         string                        $name,
         null|string|NamespaceDef      $namespace = null,
         null|string|array|DocBlockDef $docBlock = null,
-        /** @var string[]|ParameterDef[] $parameters */
         array                         $parameters = [],
         null|string|TypeDef           $returnType = null,
-        /** @var NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions */
         array                         $instructions = [],
     ) {
         $this->setNamespace($namespace);
@@ -92,18 +93,14 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     }
 
     /**
-     * @return array
+     * @return Token[]
      */
     public function getFunctionDeclarationTokens(): array
     {
         $tokens = [];
         $tokens[] = new FunctionToken();
         $tokens[] = new SpacesToken();
-        if (!$this->name instanceof Token) {
-            $tokens[] = new Token($this->name);
-        } else {
-            $tokens[] = $this->name;
-        }
+        $tokens[] = new Token($this->name);
         return $this->flatten($tokens);
     }
 
@@ -116,9 +113,7 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
         $tokens = [];
         if ($this->returnType) {
             $tokens[] = new ColonToken();
-            if ($this->returnType instanceof Tokenizes) {
-                $tokens[] = $this->returnType->getTokens($context);
-            }
+            $tokens[] = $this->returnType->getTokens($context);
         }
         return $this->flatten($tokens);
     }

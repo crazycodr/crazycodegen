@@ -16,19 +16,26 @@ class MultiTypeDef extends TypeDef
     use FlattenFunction;
     use TypeInferenceTrait;
 
+    /** @var array<NullToken|TypeDef> */
+    public array $types = [];
+
+    /**
+     * @param array<null|string|TypeDef> $types
+     * @param bool $unionTypes
+     * @param bool $nestedTypes
+     */
     public function __construct(
-        /** @var string[]|TypeDef[] $types */
-        public array $types,
+        array $types,
         public bool  $unionTypes = true,
         public bool  $nestedTypes = false,
     ) {
-        foreach ($this->types as $typeIndex => $type) {
+        foreach ($types as $typeIndex => $type) {
             if (is_null($type)) {
                 $this->types[$typeIndex] = new NullToken();
             } elseif (is_string($type)) {
                 $this->types[$typeIndex] = $this->inferType($type);
-            } elseif (!$type instanceof TypeDef) {
-                unset($this->types[$typeIndex]);
+            } elseif ($type instanceof TypeDef) {
+                $this->types[$typeIndex] = $type;
             }
         }
     }
@@ -51,7 +58,11 @@ class MultiTypeDef extends TypeDef
                     $tokens[] = new AmpersandToken();
                 }
             }
-            $tokens[] = $type->getTokens($context);
+            if ($type instanceof NullToken) {
+                $tokens[] = $type;
+            } else {
+                $tokens[] = $type->getTokens($context);
+            }
             $hasToken = true;
         }
         if ($this->nestedTypes) {
