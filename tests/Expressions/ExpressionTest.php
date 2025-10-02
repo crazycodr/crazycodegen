@@ -2,13 +2,8 @@
 
 namespace CrazyCodeGen\Tests\Expressions;
 
-use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Expression;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
-use CrazyCodeGen\Rendering\Tokens\Token;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -18,15 +13,13 @@ class ExpressionTest extends TestCase
 
     public function testSingleTokenIsRenderedAsExpected()
     {
-        $token = new Expression(
-            1,
-        );
+        $token = new Expression(1);
 
         $this->assertEquals(
             <<<'EOS'
             1
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -38,7 +31,7 @@ class ExpressionTest extends TestCase
             <<<'EOS'
             int
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -50,7 +43,7 @@ class ExpressionTest extends TestCase
             <<<'EOS'
             1,2
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -62,7 +55,7 @@ class ExpressionTest extends TestCase
             <<<'EOS'
             1 string
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 }

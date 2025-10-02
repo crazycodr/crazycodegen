@@ -2,8 +2,7 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Values;
 
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
 class IntVal extends BaseVal
@@ -13,7 +12,7 @@ class IntVal extends BaseVal
     ) {
     }
 
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         return [new Token($this->value)];
     }

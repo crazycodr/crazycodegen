@@ -19,13 +19,4 @@ trait HasNameTrait
         $this->name = $this->assertIsValidIdentifier($name);
         return $this;
     }
-
-    /**
-     * @throws InvalidIdentifierFormatException
-     */
-    public function setNamespacedName(string $name): self
-    {
-        $this->name = $this->assertIsValidNamespacedIdentifier($name);
-        return $this;
-    }
 }

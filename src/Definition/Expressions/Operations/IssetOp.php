@@ -5,8 +5,7 @@ namespace CrazyCodeGen\Definition\Expressions\Operations;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Expression;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\IssetToken;
@@ -29,13 +28,13 @@ class IssetOp extends Tokenizes
     /**
      * @return Token[]
      */
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         $tokens = [];
         $tokens[] = new IssetToken();
         $tokens[] = new ParStartToken();
         if ($this->operand instanceof Tokenizes) {
-            $tokens[] = $this->operand->getTokens($context, $rules);
+            $tokens[] = $this->operand->getSimpleTokens($context);
         } else {
             $tokens[] = $this->operand;
         }

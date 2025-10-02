@@ -19,10 +19,7 @@ use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ColonToken;
@@ -70,62 +67,36 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     }
 
     /**
-     * @param RenderContext $context
-     * @param RenderingRules $rules
+     * @param TokenizationContext $context
      * @return Token[]
      */
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         $tokens = [];
         if ($this->namespace) {
-            $tokens[] = $this->namespace->getTokens($context, $rules);
+            $tokens[] = $this->namespace->getSimpleTokens($context);
         }
         if ($this->docBlock) {
-            $tokens[] = $this->docBlock->getTokens($context, $rules);
-            $tokens[] = new NewLinesToken($rules->functions->newLinesAfterDocBlock);
+            $tokens[] = $this->docBlock->getSimpleTokens($context);
         }
-        if ($rules->functions->argumentsOnDifferentLines === WrappingDecision::NEVER) {
-            $tokens[] = $this->renderInlineScenario($context, $rules);
-        } elseif ($rules->functions->argumentsOnDifferentLines === WrappingDecision::ALWAYS) {
-            $tokens[] = $this->renderChopDownScenario($context, $rules);
-        } else {
-            $inlineScenario = $this->renderInlineScenario($context, $rules);
-            if (!$rules->exceedsAvailableSpace($context->getCurrentLine(), $this->renderTokensToString($inlineScenario))) {
-                $tokens[] = $inlineScenario;
-            } else {
-                $tokens[] = $this->renderChopDownScenario($context, $rules);
-            }
-        }
-
-        return $this->flatten($tokens);
-    }
-
-    /**
-     * @param RenderContext $context
-     * @param RenderingRules $rules
-     * @return Token[]
-     */
-    public function renderInlineScenario(RenderContext $context, RenderingRules $rules): array
-    {
-        $tokens = [];
-        $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
+        $tokens[] = $this->getSimpleFunctionDeclarationTokens();
         if ($this->parameters) {
-            $tokens[] = $this->parameters->getTokens($context, $rules);
+            $tokens[] = $this->parameters->getSimpleTokens($context);
         } else {
-            $tokens[] = (new ParameterListDef())->getTokens($context, $rules);
+            $tokens[] = (new ParameterListDef())->getSimpleTokens($context);
         }
-        $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
-        $tokens = $this->addInlineBraceTokens($rules, $tokens);
+        $tokens[] = $this->addSimpleReturnTypeTokens($context);
+        $tokens[] = new BraceStartToken();
+        $tokens[] = new BraceEndToken();
         return $this->flatten($tokens);
     }
 
     /**
-     * @param array $tokens
-     * @param RenderingRules $rules
      * @return array
      */
-    public function getFunctionDeclarationTokens(array $tokens, RenderingRules $rules): array
+    public function getSimpleFunctionDeclarationTokens(): array
     {
+        $tokens = [];
         $tokens[] = new FunctionToken();
         $tokens[] = new SpacesToken();
         if (!$this->name instanceof Token) {
@@ -133,113 +104,23 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
         } else {
             $tokens[] = $this->name;
         }
-        if ($rules->functions->spacesAfterIdentifier) {
-            $tokens[] = new SpacesToken($rules->functions->spacesAfterIdentifier);
-        }
-        return $tokens;
-    }
-
-    /**
-     * @param RenderingRules $rules
-     * @param array $tokens
-     * @param RenderContext $context
-     * @return array
-     */
-    public function addReturnTypeTokens(RenderingRules $rules, array $tokens, RenderContext $context): array
-    {
-        if ($this->returnType) {
-            if ($rules->functions->spacesAfterArguments) {
-                $tokens[] = new SpacesToken($rules->functions->spacesAfterArguments);
-            }
-            $tokens[] = new ColonToken();
-            if ($rules->functions->spacesAfterReturnColon) {
-                $tokens[] = new SpacesToken($rules->functions->spacesAfterReturnColon);
-            }
-            if ($this->returnType instanceof Tokenizes) {
-                $tokens[] = $this->returnType->getTokens($context, $rules);
-            }
-        }
-        return $tokens;
-    }
-
-    /**
-     * @param RenderingRules $rules
-     * @param array $tokens
-     * @return array
-     */
-    public function addInlineBraceTokens(RenderingRules $rules, array $tokens): array
-    {
-        if (
-            $rules->functions->openingBrace === BracePositionEnum::SAME_LINE
-            && $rules->functions->closingBrace === BracePositionEnum::SAME_LINE
-        ) {
-            if ($rules->functions->spacesBeforeOpeningBrace) {
-                $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBrace);
-            }
-            $tokens[] = new BraceStartToken();
-            $tokens[] = new BraceEndToken();
-        } elseif (
-            $rules->functions->openingBrace === BracePositionEnum::SAME_LINE
-            && $rules->functions->closingBrace === BracePositionEnum::DIFF_LINE
-        ) {
-            if ($rules->functions->spacesBeforeOpeningBrace) {
-                $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBrace);
-            }
-            $tokens[] = new BraceStartToken();
-            $tokens[] = new NewLinesToken();
-            $tokens[] = new BraceEndToken();
-        } elseif (
-            $rules->functions->openingBrace === BracePositionEnum::DIFF_LINE
-            && $rules->functions->closingBrace === BracePositionEnum::SAME_LINE
-        ) {
-            $tokens[] = new NewLinesToken();
-            $tokens[] = new BraceStartToken();
-            $tokens[] = new BraceEndToken();
-        } elseif (
-            $rules->functions->openingBrace === BracePositionEnum::DIFF_LINE
-            && $rules->functions->closingBrace === BracePositionEnum::DIFF_LINE
-        ) {
-            $tokens[] = new NewLinesToken();
-            $tokens[] = new BraceStartToken();
-            $tokens[] = new NewLinesToken();
-            $tokens[] = new BraceEndToken();
-        }
-        return $tokens;
-    }
-
-    /**
-     * @param RenderContext $context
-     * @param RenderingRules $rules
-     * @return Token[]
-     */
-    public function renderChopDownScenario(RenderContext $context, RenderingRules $rules): array
-    {
-        $tokens = [];
-        $tokens = $this->getFunctionDeclarationTokens($tokens, $rules);
-        if ($this->parameters) {
-            $tokens[] = $this->parameters->getChopDownTokens($context, $rules);
-        } else {
-            $tokens[] = (new ParameterListDef())->getChopDownTokens($context, $rules);
-        }
-        $tokens = $this->addReturnTypeTokens($rules, $tokens, $context);
-        $tokens = $this->addChopDownBraceTokens($rules, $tokens);
         return $this->flatten($tokens);
     }
 
     /**
-     * @param RenderingRules $rules
-     * @param array $tokens
-     * @return array
+     * @param TokenizationContext $context
+     * @return Token[]
      */
-    public function addChopDownBraceTokens(RenderingRules $rules, array $tokens): array
+    public function addSimpleReturnTypeTokens(TokenizationContext $context): array
     {
-        if ($rules->functions->spacesBeforeOpeningBrace) {
-            $tokens[] = new SpacesToken($rules->functions->spacesBeforeOpeningBrace);
+        $tokens = [];
+        if ($this->returnType) {
+            $tokens[] = new ColonToken();
+            if ($this->returnType instanceof Tokenizes) {
+                $tokens[] = $this->returnType->getSimpleTokens($context);
+            }
         }
-        $tokens[] = new BraceStartToken();
-        $tokens[] = new NewLinesToken();
-        $tokens[] = new BraceEndToken();
-        return $tokens;
+        return $this->flatten($tokens);
     }
 
     public function getCallableReference(): Tokenizes

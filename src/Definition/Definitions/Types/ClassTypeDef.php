@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Definition\Definitions\Types;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ShouldBeAccessedStatically;
 use CrazyCodeGen\Definition\Base\ProvidesCallableReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
@@ -12,12 +13,13 @@ use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
 class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, ProvidesClassReference, ProvidesCallableReference
 {
+    use FlattenFunction;
+
     private null|string $namespace = null;
     private string $shortName;
 
@@ -33,11 +35,9 @@ class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, Provid
     }
 
     /**
-     * @param RenderContext $context
-     * @param RenderingRules $rules
      * @return Token[]
      */
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         $tokens = [];
         if (in_array($this->type, $context->importedClasses)) {
@@ -45,7 +45,7 @@ class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, Provid
         } else {
             $tokens[] = new Token($this->namespace . '\\' . $this->shortName);
         }
-        return $tokens;
+        return $this->flatten($tokens);
     }
 
     public function isAccessedStatically(): bool

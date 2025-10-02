@@ -3,8 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
 use CrazyCodeGen\Definition\Definitions\Values\IntVal;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +19,7 @@ class IntValTest extends TestCase
             <<<'EOS'
             17
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -32,7 +31,7 @@ class IntValTest extends TestCase
             <<<'EOS'
             -33
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 }

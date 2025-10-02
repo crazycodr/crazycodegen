@@ -7,11 +7,8 @@ use CrazyCodeGen\Common\Models\ConversionRule;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Common\Traits\ValidationTrait;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ElseToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -47,20 +44,17 @@ class ConditionChain extends Tokenizes
     /**
      * @return Token[]
      */
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         $tokens = [];
         $conditionsLeft = count($this->chain);
         foreach ($this->chain as $condition) {
             $conditionsLeft--;
-            $tokens[] = $condition->getTokens($context, $rules);
+            $tokens[] = $condition->getSimpleTokens($context);
             if ($conditionsLeft > 0) {
-                if ($rules->conditions->closingBrace === BracePositionEnum::DIFF_LINE) {
-                    $tokens[] = new NewLinesToken();
-                } else {
-                    $tokens[] = new SpacesToken($rules->conditions->spacesAfterClosingBrace);
-                }
                 $tokens[] = new ElseToken();
+            } else {
+                $tokens[] = new NewLinesToken();
             }
         }
         return $this->flatten($tokens);

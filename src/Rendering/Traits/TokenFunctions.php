@@ -3,11 +3,9 @@
 namespace CrazyCodeGen\Rendering\Traits;
 
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
 trait TokenFunctions
@@ -56,85 +54,13 @@ trait TokenFunctions
     }
 
     /**
-     * @param Token[] $tokens
-     * @return bool
-     */
-    private function tokensSpanMultipleLines(array $tokens): bool
-    {
-        foreach ($tokens as $token) {
-            if ($token instanceof NewLinesToken) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function calculatePaddingSize(string $expression, int $paddingSize): int
-    {
-        if ($paddingSize >= strlen($expression)) {
-            return $paddingSize - strlen($expression);
-        }
-        return strlen($expression);
-    }
-
-    /**
-     * @param RenderingRules $rules
-     * @param int $customSize
-     * @param Token[] $tokens
-     * @param bool $skipFirstLine
-     * @return Token[]
-     */
-    private function insertCustomIndentationTokens(RenderingRules $rules, int $customSize, array $tokens, bool $skipFirstLine = false): array
-    {
-        $backupIndentationToken = $rules->indentation;
-        $rules->indentation = str_repeat(' ', $customSize);
-        $tokens = $this->insertIndentationTokens($rules, $tokens, $skipFirstLine);
-        $rules->indentation = $backupIndentationToken;
-        return $tokens;
-    }
-
-    /**
-     * @param RenderingRules $rules
-     * @param Token[] $tokens
-     * @param bool $skipFirstLine
-     * @return Token[]
-     */
-    private function insertIndentationTokens(RenderingRules $rules, array $tokens, bool $skipFirstLine = false): array
-    {
-        $tokens = $this->splitTokensWithNewlines($tokens);
-        $tokens = $this->flatten($tokens);
-        $newTokensPerLine = [];
-        $lineTokens = [];
-        foreach ($tokens as $token) {
-            if (empty($lineTokens) && !$token instanceof NewLinesToken) {
-                if ($skipFirstLine === false) {
-                    $lineTokens[] = SpacesToken::fromString($rules->indentation);
-                } elseif ($skipFirstLine === true && !empty($newTokensPerLine)) {
-                    $lineTokens[] = SpacesToken::fromString($rules->indentation);
-                }
-            }
-            $lineTokens[] = $token;
-            if ($token instanceof NewLinesToken) {
-                $newTokensPerLine[] = $lineTokens;
-                $lineTokens = [];
-            }
-        }
-        if (!empty($lineTokens)) {
-            $newTokensPerLine[] = $lineTokens;
-        }
-        return $this->flatten($newTokensPerLine);
-    }
-
-    /**
+     * @param TokenizationContext $context
      * @param array<Token|Tokenizes>|Token|Tokenizes $instructions
-     * @param RenderContext $context
-     * @param RenderingRules $rules
      * @return array
      */
-    private function renderInstructionsFromFlexibleTokenValue(
+    private function renderSimpleInstructionsFromFlexibleTokenValue(
+        TokenizationContext $context,
         array|Token|Tokenizes $instructions,
-        RenderContext         $context,
-        RenderingRules        $rules
     ): array {
         $tokens = [];
         if (is_array($instructions)) {
@@ -145,8 +71,8 @@ trait TokenFunctions
                 if ($instruction instanceof NewLinesToken) {
                     $tokens[] = $instruction;
                 } else {
-                    $tokens[] = $this->convertFlexibleTokenValueToTokens($instruction, $context, $rules);
-                    $tokens[] = new NewLinesToken();
+                    $tokens = array_merge($tokens, $this->convertSimpleFlexibleTokenValueToTokens($context, $instruction));
+//                    $tokens[] = new NewLinesToken();
                 }
             }
         } elseif ($instructions instanceof NewLinesToken) {
@@ -156,7 +82,7 @@ trait TokenFunctions
             $tokens[] = new SemiColonToken();
             $tokens[] = new NewLinesToken();
         } elseif ($instructions instanceof Tokenizes) {
-            $tokens[] = $instructions->getTokens($context, $rules);
+            $tokens[] = $instructions->getSimpleTokens($context);
             $tokens[] = new SemiColonToken();
             $tokens[] = new NewLinesToken();
         }
@@ -166,10 +92,9 @@ trait TokenFunctions
     /**
      * @param array<Token|Tokenizes>|Token|Tokenizes $values
      */
-    private function convertFlexibleTokenValueToTokens(
+    private function convertSimpleFlexibleTokenValueToTokens(
+        TokenizationContext $context,
         array|Token|Tokenizes $values,
-        RenderContext         $context,
-        RenderingRules        $rules,
     ): array {
         $tokens = [];
         if (is_array($values)) {
@@ -177,15 +102,15 @@ trait TokenFunctions
                 if ($value instanceof Token) {
                     $tokens[] = $value;
                 } elseif ($value instanceof Tokenizes) {
-                    $tokens[] = $value->getTokens($context, $rules);
+                    $tokens[] = $value->getSimpleTokens($context);
                 } elseif (is_array($value)) {
-                    $tokens[] = $this->convertFlexibleTokenValueToTokens($value, $context, $rules);
+                    $tokens[] = $this->convertSimpleFlexibleTokenValueToTokens($context, $value);
                 }
             }
         } elseif ($values instanceof Token) {
             $tokens[] = $values;
         } elseif ($values instanceof Tokenizes) {
-            $tokens[] = $values->getTokens($context, $rules);
+            $tokens[] = $values->getSimpleTokens($context);
         }
         return $this->flatten($tokens);
     }

@@ -3,13 +3,11 @@
 namespace CrazyCodeGen\Definition\Definitions\Types;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\AmpersandToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\PipeToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NullToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
@@ -36,11 +34,9 @@ class MultiTypeDef extends TypeDef
     }
 
     /**
-     * @param RenderContext $context
-     * @param RenderingRules $rules
      * @return Token[]
      */
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         $tokens = [];
         if ($this->nestedTypes) {
@@ -55,13 +51,12 @@ class MultiTypeDef extends TypeDef
                     $tokens[] = new AmpersandToken();
                 }
             }
-            $tokens[] = $type->getTokens($context, $rules);
+            $tokens[] = $type->getSimpleTokens($context);
             $hasToken = true;
         }
         if ($this->nestedTypes) {
             $tokens[] = new ParEndToken();
         }
-        $tokens[] = new SpacesToken($context->argumentDefinitionTypePaddingSize);
         return $this->flatten($tokens);
     }
 }

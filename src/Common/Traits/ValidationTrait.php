@@ -27,20 +27,6 @@ trait ValidationTrait
     }
 
     /**
-     * @throws InvalidIdentifierFormatException
-     */
-    public function assertIsValidNamespacedIdentifier(null|string $name): null|string
-    {
-        if (is_null($name)) {
-            return null;
-        }
-        if (!preg_match('/^([a-zA-Z_][a-zA-Z0-9_]*\\\\)*[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {
-            throw new InvalidIdentifierFormatException($name);
-        }
-        return $name;
-    }
-
-    /**
      * @param mixed $value
      * @param ConversionRule[] $rules
      * @return mixed
@@ -95,23 +81,6 @@ trait ValidationTrait
             throw new NoValidConversionRulesMatchedException();
         }
         return $value;
-    }
-
-    /**
-     * @param array $values
-     * @param ConversionRule[] $rules
-     * @return array
-     */
-    public function convertAndDropNonCompliantValues(array $values, array $rules): array
-    {
-        foreach ($values as $key => $value) {
-            try {
-                $values[$key] = $this->convertOrThrow($value, $rules);
-            } catch (NoValidConversionRulesMatchedException) {
-                unset($values[$key]);
-            }
-        }
-        return $values;
     }
 
     /**

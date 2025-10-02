@@ -4,8 +4,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +23,7 @@ class MultiTypeDefTest extends TestCase
             <<<'EOS'
             string|int
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -42,7 +41,7 @@ class MultiTypeDefTest extends TestCase
             <<<'EOS'
             string&int
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -54,7 +53,7 @@ class MultiTypeDefTest extends TestCase
             <<<'EOS'
             string|int
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -66,7 +65,7 @@ class MultiTypeDefTest extends TestCase
             <<<'EOS'
             (string|int)
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -85,7 +84,7 @@ class MultiTypeDefTest extends TestCase
             <<<'EOS'
             ((int|float)&(string|bool))
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 }

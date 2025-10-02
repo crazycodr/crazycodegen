@@ -2,25 +2,24 @@
 
 namespace CrazyCodeGen\Definition\Expressions\Operators\Assignment;
 
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Definition\Expression;
-use CrazyCodeGen\Definition\Expressions\Instruction;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
-use CrazyCodeGen\Rendering\Tokens\Token;
 
 class AssignOp extends Tokenizes
 {
     use FlattenFunction;
     use ValueInferenceTrait;
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function __construct(
         public string|Tokenizes|ProvidesVariableReference                                       $subject,
         public mixed $value,
@@ -41,14 +40,12 @@ class AssignOp extends Tokenizes
         }
     }
 
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         $tokens = [];
-        $tokens[] =  $this->subject->getTokens($context, $rules);
-        $tokens[] =  new SpacesToken();
+        $tokens[] =  $this->subject->getSimpleTokens($context);
         $tokens[] =  new EqualToken();
-        $tokens[] =  new SpacesToken();
-        $tokens[] =  $this->value->getTokens($context, $rules);
+        $tokens[] =  $this->value->getSimpleTokens($context);
         return $this->flatten($tokens);
     }
 }

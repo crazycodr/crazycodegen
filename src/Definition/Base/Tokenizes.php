@@ -2,16 +2,15 @@
 
 namespace CrazyCodeGen\Definition\Base;
 
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\Token;
 
 abstract class Tokenizes
 {
     /**
-     * @param RenderContext $context
-     * @param RenderingRules $rules
+     * Returns all tokens in a minimal serial way to be formatted by an external formatter.
+     * @param TokenizationContext $context
      * @return Token[]
      */
-    abstract public function getTokens(RenderContext $context, RenderingRules $rules): array;
+    abstract public function getSimpleTokens(TokenizationContext $context): array;
 }

@@ -10,9 +10,4 @@ class SpacesToken extends Token
     {
         parent::__construct(str_repeat(' ', $size));
     }
-
-    public static function fromString(string $string): self
-    {
-        return new self(strlen($string));
-    }
 }

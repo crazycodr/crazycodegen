@@ -5,10 +5,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Expression;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -19,35 +16,15 @@ class ArrayValTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testLongFormUsedWhenConfigurationSaysSoAndNoKeysArePrintedBecauseTheyAreSequential()
+    public function testNoKeysArePrintedBecauseTheyAreSequential()
     {
         $token = new ArrayVal([1, 2, 3]);
 
-        $rules = $this->getRenderingRules();
-        $rules->arrays->useShortForm = false;
-
         $this->assertEquals(
             <<<'EOS'
-            array(1, 2, 3)
+            [1,2,3]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testShortFormUsedWhenConfigurationSaysSoAndNoKeysArePrintedBecauseTheyAreSequential()
-    {
-        $token = new ArrayVal([1, 2, 3]);
-
-        $rules = $this->getRenderingRules();
-
-        $this->assertEquals(
-            <<<'EOS'
-            [1, 2, 3]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -58,13 +35,11 @@ class ArrayValTest extends TestCase
     {
         $token = new ArrayVal([0 => 1, 2 => 2, 3 => 3]);
 
-        $rules = $this->getRenderingRules();
-
         $this->assertEquals(
             <<<'EOS'
-            [0 => 1, 2 => 2, 3 => 3]
+            [0=>1,2=>2,3=>3]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -75,13 +50,11 @@ class ArrayValTest extends TestCase
     {
         $token = new ArrayVal(['0' => 1, 2 => 2, 'hello' => 3]);
 
-        $rules = $this->getRenderingRules();
-
         $this->assertEquals(
             <<<'EOS'
-            [0 => 1, 2 => 2, 'hello' => 3]
+            [0=>1,2=>2,'hello'=>3]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -92,85 +65,11 @@ class ArrayValTest extends TestCase
     {
         $token = new ArrayVal(['0' => 1, '2' => 2, 'hello' => 3]);
 
-        $rules = $this->getRenderingRules();
-
         $this->assertEquals(
             <<<'EOS'
-            [0 => 1, 2 => 2, 'hello' => 3]
+            [0=>1,2=>2,'hello'=>3]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testSpacesAfterIdentifiersAreRespected()
-    {
-        $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->spacesAfterIdentifiers = 3;
-
-        $this->assertEquals(
-            <<<'EOS'
-            ['hello'   => 1, 'world'   => 2, 'foo'   => 3]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testSpacesAfterOperatorsAreRespected()
-    {
-        $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->spacesAfterOperators = 3;
-
-        $this->assertEquals(
-            <<<'EOS'
-            ['hello' =>   1, 'world' =>   2, 'foo' =>   3]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testSpacesAfterValuesAreRespected()
-    {
-        $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->spacesAfterValues = 3;
-
-        $this->assertEquals(
-            <<<'EOS'
-            ['hello' => 1   , 'world' => 2   , 'foo' => 3]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testSpacesAfterSeparatorsAreRespected()
-    {
-        $token = new ArrayVal(['hello' => 1, 'world' => 2, 'foo' => 3]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->spacesAfterSeparators = 3;
-
-        $this->assertEquals(
-            <<<'EOS'
-            ['hello' => 1,   'world' => 2,   'foo' => 3]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -185,233 +84,11 @@ class ArrayValTest extends TestCase
             'shortButWraps' => 3
         ]);
 
-        $rules = $this->getRenderingRules();
-        $rules->lineLength = 80;
-        $rules->arrays->wrap = WrappingDecision::IF_TOO_LONG;
-
         $this->assertEquals(
             <<<'EOS'
-            [
-                'thisIsAPrettyLongKey' => 1,
-                'thisAlsoContributesToWrapping' => 2,
-                'shortButWraps' => 3,
-            ]
+            ['thisIsAPrettyLongKey'=>1,'thisAlsoContributesToWrapping'=>2,'shortButWraps'=>3]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testWrappingIsDoneEvenIfLineNotTooLong()
-    {
-        $token = new ArrayVal([
-            'this' => 1,
-            'is' => 2,
-            'short' => 3
-        ]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-
-        $this->assertEquals(
-            <<<'EOS'
-            [
-                'this' => 1,
-                'is' => 2,
-                'short' => 3,
-            ]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testWrappingIsNotDoneEvenIfLineTooLong()
-    {
-        $token = new ArrayVal([
-            'thisIsAPrettyLongKey' => 1,
-            'thisAlsoContributesToWrapping' => 2,
-            'shortButWraps' => 3
-        ]);
-
-        $rules = $this->getRenderingRules();
-        $rules->lineLength = 100;
-        $rules->arrays->wrap = WrappingDecision::NEVER;
-
-        $this->assertEquals(
-            <<<'EOS'
-            ['thisIsAPrettyLongKey' => 1, 'thisAlsoContributesToWrapping' => 2, 'shortButWraps' => 3]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testOpeningBraceOnSameLineIfWrappingIndentsAllOtherItemsButFirst()
-    {
-        $token = new ArrayVal([
-            'this' => 1,
-            'is' => 2,
-            'short' => 3
-        ]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-        $rules->arrays->openingBrace = BracePositionEnum::SAME_LINE;
-        $rules->arrays->closingBrace = BracePositionEnum::DIFF_LINE;
-
-        $this->assertEquals(
-            <<<'EOS'
-            ['this' => 1,
-                'is' => 2,
-                'short' => 3,
-            ]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testOpeningBraceOnDiffLineIfWrappingIsPropertyIndented()
-    {
-        $token = new ArrayVal([
-            'this' => 1,
-            'is' => 2,
-            'short' => 3
-        ]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-        $rules->arrays->openingBrace = BracePositionEnum::DIFF_LINE;
-        $rules->arrays->closingBrace = BracePositionEnum::DIFF_LINE;
-
-        $this->assertEquals(
-            <<<'EOS'
-            [
-                'this' => 1,
-                'is' => 2,
-                'short' => 3,
-            ]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testClosingBraceOnSameLineIfWrappingHidesLastItemComma()
-    {
-        $token = new ArrayVal([
-            'this' => 1,
-            'is' => 2,
-            'short' => 3
-        ]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-        $rules->arrays->openingBrace = BracePositionEnum::DIFF_LINE;
-        $rules->arrays->closingBrace = BracePositionEnum::SAME_LINE;
-
-        $this->assertEquals(
-            <<<'EOS'
-            [
-                'this' => 1,
-                'is' => 2,
-                'short' => 3]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testClosingBraceOnDiffLineIfWrappingShowsLastItemCommaIfConfigured()
-    {
-        $token = new ArrayVal([
-            'this' => 1,
-            'is' => 2,
-            'short' => 3
-        ]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-        $rules->arrays->openingBrace = BracePositionEnum::DIFF_LINE;
-        $rules->arrays->closingBrace = BracePositionEnum::DIFF_LINE;
-        $rules->arrays->addSeparatorToLastItem = true;
-
-        $this->assertEquals(
-            <<<'EOS'
-            [
-                'this' => 1,
-                'is' => 2,
-                'short' => 3,
-            ]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testWrappedConfigDoesNotFeatureSpacesAfterSeparatorAndHidesLastSeparatorWhenConfigured()
-    {
-        $token = new ArrayVal([
-            'this' => 1,
-            'is' => 2,
-            'short' => 3
-        ]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-        $rules->arrays->addSeparatorToLastItem = false;
-
-        $this->assertEquals(
-            <<<'EOS'
-            [
-                'this' => 1,
-                'is' => 2,
-                'short' => 3
-            ]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
-        );
-    }
-
-    /**
-     * @throws NoValidConversionRulesMatchedException
-     */
-    public function testPaddingOfIdentifiersIsAppliedIfConfiguredButAppliesOnlyWhenChoppingDown()
-    {
-        $token = new ArrayVal([
-            'this' => 1,
-            'is' => 2,
-            'short' => 3
-        ]);
-
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-        $rules->arrays->padIdentifiers = true;
-
-        $this->assertEquals(
-            <<<'EOS'
-            [
-                'this'  => 1,
-                'is'    => 2,
-                'short' => 3,
-            ]
-            EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -424,16 +101,11 @@ class ArrayValTest extends TestCase
             'this' => 'is a string',
         ]);
 
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-
         $this->assertEquals(
             <<<'EOS'
-            [
-                'this' => 'is a string',
-            ]
+            ['this'=>'is a string']
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -446,16 +118,11 @@ class ArrayValTest extends TestCase
             'this' => true,
         ]);
 
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-
         $this->assertEquals(
             <<<'EOS'
-            [
-                'this' => true,
-            ]
+            ['this'=>true]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -468,16 +135,11 @@ class ArrayValTest extends TestCase
             'this' => null,
         ]);
 
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-
         $this->assertEquals(
             <<<'EOS'
-            [
-                'this' => null,
-            ]
+            ['this'=>null]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -490,16 +152,11 @@ class ArrayValTest extends TestCase
             'this' => new Expression('1+2'),
         ]);
 
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-
         $this->assertEquals(
             <<<'EOS'
-            [
-                'this' => 1+2,
-            ]
+            ['this'=>1+2]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -512,16 +169,11 @@ class ArrayValTest extends TestCase
             'this' => new Expression('$someDirectIdentifier'),
         ]);
 
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-
         $this->assertEquals(
             <<<'EOS'
-            [
-                'this' => $someDirectIdentifier,
-            ]
+            ['this'=>$someDirectIdentifier]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -538,37 +190,11 @@ class ArrayValTest extends TestCase
             'world' => 123,
         ]);
 
-        $rules = $this->getRenderingRules();
-        $rules->arrays->wrap = WrappingDecision::ALWAYS;
-
         $this->assertEquals(
             <<<'EOS'
-            [
-                'hello' => [
-                    'foo' => 'bar',
-                    'bar' => 'baz',
-                ],
-                'world' => 123,
-            ]
+            ['hello'=>['foo'=>'bar','bar'=>'baz'],'world'=>123]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
-    }
-
-    public function getRenderingRules(): RenderingRules
-    {
-        $rules = new RenderingRules();
-        $rules->lineLength = 120;
-        $rules->arrays->useShortForm = true;
-        $rules->arrays->wrap = WrappingDecision::IF_TOO_LONG;
-        $rules->arrays->openingBrace = BracePositionEnum::DIFF_LINE;
-        $rules->arrays->closingBrace = BracePositionEnum::DIFF_LINE;
-        $rules->arrays->padIdentifiers = false;
-        $rules->arrays->spacesAfterIdentifiers = 1;
-        $rules->arrays->spacesAfterOperators = 1;
-        $rules->arrays->spacesAfterValues = 0;
-        $rules->arrays->spacesAfterSeparators = 1;
-        $rules->arrays->addSeparatorToLastItem = true;
-        return $rules;
     }
 }

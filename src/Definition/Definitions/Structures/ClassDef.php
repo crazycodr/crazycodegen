@@ -11,6 +11,7 @@ use CrazyCodeGen\Definition\Base\ProvidesClassReference;
 use CrazyCodeGen\Definition\Base\ProvidesClassType;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Traits\HasAbstractModifierTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasConstantsTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasDocBlockTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasExtendsTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasImplementationsTrait;
@@ -21,13 +22,9 @@ use CrazyCodeGen\Definition\Definitions\Traits\HasNameTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasPropertiesTrait;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Enums\BracePositionEnum;
-use CrazyCodeGen\Rendering\Renderers\Enums\WrappingDecision;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\BraceStartToken;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\AbstractToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ClassToken;
@@ -47,6 +44,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     use HasNameTrait;
     use HasExtendsTrait;
     use HasImplementationsTrait;
+    use HasConstantsTrait;
     use HasPropertiesTrait;
     use HasMethodsTrait;
 
@@ -64,6 +62,8 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
         null|string|ClassTypeDef      $extends = null,
         /** @var string[]|ClassTypeDef[] $implementations */
         array                         $implementations = [],
+        /** @var string[]|ConstantDef[] $constants */
+        array                         $constants = [],
         /** @var string[]|PropertyDef[] $properties */
         array                         $properties = [],
         /** @var MethodDef[] $methods */
@@ -76,6 +76,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
         $this->setName($name);
         $this->setExtends($extends);
         $this->setImplementations($implementations);
+        $this->setConstants($constants);
         $this->setProperties($properties);
         $this->setMethods($methods);
     }
@@ -83,129 +84,56 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     /**
      * @return Token[]
      */
-    private function getExtendsTokens(RenderContext $context, RenderingRules $rules): array
+    private function getSimpleExtendsTokens(TokenizationContext $context): array
     {
         $tokens = [];
         if ($this->extends) {
+            $tokens[] = new SpacesToken();
             $tokens[] = new ExtendsToken();
             $tokens[] = new SpacesToken();
-            $tokens[] = $this->extends->getTokens($context, $rules);
+            $tokens[] = $this->extends->getSimpleTokens($context);
         }
         return $this->flatten($tokens);
     }
 
     /**
-     * @param RenderContext $context
-     * @param RenderingRules $rules
      * @return Token[]
      */
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         $tokens = [];
         if ($this->namespace) {
-            $tokens[] = $this->namespace->getTokens($context, $rules);
+            $tokens[] = $this->namespace->getSimpleTokens($context);
         }
 
         $previousImportedClasses = $context->importedClasses;
-        $importsLeft = count($this->imports);
         foreach ($this->imports as $import) {
-            $importsLeft--;
-            $tokens[] = $import->getTokens($context, $rules);
+            $tokens[] = $import->getSimpleTokens($context);
             if (!$import->alias) {
                 $context->importedClasses[] = $import->type->type;
             }
-            if ($importsLeft > 0) {
-                $tokens[] = new NewLinesToken($rules->classes->newLinesAfterEachImport);
-            }
-        }
-        if (!empty($this->imports)) {
-            $tokens[] = new NewLinesToken($rules->classes->newLinesAfterAllImports);
         }
 
         if ($this->docBlock) {
-            $tokens[] = $this->docBlock->getTokens($context, $rules);
-            $tokens[] = new NewLinesToken($rules->classes->newLinesAfterDocBlock);
+            $tokens[] = $this->docBlock->getSimpleTokens($context);
         }
 
-        $scenarios = [];
-        foreach ($this->getWrapRulePermutations($rules) as $permutation) {
-            /** @var array{extends: WrappingDecision, implements: WrappingDecision, individualImplements: WrappingDecision} $permutation */
-            $scenario = $this->getDeclarationByWrappingPermutation(
-                $permutation['extends'],
-                $permutation['implements'],
-                $permutation['individualImplements'],
-                $context,
-                $rules,
-            );
-            $textScenario = $this->renderTokensToString($scenario);
-            $textScenarioLines = explode("\n", $textScenario);
-            foreach ($textScenarioLines as $textScenarioLine) {
-                if ($rules->exceedsAvailableSpace($context->getCurrentLine(), $textScenarioLine)) {
-                    if (
-                        str_contains($textScenarioLine, 'extends ')
-                        && $rules->classes->extendsOnNextLine === WrappingDecision::NEVER
-                    ) {
-                        continue;
-                    }
-                    if (
-                        str_contains($textScenarioLine, 'implements ')
-                        && (
-                            $rules->classes->implementsOnNextLine === WrappingDecision::NEVER
-                            || $rules->classes->implementsOnDifferentLines === WrappingDecision::NEVER
-                        )
-                    ) {
-                        continue;
-                    }
-                    continue 2;
-                }
-            }
-            $scenarios[] = $scenario;
-        }
+        $tokens[] = $this->getSimpleDeclarationTokens();
+        $tokens[] = $this->getSimpleExtendsTokens($context);
+        $tokens[] = $this->addSpaceIfNotEmpty($this->getSimpleImplementsTokens($context));
 
-        /** @var Token[] $tokens */
-        $tokens = array_merge($tokens, reset($scenarios));
-
-        if ($rules->classes->openingBrace === BracePositionEnum::SAME_LINE) {
-            $tokens[] = new SpacesToken($rules->classes->spacesBeforeOpeningBrace);
-        } else {
-            $tokens[] = new NewLinesToken();
-            $tokens[] = SpacesToken::fromString($context->indents);
-        }
         $tokens[] = new BraceStartToken();
-        $rules->indent($context);
-        if (!empty($this->properties) || !empty($this->methods)) {
-            $tokens[] = new NewLinesToken();
-        }
 
-        $propertiesLeft = count($this->properties);
+        foreach ($this->constants as $constant) {
+            $tokens[] = $constant->getSimpleTokens($context);
+        }
         foreach ($this->properties as $property) {
-            $propertiesLeft--;
-            $tokens[] = $this->insertIndentationTokens($rules, $property->getTokens($context, $rules));
-            if ($propertiesLeft > 0) {
-                $tokens[] = new NewLinesToken($rules->classes->newLinesAfterEachProperty);
-            }
+            $tokens[] = $property->getSimpleTokens($context);
         }
-
-        if (!empty($this->properties) && !empty($this->methods)) {
-            $tokens[] = new NewLinesToken($rules->classes->newLinesAfterProperties);
-        }
-
-        $methodsLeft = count($this->methods);
         foreach ($this->methods as $method) {
-            $methodsLeft--;
-            $tokens[] = $this->insertIndentationTokens($rules, $method->getTokens($context, $rules));
-            if ($methodsLeft > 0) {
-                $tokens[] = new NewLinesToken($rules->classes->newLinesAfterEachMethod);
-            }
-        }
-
-        if ($rules->classes->closingBrace !== BracePositionEnum::SAME_LINE) {
-            $rules->unindent($context);
-            $tokens[] = new NewLinesToken();
-            $tokens[] = SpacesToken::fromString($context->indents);
+            $tokens[] = $method->getSimpleTokens($context);
         }
         $tokens[] = new BraceEndToken();
-        $tokens[] = new NewLinesToken($rules->classes->newLinesAfterClosingBrace);
 
         $context->importedClasses = $previousImportedClasses;
 
@@ -213,113 +141,9 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     }
 
     /**
-     * @param RenderingRules $rules
-     * @return array<array{extends: WrappingDecision, implements: WrappingDecision, individualImplements: WrappingDecision}>
-     */
-    private function getWrapRulePermutations(RenderingRules $rules): array
-    {
-        $permutations = [];
-
-        $extendsChopWrapDecisions = [];
-        if ($rules->classes->extendsOnNextLine === WrappingDecision::NEVER) {
-            $extendsChopWrapDecisions[] = WrappingDecision::NEVER;
-        } elseif ($rules->classes->extendsOnNextLine === WrappingDecision::IF_TOO_LONG) {
-            $extendsChopWrapDecisions[] = WrappingDecision::NEVER;
-            $extendsChopWrapDecisions[] = WrappingDecision::ALWAYS;
-        } elseif ($rules->classes->extendsOnNextLine === WrappingDecision::ALWAYS) {
-            $extendsChopWrapDecisions[] = WrappingDecision::ALWAYS;
-        }
-
-        $implementsChopWrapDecisions = [];
-        if ($rules->classes->implementsOnNextLine === WrappingDecision::NEVER) {
-            $implementsChopWrapDecisions[] = WrappingDecision::NEVER;
-        } elseif ($rules->classes->implementsOnNextLine === WrappingDecision::IF_TOO_LONG) {
-            $implementsChopWrapDecisions[] = WrappingDecision::NEVER;
-            $implementsChopWrapDecisions[] = WrappingDecision::ALWAYS;
-        } elseif ($rules->classes->implementsOnNextLine === WrappingDecision::ALWAYS) {
-            $implementsChopWrapDecisions[] = WrappingDecision::ALWAYS;
-        }
-
-        $individualImplementsChopWrapDecisions = [];
-        if (in_array(WrappingDecision::ALWAYS, $implementsChopWrapDecisions)) {
-            if ($rules->classes->implementsOnDifferentLines === WrappingDecision::NEVER) {
-                $individualImplementsChopWrapDecisions[WrappingDecision::NEVER->name] = WrappingDecision::NEVER;
-            } elseif ($rules->classes->implementsOnDifferentLines === WrappingDecision::IF_TOO_LONG) {
-                $individualImplementsChopWrapDecisions[WrappingDecision::NEVER->name] = WrappingDecision::NEVER;
-                $individualImplementsChopWrapDecisions[WrappingDecision::ALWAYS->name] = WrappingDecision::ALWAYS;
-            } elseif ($rules->classes->implementsOnDifferentLines === WrappingDecision::ALWAYS) {
-                $individualImplementsChopWrapDecisions[WrappingDecision::ALWAYS->name] = WrappingDecision::ALWAYS;
-            }
-        }
-        if (in_array(WrappingDecision::NEVER, $implementsChopWrapDecisions)) {
-            $individualImplementsChopWrapDecisions[WrappingDecision::NEVER->name] = WrappingDecision::NEVER;
-        }
-
-        foreach ($extendsChopWrapDecisions as $extendsChopWrapDecision) {
-            foreach ($implementsChopWrapDecisions as $implementsChopWrapDecision) {
-                foreach ($individualImplementsChopWrapDecisions as $individualImplementsChopWrapDecision) {
-                    $permutations[] = [
-                        'extends' => $extendsChopWrapDecision,
-                        'implements' => $implementsChopWrapDecision,
-                        'individualImplements' => $individualImplementsChopWrapDecision,
-                    ];
-                }
-            }
-        }
-
-        return $permutations;
-    }
-
-    /**
      * @return Token[]
      */
-    public function getDeclarationByWrappingPermutation(
-        WrappingDecision $wrapExtends,
-        WrappingDecision $wrapImplements,
-        WrappingDecision $wrapIndividualImplements,
-        RenderContext    $context,
-        RenderingRules   $rules,
-    ): array {
-        $scenario = [];
-        $scenario[] = $this->getDeclarationTokens();
-        $extendsTokens = $this->getExtendsTokens($context, $rules);
-        $inlineImplementsTokens = $this->getInlineImplementsTokens($context, $rules);
-        $chopDownImplementsTokens = $this->getChopDownImplementsTokens($context, $rules);
-        if ($wrapExtends === WrappingDecision::NEVER && !empty($extendsTokens)) {
-            $scenario[] = new SpacesToken();
-            $scenario[] = $extendsTokens;
-        } elseif (!empty($extendsTokens)) {
-            $scenario[] = new NewLinesToken();
-            $rules->indent($context);
-            $scenario[] = SpacesToken::fromString($context->indents);
-            $scenario[] = $extendsTokens;
-            $rules->unindent($context);
-        }
-        if ($wrapImplements === WrappingDecision::NEVER && !empty($inlineImplementsTokens)) {
-            $scenario[] = new SpacesToken();
-            $scenario[] = $inlineImplementsTokens;
-        } elseif (
-            ($wrapImplements === WrappingDecision::ALWAYS || $wrapImplements === WrappingDecision::IF_TOO_LONG)
-            && $wrapIndividualImplements === WrappingDecision::NEVER
-            && !empty($inlineImplementsTokens)
-        ) {
-            $scenario[] = new NewLinesToken();
-            $rules->indent($context);
-            $scenario[] = $this->insertIndentationTokens($rules, $inlineImplementsTokens);
-            $rules->unindent($context);
-        } elseif (!empty($chopDownImplementsTokens)) {
-            $scenario[] = new NewLinesToken();
-            $rules->indent($context);
-            $scenario[] = $this->insertIndentationTokens($rules, $chopDownImplementsTokens);
-            $rules->unindent($context);
-        }
-        return $this->flatten($scenario);
-    }
-
-    /**
-     * @return Token[]
-     */
-    private function getDeclarationTokens(): array
+    private function getSimpleDeclarationTokens(): array
     {
         $tokens = [];
         if ($this->abstract) {
@@ -335,27 +159,14 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     /**
      * @return Token[]
      */
-    private function getInlineImplementsTokens(RenderContext $context, RenderingRules $rules): array
+    private function getSimpleImplementsTokens(TokenizationContext $context): array
     {
         $tokens = [];
         if (empty($this->implementations)) {
             return $tokens;
         }
         $implementsTokenGroup = new ImplementationsDef($this->implementations);
-        return $implementsTokenGroup->renderInlineScenario($context, $rules);
-    }
-
-    /**
-     * @return Token[]
-     */
-    private function getChopDownImplementsTokens(RenderContext $context, RenderingRules $rules): array
-    {
-        $tokens = [];
-        if (empty($this->implementations)) {
-            return $tokens;
-        }
-        $implementsTokenGroup = new ImplementationsDef($this->implementations);
-        return $implementsTokenGroup->renderChopDownScenario($context, $rules);
+        return $implementsTokenGroup->getSimpleTokens($context);
     }
 
     public function getClassReference(): ClassRefVal
@@ -374,5 +185,17 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     public function getCallableReference(): Tokenizes
     {
         return $this->getClassType()->getCallableReference();
+    }
+
+    /**
+     * @param Token[] $tokensToAdd
+     * @return Token[]
+     */
+    private function addSpaceIfNotEmpty(array $tokensToAdd): array
+    {
+        if (!empty($tokensToAdd)) {
+            return $this->flatten([new SpacesToken(), $tokensToAdd]);
+        }
+        return $tokensToAdd;
     }
 }

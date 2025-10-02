@@ -3,8 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Definition\Definitions\Structures\ImportDef;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -12,18 +11,15 @@ class ImportDefTest extends TestCase
 {
     use TokenFunctions;
 
-    public function testImportRendersUseTypeAndSemiColonWithConfiguredSpaces()
+    public function testImportRendersAsExpected()
     {
         $token = new ImportDef('CrazyCodeGen\\Tests');
 
-        $rules = new RenderingRules();
-        $rules->imports->spacesAfterUse = 4;
-
         $this->assertEquals(
             <<<'EOS'
-            use    CrazyCodeGen\Tests;
+            use CrazyCodeGen\Tests;
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -31,15 +27,11 @@ class ImportDefTest extends TestCase
     {
         $token = new ImportDef('CrazyCodeGen\\Tests', 'tests');
 
-        $rules = new RenderingRules();
-        $rules->imports->spacesAfterType = 4;
-        $rules->imports->spacesAfterAs = 4;
-
         $this->assertEquals(
             <<<'EOS'
-            use CrazyCodeGen\Tests    as    tests;
+            use CrazyCodeGen\Tests as tests;
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 }

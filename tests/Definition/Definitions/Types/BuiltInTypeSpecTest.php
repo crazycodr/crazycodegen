@@ -3,8 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -31,14 +30,14 @@ class BuiltInTypeSpecTest extends TestCase
     /**
      * Not testing all possible cases
      */
-    public function testGetTokensReturnTheExpectedTokensPerType()
+    public function testReturnTheExpectedTokensPerType()
     {
         $token = new BuiltInTypeSpec('int');
         $this->assertEquals(
             <<<'EOS'
             int
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
 
         $token = new BuiltInTypeSpec('bool');
@@ -46,7 +45,7 @@ class BuiltInTypeSpecTest extends TestCase
             <<<'EOS'
             bool
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
 
         $token = new BuiltInTypeSpec('false');
@@ -54,7 +53,7 @@ class BuiltInTypeSpecTest extends TestCase
             <<<'EOS'
             false
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
 
         $token = new BuiltInTypeSpec('mixed');
@@ -62,7 +61,7 @@ class BuiltInTypeSpecTest extends TestCase
             <<<'EOS'
             mixed
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 }

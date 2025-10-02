@@ -2,11 +2,11 @@
 
 namespace CrazyCodeGen\Definition\Expressions\Operators\LogicalOperators;
 
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ExclamationToken;
 
 class NotOp extends Tokenizes
@@ -14,6 +14,9 @@ class NotOp extends Tokenizes
     use FlattenFunction;
     use ValueInferenceTrait;
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function __construct(
         public int|float|string|bool|Tokenizes $operand,
         public bool                            $doubled = false,
@@ -23,11 +26,11 @@ class NotOp extends Tokenizes
         }
     }
 
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         $tokens = [];
         $tokens[] = new ExclamationToken();
-        $tokens[] = $this->operand->getTokens($context, $rules);
+        $tokens[] = $this->operand->getSimpleTokens($context);
         return $this->flatten($tokens);
     }
 }

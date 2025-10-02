@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\MethodDefScenarios;
 
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
@@ -12,8 +13,8 @@ use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\Formatters\PhpCsFixerFormatter;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -21,6 +22,9 @@ class ContextMemberAccessScenarioTest extends TestCase
 {
     use TokenFunctions;
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testUsingThisContextToChainAccessesToArgumentsReturnsTheProperCode()
     {
         $modelTypePropertyType = new ClassTypeDef('Internal\Project\Models\Model');
@@ -52,11 +56,14 @@ class ContextMemberAccessScenarioTest extends TestCase
             ->addProperty($modelProperty)
             ->addMethod($getMethod);
 
+        $simpleCode = $this->renderTokensToString($classDef->getSimpleTokens(new TokenizationContext()));
+        $newCode = (new PhpCsFixerFormatter())->format($simpleCode);
+
         $this->assertEquals(
             <<<'EOS'
-            namespace Internal\Project\Models;
+            <?php
             
-            use Internal\Project\Models\Model;
+            namespace Internal\Project\Models;
             
             class ContextMemberAccessScenario
             {
@@ -71,10 +78,13 @@ class ContextMemberAccessScenarioTest extends TestCase
             }
             
             EOS,
-            $this->renderTokensToString($classDef->getTokens(new RenderContext(), new RenderingRules())),
+            $newCode,
         );
     }
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testUsingParentContextToChainAccessesToParentMemberReturnsTheProperCode()
     {
         $constructor = (new MethodDef('__construct'))
@@ -84,8 +94,13 @@ class ContextMemberAccessScenarioTest extends TestCase
             ->setNamespace('Internal\Project\Models')
             ->addMethod($constructor);
 
+        $simpleCode = $this->renderTokensToString($classDef->getSimpleTokens(new TokenizationContext()));
+        $newCode = (new PhpCsFixerFormatter())->format($simpleCode);
+
         $this->assertEquals(
             <<<'EOS'
+            <?php
+            
             namespace Internal\Project\Models;
             
             class ContextMemberAccessScenario
@@ -97,7 +112,7 @@ class ContextMemberAccessScenarioTest extends TestCase
             }
             
             EOS,
-            $this->renderTokensToString($classDef->getTokens(new RenderContext(), new RenderingRules())),
+            $newCode,
         );
     }
 }

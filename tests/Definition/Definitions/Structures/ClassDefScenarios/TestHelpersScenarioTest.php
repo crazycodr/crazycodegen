@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\ClassDefScenarios;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
+use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
@@ -20,8 +21,9 @@ use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Comparisons\InstanceOfOp;
 use CrazyCodeGen\Definition\Expressions\Operators\LogicalOperators\NotOp;
 use CrazyCodeGen\Definition\Expressions\Structures\Condition;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Definition\Expressions\Structures\ConditionChain;
+use CrazyCodeGen\Rendering\Formatters\PhpCsFixerFormatter;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -30,6 +32,9 @@ class TestHelpersScenarioTest extends TestCase
 {
     use TokenFunctions;
 
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
     public function testAbilityToGenerateTestHelperFromPreviousInternalFramework()
     {
         $testCaseType = new ClassTypeDef('PHPUnit\Framework\TestCase');
@@ -53,15 +58,17 @@ class TestHelpersScenarioTest extends TestCase
         $setUpMethod = (new MethodDef('setUp'))
             ->setReturnType('void')
             ->addInstruction(ParentContext::to(new CallOp('setUp')))
-            ->addInstruction(new Condition(
-                condition: new NotOp(new InstanceOfOp(
-                    left: $configApiManagerType->to(new CallOp('getClient')),
-                    right: $configApiClientType,
-                )),
-                instructions: [
-                    $configApiManagerType->to(new CallOp(subject: 'setClient', arguments: [null])),
-                ]
-            ))
+            ->addInstruction(new ConditionChain([
+                new Condition(
+                    condition: new NotOp(new InstanceOfOp(
+                        left: $configApiManagerType->to(new CallOp('getClient')),
+                        right: $configApiClientType,
+                    )),
+                    instructions: [
+                        $configApiManagerType->to(new CallOp(subject: 'setClient', arguments: [null])),
+                    ]
+                )
+            ]))
             ->addInstruction(new AssignOp(
                 subject: ThisContext::to($configApiClientBackupProperty),
                 value: $configApiManagerType->to(new CallOp('getClient')),
@@ -99,20 +106,22 @@ class TestHelpersScenarioTest extends TestCase
             ->setVisibility(VisibilityEnum::PROTECTED)
             ->addParameter($scenarioBuildingCallable)
             ->setReturnType($configApiSpyBuilderType)
-            ->addInstruction(new Condition(
-                condition: new NotOp(new IssetOp(ThisContext::to($configApiClientSpyBuilderProperty))),
-                instructions: [
-                    new AssignOp(
-                        subject: ThisContext::to($configApiClientSpyBuilderProperty),
-                        value: new NewOp(
-                            class: $configApiSpyBuilderType,
-                            arguments: [
-                                $configApiManagerType->to(new CallOp('getClient')),
-                            ],
+            ->addInstruction(new ConditionChain([
+                new Condition(
+                    condition: new NotOp(new IssetOp(ThisContext::to($configApiClientSpyBuilderProperty))),
+                    instructions: [
+                        new AssignOp(
+                            subject: ThisContext::to($configApiClientSpyBuilderProperty),
+                            value: new NewOp(
+                                class: $configApiSpyBuilderType,
+                                arguments: [
+                                    $configApiManagerType->to(new CallOp('getClient')),
+                                ],
+                            ),
                         ),
-                    ),
-                ],
-            ))
+                    ],
+                ),
+            ]))
             ->addInstruction(new NewLinesToken())
             ->addInstruction(new Condition(
                 condition: $scenarioBuildingCallable,
@@ -127,7 +136,8 @@ class TestHelpersScenarioTest extends TestCase
             ->addInstruction(new ReturnOp(ThisContext::to($configApiClientSpyBuilderProperty)));
         $getAuditingTrackingServiceManagerBuilderMethod = (new MethodDef('getAuditingTrackingServiceManagerBuilder'))
             ->setReturnType($serviceBuilderType)
-            ->addInstruction(new Comment('@noinspection PhpUnhandledExceptionInspection', useMultiline: true))
+            ->addInstruction(new NewLinesToken())
+            ->addInstruction(new Comment('@noinspection PhpUnhandledExceptionInspection'))
             ->addInstruction(new ReturnOp(new NewOp(
                 $serviceBuilderType,
                 arguments: [
@@ -155,11 +165,13 @@ class TestHelpersScenarioTest extends TestCase
             ->addMethod($getConfigApiSpyBuilderMethod)
             ->addMethod($getAuditingTrackingServiceManagerBuilderMethod);
 
-        $rules = new RenderingRules();
-        $rules->docBlocks->lineLength = 125;
+        $simpleCode = $this->renderTokensToString($classDef->getSimpleTokens(new TokenizationContext()));
+        $newCode = (new PhpCsFixerFormatter())->format($simpleCode);
 
         $this->assertEquals(
             <<<'EOS'
+            <?php
+            
             namespace Internal\Tests\Auditing\Subscribers\TestHelpers;
             
             use PHPUnit\Framework\TestCase;
@@ -172,11 +184,14 @@ class TestHelpersScenarioTest extends TestCase
             /**
              * This file was generated using the Symfony command "mock-helpers:generate".
              *
-             * Do not edit this file as the content will be replaced automatically the next time someone will run the generate command.
+             * Do not edit this file as the content will be replaced automatically the next
+             * time someone will run the generate command.
              *
-             * If you want to learn more about this framework, visit the documentation on Confluence at:
+             * If you want to learn more about this framework, visit the documentation on
+             * Confluence at:
              * https://example.com/wiki/spaces/COPUNIT/pages/4051238915/Mocking+framework.
              */
+            
             class FinalizeTrackingOnRequestEndSubscriberTestHelpers extends TestCase
             {
                 protected ConfigApiClientSpyBuilder $configApiClientSpyBuilder;
@@ -200,9 +215,8 @@ class TestHelpersScenarioTest extends TestCase
                     parent::tearDown();
                 }
             
-                protected function getConfigApiClientSpyBuilder(
-                    null|callable $scenarioBuildingCallable = null,
-                ): ConfigApiClientSpyBuilder {
+                protected function getConfigApiClientSpyBuilder(null|callable $scenarioBuildingCallable = null): ConfigApiClientSpyBuilder
+                {
                     if (!isset($this->configApiClientSpyBuilder)) {
                         $this->configApiClientSpyBuilder = new ConfigApiClientSpyBuilder(ConfigApiManager::getClient());
                     }
@@ -210,19 +224,18 @@ class TestHelpersScenarioTest extends TestCase
                     if ($scenarioBuildingCallable) {
                         $scenarioBuildingCallable($this->configApiClientSpyBuilder);
                     }
-            
                     return $this->configApiClientSpyBuilder;
                 }
             
                 public function getAuditingTrackingServiceManagerBuilder(): AuditingTrackingServiceManagerBuilder
                 {
-                    /** @noinspection PhpUnhandledExceptionInspection */
+                    // @noinspection PhpUnhandledExceptionInspection
                     return new AuditingTrackingServiceManagerBuilder($this->createMock(AuditingTrackingServiceManager::class));
                 }
             }
             
             EOS,
-            $this->renderTokensToString($classDef->getTokens(new RenderContext(), $rules)),
+            $newCode,
         );
     }
 }

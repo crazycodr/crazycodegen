@@ -4,8 +4,7 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -22,11 +21,9 @@ class DocBlockDef extends Tokenizes
     }
 
     /**
-     * @param RenderContext $context
-     * @param RenderingRules $rules
      * @return Token[]
      */
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         $tokens = [];
         if (empty($this->texts)) {
@@ -41,11 +38,11 @@ class DocBlockDef extends Tokenizes
                 continue;
             }
             do {
-                if (strlen($text) > $rules->docBlocks->lineLength) {
-                    $textSampleForCutoff = substr($text, 0, $rules->docBlocks->lineLength + 1);
+                if (strlen($text) > 80) {
+                    $textSampleForCutoff = substr($text, 0, 80 + 1);
                     $nextSpaceToCutAt = strrpos($textSampleForCutoff, ' ');
                     if ($nextSpaceToCutAt === false) {
-                        $nextSpaceToCutAt = strpos($text, ' ', $rules->docBlocks->lineLength);
+                        $nextSpaceToCutAt = strpos($text, ' ', 80);
                         if ($nextSpaceToCutAt === false) {
                             $nextSpaceToCutAt = null;
                         }
@@ -68,6 +65,7 @@ class DocBlockDef extends Tokenizes
             }
         }
         $tokens[] = new Token(' */');
+        $tokens[] = new NewLinesToken();
         return $this->flatten($tokens);
     }
 }

@@ -4,8 +4,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -22,7 +21,7 @@ class ClassRefValTest extends TestCase
             <<<'EOS'
             Foo\Bar\Baz::class
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -31,14 +30,14 @@ class ClassRefValTest extends TestCase
         $type = new ClassTypeDef('Foo\\Bar\\Baz');
         $token = new ClassRefVal($type);
 
-        $context = new RenderContext();
+        $context = new TokenizationContext();
         $context->importedClasses[] = 'Foo\\Bar\\Baz';
 
         $this->assertEquals(
             <<<'EOS'
             Baz::class
             EOS,
-            $this->renderTokensToString($token->getTokens($context, new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens($context))
         );
     }
 }

@@ -3,8 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +17,7 @@ class DocBlockDefTest extends TestCase
             texts: [],
         );
 
-        $this->assertEquals([], $token->getTokens(new RenderContext(), new RenderingRules()));
+        $this->assertEquals([], $token->getSimpleTokens(new TokenizationContext()));
     }
 
     public function testEmptyTextsAreIgnoredButCanStillGenerateEmptyDocBlock()
@@ -31,8 +30,9 @@ class DocBlockDefTest extends TestCase
             <<<'EOS'
             /**
              */
+            
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -51,50 +51,45 @@ class DocBlockDefTest extends TestCase
              *
              * Foo
              */
+            
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), new RenderingRules()))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
     public function testLongTextsAreWrappedBasedOnLineLengthAndSplitsOnSpacesOnlyAndExtraSpacesAreTrimmedOnSplit()
     {
         $token = new DocBlockDef(
-            texts: ['Hello world, i love programming and this automatically wraps on 25 characters.'],
+            texts: ['Hello world, i love programming and this long comment will automatically wrap on the 80th characters.'],
         );
-
-        $rules = new RenderingRules();
-        $rules->docBlocks->lineLength = 25;
 
         $this->assertEquals(
             <<<'EOS'
             /**
-             * Hello world, i love
-             * programming and this
-             * automatically wraps on 25
-             * characters.
+             * Hello world, i love programming and this long comment will automatically wrap on
+             * the 80th characters.
              */
+            
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
     public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceAsLongAsNeeded()
     {
         $token = new DocBlockDef(
-            texts: ['https://example.com/questions/49907308/url-without-spaces will chop here.'],
+            texts: ['https://example.com/long-example-of-a-url-feature-a-question/49907308/url-without-spaces will chop here.'],
         );
-
-        $rules = new RenderingRules();
-        $rules->docBlocks->lineLength = 25;
 
         $this->assertEquals(
             <<<'EOS'
             /**
-             * https://example.com/questions/49907308/url-without-spaces
+             * https://example.com/long-example-of-a-url-feature-a-question/49907308/url-without-spaces
              * will chop here.
              */
+            
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 
@@ -104,19 +99,15 @@ class DocBlockDefTest extends TestCase
             texts: ['Upcoming url is too long so it will be take as a whole: https://example.com/questions/49907308/url-without-spaces'],
         );
 
-        $rules = new RenderingRules();
-        $rules->docBlocks->lineLength = 25;
-
         $this->assertEquals(
             <<<'EOS'
             /**
-             * Upcoming url is too long
-             * so it will be take as a
-             * whole:
+             * Upcoming url is too long so it will be take as a whole:
              * https://example.com/questions/49907308/url-without-spaces
              */
+            
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderContext(), $rules))
+            $this->renderTokensToString($token->getSimpleTokens(new TokenizationContext()))
         );
     }
 }

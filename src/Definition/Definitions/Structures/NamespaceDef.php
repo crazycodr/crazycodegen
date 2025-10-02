@@ -4,9 +4,7 @@ namespace CrazyCodeGen\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
-use CrazyCodeGen\Rendering\Renderers\Contexts\RenderContext;
-use CrazyCodeGen\Rendering\Renderers\Rules\RenderingRules;
-use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
+use CrazyCodeGen\Rendering\TokenizationContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\NamespaceToken;
@@ -23,18 +21,15 @@ class NamespaceDef extends Tokenizes
     }
 
     /**
-     * @param RenderContext $context
-     * @param RenderingRules $rules
      * @return Token[]
      */
-    public function getTokens(RenderContext $context, RenderingRules $rules): array
+    public function getSimpleTokens(TokenizationContext $context): array
     {
         $tokens = [];
         $tokens[] = new NamespaceToken();
-        $tokens[] = new SpacesToken($rules->namespaces->spacesAfterNamespace);
+        $tokens[] = new SpacesToken();
         $tokens[] = new Token($this->path);
         $tokens[] = new SemiColonToken();
-        $tokens[] = new NewLinesToken($rules->namespaces->newLinesAfterSemiColon);
         return $this->flatten($tokens);
     }
 }
