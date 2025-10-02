@@ -18,8 +18,8 @@ class MultiTypeDefTest extends TestCase
     public function testTypesAreJoinedWithPipeWhenUnionIsTrueByDefault(): void
     {
         $token = new MultiTypeDef([
-            new BuiltInTypeSpec(BuiltInTypesEnum::string),
-            new BuiltInTypeSpec(BuiltInTypesEnum::int),
+            BuiltInTypeSpec::stringType(),
+            BuiltInTypeSpec::intType(),
         ]);
 
         $this->assertEquals(
@@ -34,8 +34,8 @@ class MultiTypeDefTest extends TestCase
     {
         $token = new MultiTypeDef(
             [
-                new BuiltInTypeSpec(BuiltInTypesEnum::string),
-                new BuiltInTypeSpec(BuiltInTypesEnum::int),
+                BuiltInTypeSpec::stringType(),
+                BuiltInTypeSpec::intType(),
             ],
             unionTypes: false
         );
@@ -51,8 +51,8 @@ class MultiTypeDefTest extends TestCase
     public function testStringTypesAreConvertedToSingleTypeTokenGroupsAndRendered(): void
     {
         $token = new MultiTypeDef([
-            new BuiltInTypeSpec(BuiltInTypesEnum::string),
-            new BuiltInTypeSpec(BuiltInTypesEnum::int)
+            BuiltInTypeSpec::stringType(),
+            BuiltInTypeSpec::intType()
         ]);
 
         $this->assertEquals(
@@ -66,8 +66,8 @@ class MultiTypeDefTest extends TestCase
     public function testParenthesesAreAddedAroundTokensWhenNestedIsTurnedOn(): void
     {
         $token = new MultiTypeDef([
-            new BuiltInTypeSpec(BuiltInTypesEnum::string),
-            new BuiltInTypeSpec(BuiltInTypesEnum::int),
+            BuiltInTypeSpec::stringType(),
+            BuiltInTypeSpec::intType(),
         ], nestedTypes: true);
 
         $this->assertEquals(
@@ -83,12 +83,12 @@ class MultiTypeDefTest extends TestCase
         $token = new MultiTypeDef(
             [
                 new MultiTypeDef([
-                    new BuiltInTypeSpec(BuiltInTypesEnum::int),
-                    new BuiltInTypeSpec(BuiltInTypesEnum::float)
+                    BuiltInTypeSpec::intType(),
+                    BuiltInTypeSpec::floatType()
                 ], nestedTypes: true),
                 new MultiTypeDef([
-                    new BuiltInTypeSpec(BuiltInTypesEnum::string),
-                    new BuiltInTypeSpec(BuiltInTypesEnum::bool)
+                    BuiltInTypeSpec::stringType(),
+                    BuiltInTypeSpec::boolType()
                 ], nestedTypes: true),
             ],
             unionTypes: false,

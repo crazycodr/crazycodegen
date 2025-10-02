@@ -81,7 +81,7 @@ class PropertyDefTest extends TestCase
     {
         $token = new PropertyDef(
             name: 'foo',
-            type: new BuiltInTypeSpec(BuiltInTypesEnum::int)
+            type: BuiltInTypeSpec::intType()
         );
 
         $this->assertEquals(
@@ -100,9 +100,9 @@ class PropertyDefTest extends TestCase
         $token = new PropertyDef(
             name: 'foo',
             type: new MultiTypeDef(types: [
-                new BuiltInTypeSpec(BuiltInTypesEnum::int),
-                new BuiltInTypeSpec(BuiltInTypesEnum::string),
-                new BuiltInTypeSpec(BuiltInTypesEnum::bool),
+                BuiltInTypeSpec::intType(),
+                BuiltInTypeSpec::stringType(),
+                BuiltInTypeSpec::boolType(),
             ])
         );
 

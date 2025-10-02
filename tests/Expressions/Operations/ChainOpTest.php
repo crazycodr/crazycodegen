@@ -77,7 +77,7 @@ class ChainOpTest extends TestCase
     {
         $token = new ChainOp(
             chain: [
-                new PropertyDef(name: 'foo', type: new BuiltInTypeSpec(BuiltInTypesEnum::int)),
+                new PropertyDef(name: 'foo', type: BuiltInTypeSpec::intType()),
             ],
         );
 
@@ -94,8 +94,8 @@ class ChainOpTest extends TestCase
         $token = new ChainOp(
             chain: [
                 new ThisContext(),
-                new PropertyDef(name: 'foo', type: new BuiltInTypeSpec(BuiltInTypesEnum::int)),
-                new PropertyDef(name: 'bar', type: new BuiltInTypeSpec(BuiltInTypesEnum::int)),
+                new PropertyDef(name: 'foo', type: BuiltInTypeSpec::intType()),
+                new PropertyDef(name: 'bar', type: BuiltInTypeSpec::intType()),
             ],
         );
 
@@ -113,7 +113,7 @@ class ChainOpTest extends TestCase
             chain: [
                 new ParentContext(),
                 new CallOp(subject: 'setUp'),
-                new PropertyDef(name: 'bar', type: new BuiltInTypeSpec(BuiltInTypesEnum::int)),
+                new PropertyDef(name: 'bar', type: BuiltInTypeSpec::intType()),
             ],
         );
 

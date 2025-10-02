@@ -19,7 +19,7 @@ class BuiltInTypeSpecTest extends TestCase
      */
     public function testReturnTheExpectedTokensPerType(): void
     {
-        $token = new BuiltInTypeSpec(BuiltInTypesEnum::int);
+        $token = BuiltInTypeSpec::intType();
         $this->assertEquals(
             <<<'EOS'
             int
@@ -27,7 +27,7 @@ class BuiltInTypeSpecTest extends TestCase
             $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
 
-        $token = new BuiltInTypeSpec(BuiltInTypesEnum::bool);
+        $token = BuiltInTypeSpec::boolType();
         $this->assertEquals(
             <<<'EOS'
             bool
@@ -35,7 +35,7 @@ class BuiltInTypeSpecTest extends TestCase
             $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
 
-        $token = new BuiltInTypeSpec(BuiltInTypesEnum::false);
+        $token = BuiltInTypeSpec::falseType();
         $this->assertEquals(
             <<<'EOS'
             false
@@ -43,7 +43,7 @@ class BuiltInTypeSpecTest extends TestCase
             $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );
 
-        $token = new BuiltInTypeSpec(BuiltInTypesEnum::mixed);
+        $token = BuiltInTypeSpec::mixedType();
         $this->assertEquals(
             <<<'EOS'
             mixed

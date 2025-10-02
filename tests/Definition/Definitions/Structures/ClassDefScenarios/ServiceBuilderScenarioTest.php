@@ -48,7 +48,7 @@ class ServiceBuilderScenarioTest extends TestCase
                 value: $mockParameter,
             ));
         $getMockedClassesMethod = (new MethodDef('getMockedClasses'))
-            ->setReturnType(new BuiltInTypeSpec(BuiltInTypesEnum::array))
+            ->setReturnType(BuiltInTypeSpec::arrayType())
             ->setStatic(true)
             ->addInstruction(new ReturnOp([$hookBasketAdapterType]));
         $getServiceMethod = (new MethodDef('getService'))

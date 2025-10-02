@@ -60,7 +60,7 @@ class TestHelpersScenarioTest extends TestCase
         );
 
         $setUpMethod = (new MethodDef('setUp'))
-            ->setReturnType(new BuiltInTypeSpec(BuiltInTypesEnum::void))
+            ->setReturnType(BuiltInTypeSpec::voidType())
             ->addInstruction(ParentContext::to(new CallOp('setUp')))
             ->addInstruction(new ConditionChain([
                 new Condition(
@@ -88,7 +88,7 @@ class TestHelpersScenarioTest extends TestCase
                 ),
             ));
         $tearDownMethod = (new MethodDef('tearDown'))
-            ->setReturnType(new BuiltInTypeSpec(BuiltInTypesEnum::void))
+            ->setReturnType(BuiltInTypeSpec::voidType())
             ->addInstruction(
                 ThisContext::to($configApiClientSpyBuilderProperty)
                     ->to(new CallOp('getService'))
@@ -104,8 +104,8 @@ class TestHelpersScenarioTest extends TestCase
         $scenarioBuildingCallable = new ParameterDef(
             name: 'scenarioBuildingCallable',
             type: new MultiTypeDef([
-                new BuiltInTypeSpec(BuiltInTypesEnum::null),
-                new BuiltInTypeSpec(BuiltInTypesEnum::callable)
+                BuiltInTypeSpec::nullType(),
+                BuiltInTypeSpec::callableType()
             ]),
             defaultValue: null
         );

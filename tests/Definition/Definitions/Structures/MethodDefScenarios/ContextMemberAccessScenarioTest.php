@@ -35,7 +35,7 @@ class ContextMemberAccessScenarioTest extends TestCase
 
         $modelTypeProperty = new PropertyDef(
             'modelType',
-            type: new BuiltInTypeSpec(BuiltInTypesEnum::string),
+            type: BuiltInTypeSpec::stringType(),
             defaultValue: $modelTypePropertyType
         );
 

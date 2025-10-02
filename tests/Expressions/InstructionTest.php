@@ -33,7 +33,7 @@ class InstructionTest extends TestCase
     public function testTokenGroupIsRenderedWithTrailingSemiColon(): void
     {
         $token = new Instruction([
-            new BuiltInTypeSpec(BuiltInTypesEnum::int),
+            BuiltInTypeSpec::intType(),
         ]);
 
         $this->assertEquals(

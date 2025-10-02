@@ -105,8 +105,8 @@ class MethodDefTest extends TestCase
             name: 'myFunction',
             parameters: [
                 new ParameterDef(name: 'foo'),
-                new ParameterDef(name: 'bar', type: new BuiltInTypeSpec(BuiltInTypesEnum::int)),
-                new ParameterDef(name: 'baz', type: new BuiltInTypeSpec(BuiltInTypesEnum::bool), defaultValue: true),
+                new ParameterDef(name: 'bar', type: BuiltInTypeSpec::intType()),
+                new ParameterDef(name: 'baz', type: BuiltInTypeSpec::boolType(), defaultValue: true),
             ],
         );
 
@@ -122,7 +122,7 @@ class MethodDefTest extends TestCase
     {
         $token = new MethodDef(
             name: 'myFunction',
-            returnType: new BuiltInTypeSpec(BuiltInTypesEnum::string),
+            returnType: BuiltInTypeSpec::stringType(),
         );
 
         $this->assertEquals(
