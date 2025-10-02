@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Tests\Expressions\Operations;
 
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
 use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
@@ -15,8 +16,9 @@ use PHPUnit\Framework\TestCase;
 class CallOpTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testSubjectAndFunctionAreConvertedToTokensWhenStrings()
+    public function testSubjectAndFunctionAreConvertedToTokensWhenStrings(): void
     {
         $token = new CallOp(
             subject: 'setUp',
@@ -33,7 +35,7 @@ class CallOpTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testFunctionConvertedToTokenWhenMethodTokenGroupPassedIn()
+    public function testFunctionConvertedToTokenWhenMethodTokenGroupPassedIn(): void
     {
         $token = new CallOp(
             subject: new MethodDef(name: 'setUp'),
@@ -50,7 +52,7 @@ class CallOpTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testRendersTokenGroupArgumentAsExpected()
+    public function testRendersTokenGroupArgumentAsExpected(): void
     {
         $token = new CallOp(
             subject: new MethodDef(name: 'setUp'),
@@ -68,11 +70,11 @@ class CallOpTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces()
+    public function testRendersTokensArgumentAsListOfItemsSeparatedByCommasAndSpaces(): void
     {
         $token = new CallOp(
             subject: new MethodDef(name: 'setUp'),
-            arguments: [new Token(1), new Token(2), new Token(3)],
+            arguments: [new Token('1'), new Token('2'), new Token('3')],
         );
 
         $this->assertEquals(
@@ -86,7 +88,7 @@ class CallOpTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces()
+    public function testRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpaces(): void
     {
         $token = new CallOp(
             subject: new MethodDef(name: 'setUp'),
@@ -104,7 +106,7 @@ class CallOpTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions()
+    public function testRendersTokenGroupsArgumentAsListOfItemsSeparatedByCommasAndSpacesAndUsesTheInlineVersions(): void
     {
         $token = new CallOp(
             subject: new MethodDef(name: 'setUp'),

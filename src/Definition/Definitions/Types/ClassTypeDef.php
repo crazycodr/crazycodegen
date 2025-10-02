@@ -65,7 +65,7 @@ class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, Provid
 
     public function asNullable(): MultiTypeDef
     {
-        return new MultiTypeDef([$this, new BuiltInTypeSpec('null')]);
+        return new MultiTypeDef([$this, new BuiltInTypeSpec(BuiltInTypesEnum::null)]);
     }
 
     public function getCallableReference(): Tokenizes

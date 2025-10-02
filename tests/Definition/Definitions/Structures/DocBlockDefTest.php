@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -10,8 +11,9 @@ use PHPUnit\Framework\TestCase;
 class DocBlockDefTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testEmptyDocBlockIsNotRendered()
+    public function testEmptyDocBlockIsNotRendered(): void
     {
         $token = new DocBlockDef(
             texts: [],
@@ -20,7 +22,7 @@ class DocBlockDefTest extends TestCase
         $this->assertEquals([], $token->getTokens(new RenderingContext()));
     }
 
-    public function testEmptyTextsAreIgnoredButCanStillGenerateEmptyDocBlock()
+    public function testEmptyTextsAreIgnoredButCanStillGenerateEmptyDocBlock(): void
     {
         $token = new DocBlockDef(
             texts: ['', ''],
@@ -36,7 +38,7 @@ class DocBlockDefTest extends TestCase
         );
     }
 
-    public function testTextsAreGeneratedWithEmptyLineBetweenThemAndEmptyLineDoesNotFeatureTrailingSpace()
+    public function testTextsAreGeneratedWithEmptyLineBetweenThemAndEmptyLineDoesNotFeatureTrailingSpace(): void
     {
         $token = new DocBlockDef(
             texts: ['Hello', 'World', 'Foo'],
@@ -57,7 +59,7 @@ class DocBlockDefTest extends TestCase
         );
     }
 
-    public function testLongTextsAreWrappedBasedOnLineLengthAndSplitsOnSpacesOnlyAndExtraSpacesAreTrimmedOnSplit()
+    public function testLongTextsAreWrappedBasedOnLineLengthAndSplitsOnSpacesOnlyAndExtraSpacesAreTrimmedOnSplit(): void
     {
         $token = new DocBlockDef(
             texts: ['Hello world, i love programming and this long comment will automatically wrap on the 80th characters.'],
@@ -75,7 +77,7 @@ class DocBlockDefTest extends TestCase
         );
     }
 
-    public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceAsLongAsNeeded()
+    public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceAsLongAsNeeded(): void
     {
         $token = new DocBlockDef(
             texts: ['https://example.com/long-example-of-a-url-feature-a-question/49907308/url-without-spaces will chop here.'],
@@ -93,7 +95,7 @@ class DocBlockDefTest extends TestCase
         );
     }
 
-    public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceButWillTakeAllIfNothingLeftAfterIt()
+    public function testLongTextsWithoutSpacesFoundAreScannedForTheNextSpaceButWillTakeAllIfNothingLeftAfterIt(): void
     {
         $token = new DocBlockDef(
             texts: ['Upcoming url is too long so it will be take as a whole: https://example.com/questions/49907308/url-without-spaces'],

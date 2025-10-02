@@ -18,6 +18,7 @@ trait HasInstructionsTrait
     public array $instructions = [];
 
     /**
+     * @param NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions
      * @throws NoValidConversionRulesMatchedException
      */
     public function setInstructions(array $instructions): self

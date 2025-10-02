@@ -3,6 +3,7 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\MethodDefScenarios;
 
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
@@ -21,11 +22,12 @@ use PHPUnit\Framework\TestCase;
 class ContextMemberAccessScenarioTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testUsingThisContextToChainAccessesToArgumentsReturnsTheProperCode()
+    public function testUsingThisContextToChainAccessesToArgumentsReturnsTheProperCode(): void
     {
         $modelTypePropertyType = new ClassTypeDef('Internal\Project\Models\Model');
 
@@ -85,7 +87,7 @@ class ContextMemberAccessScenarioTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testUsingParentContextToChainAccessesToParentMemberReturnsTheProperCode()
+    public function testUsingParentContextToChainAccessesToParentMemberReturnsTheProperCode(): void
     {
         $constructor = (new MethodDef('__construct'))
             ->addInstruction(ParentContext::to(new CallOp('__construct')));

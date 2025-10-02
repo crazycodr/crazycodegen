@@ -52,6 +52,9 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
     use HasInstructionsTrait;
 
     /**
+     * @param null|string|string[]|DocBlockDef $docBlock
+     * @param string[]|ParameterDef[] $parameters
+     * @param NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions
      * @throws NoValidConversionRulesMatchedException
      * @throws InvalidIdentifierFormatException
      */
@@ -61,10 +64,8 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
         bool                          $abstract = false,
         VisibilityEnum                $visibility = VisibilityEnum::PUBLIC,
         bool                          $static = false,
-        /** @var string[]|ParameterDef[] $parameters */
         array                         $parameters = [],
         null|string|TypeDef           $returnType = null,
-        /** @var NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions */
         array                         $instructions = [],
     ) {
         $this->setDocBlock($docBlock);

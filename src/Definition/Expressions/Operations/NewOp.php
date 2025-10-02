@@ -29,7 +29,7 @@ class NewOp extends Tokenizes
      */
     public function __construct(
         public string|Tokenizes|ClassTypeDef|ClassDef $class,
-        /** @var array|Tokenizes[] $arguments */
+        /** @var mixed[]|array<Tokenizes> $arguments */
         public array                                  $arguments = [],
     ) {
         if (is_string($this->class)) {

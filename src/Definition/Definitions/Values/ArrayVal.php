@@ -26,6 +26,7 @@ class ArrayVal extends BaseVal
      * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
+        /** @var ProvidesClassReference[]|mixed[] $keyValues */
         public array $keyValues = [],
     ) {
         $this->keyValues = $this->convertOrThrowForEachValues($this->keyValues, [
@@ -77,7 +78,7 @@ class ArrayVal extends BaseVal
             $tokens[] = (new StringVal($key))->getTokens($context);
             $tokens[] = new ArrayAssignToken();
         } elseif (!is_null($key)) {
-            $tokens[] = [new Token($key)];
+            $tokens[] = [new Token((string)$key)];
             $tokens[] = new ArrayAssignToken();
         }
         $valueTokens = $this->getTokensForValue($context, $value);
@@ -106,7 +107,7 @@ class ArrayVal extends BaseVal
     /**
      * @param RenderingContext $context
      * @param mixed $value
-     * @return array
+     * @return Token[]
      */
     private function getTokensForValue(
         RenderingContext $context,
@@ -124,7 +125,7 @@ class ArrayVal extends BaseVal
         } elseif ($value instanceof Token) {
             $tokens[] = $value;
         } else {
-            $tokens[] = new Token($value);
+            $tokens[] = new Token((string)$value);
         }
         return $tokens;
     }

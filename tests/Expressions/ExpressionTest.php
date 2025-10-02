@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Expressions;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -10,10 +11,11 @@ use PHPUnit\Framework\TestCase;
 class ExpressionTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testSingleTokenIsRenderedAsExpected()
+    public function testSingleTokenIsRenderedAsExpected(): void
     {
-        $token = new Expression(1);
+        $token = new Expression('1');
 
         $this->assertEquals(
             <<<'EOS'
@@ -23,7 +25,7 @@ class ExpressionTest extends TestCase
         );
     }
 
-    public function testTokenGroupIsRenderedAsExpected()
+    public function testTokenGroupIsRenderedAsExpected(): void
     {
         $token = new Expression('int');
 
@@ -35,7 +37,7 @@ class ExpressionTest extends TestCase
         );
     }
 
-    public function testArrayOfValuesIsReturnedAsIs()
+    public function testArrayOfValuesIsReturnedAsIs(): void
     {
         $token = new Expression('1,2');
 
@@ -47,7 +49,7 @@ class ExpressionTest extends TestCase
         );
     }
 
-    public function testMixOfTokensAndTokenGroupsIsRendered()
+    public function testMixOfTokensAndTokenGroupsIsRendered(): void
     {
         $token = new Expression('1 string');
 

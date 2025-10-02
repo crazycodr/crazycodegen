@@ -3,7 +3,9 @@
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -12,8 +14,9 @@ use PHPUnit\Framework\TestCase;
 class ParameterDefTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testRendersNameAsExpectedWithoutSpacesAround()
+    public function testRendersNameAsExpectedWithoutSpacesAround(): void
     {
         $token = new ParameterDef(
             'foo'
@@ -29,11 +32,11 @@ class ParameterDefTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testAddsTypeInFrontOfIdentifierAndSeparatesWithSpace()
+    public function testAddsTypeInFrontOfIdentifierAndSeparatesWithSpace(): void
     {
         $token = new ParameterDef(
             'foo',
-            new BuiltInTypeSpec('int'),
+            new BuiltInTypeSpec(BuiltInTypesEnum::int),
         );
 
         $this->assertEquals(
@@ -45,7 +48,7 @@ class ParameterDefTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testAddsDefaultValueAfterIdentifier()
+    public function testAddsDefaultValueAfterIdentifier(): void
     {
         $token = new ParameterDef(
             'foo',
@@ -58,7 +61,7 @@ class ParameterDefTest extends TestCase
         );
     }
 
-    public function testAddsDefaultValueWithSingleQuotesIfString()
+    public function testAddsDefaultValueWithSingleQuotesIfString(): void
     {
         $token = new ParameterDef(
             'foo',
@@ -71,7 +74,7 @@ class ParameterDefTest extends TestCase
         );
     }
 
-    public function testAddsDefaultValueWithStringRepresentationIfBool()
+    public function testAddsDefaultValueWithStringRepresentationIfBool(): void
     {
         $token = new ParameterDef(
             'foo',
@@ -84,7 +87,7 @@ class ParameterDefTest extends TestCase
         );
     }
 
-    public function testVariadicExpansionTokenAppearsBeforeVariable()
+    public function testVariadicExpansionTokenAppearsBeforeVariable(): void
     {
         $token = new ParameterDef(
             'reallyLongIdentifier',

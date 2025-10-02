@@ -6,8 +6,8 @@ trait TypeInferenceTrait
 {
     public function inferType(string $type): TypeDef
     {
-        if (BuiltInTypeSpec::supports($type)) {
-            return new BuiltInTypeSpec($type);
+        if ($builtInType = BuiltInTypesEnum::tryFrom($type)) {
+            return new BuiltInTypeSpec($builtInType);
         }
         return match ($type) {
             'self' => new SelfTypeSpec(),

@@ -25,11 +25,7 @@ class VariableDef extends Tokenizes implements ProvidesCallableReference
     {
         $tokens = [];
         $tokens[] = new DollarToken();
-        if (is_string($this->name)) {
-            $tokens[] = new Token($this->name);
-        } else {
-            $tokens[] = $this->name;
-        }
+        $tokens[] = new Token($this->name);
         return $this->flatten($tokens);
     }
 

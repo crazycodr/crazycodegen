@@ -14,6 +14,6 @@ class IntVal extends BaseVal
 
     public function getTokens(RenderingContext $context): array
     {
-        return [new Token($this->value)];
+        return [new Token((string)$this->value)];
     }
 }

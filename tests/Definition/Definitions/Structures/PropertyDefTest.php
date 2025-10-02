@@ -4,6 +4,7 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
@@ -14,8 +15,9 @@ use PHPUnit\Framework\TestCase;
 class PropertyDefTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testRendersVisibilityAndName()
+    public function testRendersVisibilityAndName(): void
     {
         $token = new PropertyDef(
             name: 'foo',
@@ -29,7 +31,7 @@ class PropertyDefTest extends TestCase
         );
     }
 
-    public function testRendersNameFromStringAsExpected()
+    public function testRendersNameFromStringAsExpected(): void
     {
         $token = new PropertyDef(
             name: 'foo',
@@ -43,7 +45,7 @@ class PropertyDefTest extends TestCase
         );
     }
 
-    public function testDifferentVisibilityPropertyRendered()
+    public function testDifferentVisibilityPropertyRendered(): void
     {
         $token = new PropertyDef(
             name: 'foo',
@@ -58,7 +60,7 @@ class PropertyDefTest extends TestCase
         );
     }
 
-    public function testRendersStaticModifierWithSpaces()
+    public function testRendersStaticModifierWithSpaces(): void
     {
         $token = new PropertyDef(
             name: 'foo',
@@ -73,7 +75,7 @@ class PropertyDefTest extends TestCase
         );
     }
 
-    public function testRendersType()
+    public function testRendersType(): void
     {
         $token = new PropertyDef(
             name: 'foo',
@@ -91,7 +93,7 @@ class PropertyDefTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testRendersComplexTypeAsExpected()
+    public function testRendersComplexTypeAsExpected(): void
     {
         $token = new PropertyDef(
             name: 'foo',
@@ -106,7 +108,7 @@ class PropertyDefTest extends TestCase
         );
     }
 
-    public function testDefaultValueRendersAfterNameWithExpectedSpaces()
+    public function testDefaultValueRendersAfterNameWithExpectedSpaces(): void
     {
         $token = new PropertyDef(
             name: 'foo',
@@ -124,7 +126,7 @@ class PropertyDefTest extends TestCase
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testDocBlockIsProperlyRendered()
+    public function testDocBlockIsProperlyRendered(): void
     {
         $token = new PropertyDef(
             name: 'prop1',

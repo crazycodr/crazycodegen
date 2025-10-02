@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Values\FloatVal;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -10,8 +11,9 @@ use PHPUnit\Framework\TestCase;
 class FloatValTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testFloatValReturnsFloatPassedIn()
+    public function testFloatValReturnsFloatPassedIn(): void
     {
         $token = new FloatVal(81.3335698);
 
@@ -23,7 +25,7 @@ class FloatValTest extends TestCase
         );
     }
 
-    public function testFloatValSupportsNegative()
+    public function testFloatValSupportsNegative(): void
     {
         $token = new FloatVal(-65.741855);
 

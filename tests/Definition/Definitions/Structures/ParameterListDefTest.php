@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Structures;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
 use CrazyCodeGen\Rendering\RenderingContext;
@@ -11,8 +12,9 @@ use PHPUnit\Framework\TestCase;
 class ParameterListDefTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testHasStartAndEndParenthesisAndTokensFromArgumentAndNoTrailingComma()
+    public function testHasStartAndEndParenthesisAndTokensFromArgumentAndNoTrailingComma(): void
     {
         $token = new ParameterListDef(
             [
@@ -26,7 +28,7 @@ class ParameterListDefTest extends TestCase
         );
     }
 
-    public function testHasCommaAndSpaceAfterEachArgumentExceptLast()
+    public function testHasCommaAndSpaceAfterEachArgumentExceptLast(): void
     {
         $token = new ParameterListDef(
             [

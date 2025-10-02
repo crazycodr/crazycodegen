@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Types;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Rendering\RenderingContext;
@@ -11,8 +12,9 @@ use PHPUnit\Framework\TestCase;
 class ClassTypeDefTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testTypeIsRenderedAsExpected()
+    public function testTypeIsRenderedAsExpected(): void
     {
         $token = new ClassTypeDef('CrazyCodeGen\\Tokens\\Token');
         $this->assertEquals(
@@ -23,7 +25,7 @@ class ClassTypeDefTest extends TestCase
         );
     }
 
-    public function testShortNameIsRenderedAsAnIdentifierWhenShortenIsTurnedOn()
+    public function testShortNameIsRenderedAsAnIdentifierWhenShortenIsTurnedOn(): void
     {
         $token = new ClassTypeDef('CrazyCodeGen\\Tokens\\Token');
         $context = new RenderingContext();
@@ -37,7 +39,7 @@ class ClassTypeDefTest extends TestCase
         );
     }
 
-    public function testCanResolveClassReference()
+    public function testCanResolveClassReference(): void
     {
         $token = new ClassTypeDef('Token');
 

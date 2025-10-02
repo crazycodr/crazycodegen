@@ -4,11 +4,13 @@ namespace CrazyCodeGen\Tests\Definition\Definitions\Structures\ClassDefScenarios
 
 use CrazyCodeGen\Common\Enums\VisibilityEnum;
 use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
+use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
@@ -20,11 +22,12 @@ use PHPUnit\Framework\TestCase;
 class ModelBuilderScenarioTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function testAbilityToGenerateModelHelperFromPreviousInternalFramework()
+    public function testAbilityToGenerateModelHelperFromPreviousInternalFramework(): void
     {
         $baseModelBuilderType = new ClassTypeDef('Internal\TestFramework\MockingFramework\Builders\BaseModelBuilder');
         $taxExemptionCategoryModelType = new ClassTypeDef('internal\Baskets\Models\TaxExemptionCategoryModel');
@@ -37,10 +40,10 @@ class ModelBuilderScenarioTest extends TestCase
             ->addInstruction(new ReturnOp(new NewOp(
                 class: $taxExemptionCategoryModelType,
                 arguments: [
-                    [
+                    new ArrayVal([
                         'identifier' => 'stub',
                         'name' => 'stub',
-                    ]
+                    ]),
                 ],
             )));
         $hstExemptionMethod = (new MethodDef('hstExemption'))

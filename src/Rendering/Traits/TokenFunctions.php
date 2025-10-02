@@ -56,7 +56,7 @@ trait TokenFunctions
     /**
      * @param RenderingContext $context
      * @param array<Token|Tokenizes>|Token|Tokenizes $instructions
-     * @return array
+     * @return array<Token>
      */
     private function renderInstructionsFromFlexibleTokenValue(
         RenderingContext      $context,
@@ -90,6 +90,7 @@ trait TokenFunctions
 
     /**
      * @param array<Token|Tokenizes>|Token|Tokenizes $values
+     * @return array<Token>
      */
     private function convertFlexibleTokenValueToTokens(
         RenderingContext      $context,

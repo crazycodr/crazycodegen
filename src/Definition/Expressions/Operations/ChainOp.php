@@ -21,6 +21,7 @@ class ChainOp extends Tokenizes
     use TokenFunctions;
 
     public function __construct(
+        /** @var string[]|PropertyDef[]|Tokenizes[] $chain */
         public array $chain = [],
     ) {
         foreach ($this->chain as $chainItemIndex => $chainItem) {

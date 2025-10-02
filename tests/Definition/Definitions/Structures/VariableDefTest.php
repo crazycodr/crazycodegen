@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class VariableDefTest extends TestCase
 {
-    public function testVariableIsRenderedWithLeadingDollarSign()
+    public function testVariableIsRenderedWithLeadingDollarSign(): void
     {
         $token = new VariableDef('foo');
 
@@ -20,7 +20,7 @@ class VariableDefTest extends TestCase
         );
     }
 
-    public function testVariableNameIsRenderedNext()
+    public function testVariableNameIsRenderedNext(): void
     {
         $token = new VariableDef('foo');
 

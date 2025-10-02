@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Expressions\Operations;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
@@ -16,8 +17,9 @@ use PHPUnit\Framework\TestCase;
 class ChainOpTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testChainsItemsTogetherWithAccessTokens()
+    public function testChainsItemsTogetherWithAccessTokens(): void
     {
         $token = new ChainOp(
             chain: [
@@ -35,7 +37,7 @@ class ChainOpTest extends TestCase
         );
     }
 
-    public function testConvertsStringsToExpressions()
+    public function testConvertsStringsToExpressions(): void
     {
         $token = new ChainOp(
             chain: [
@@ -53,7 +55,7 @@ class ChainOpTest extends TestCase
         );
     }
 
-    public function testRendersTokenGroups()
+    public function testRendersTokenGroups(): void
     {
         $token = new ChainOp(
             chain: [
@@ -69,7 +71,7 @@ class ChainOpTest extends TestCase
         );
     }
 
-    public function testTransformsPropertyTokenGroupToTokenAndLosesDollarSignBecauseConsideredAsAccess()
+    public function testTransformsPropertyTokenGroupToTokenAndLosesDollarSignBecauseConsideredAsAccess(): void
     {
         $token = new ChainOp(
             chain: [
@@ -85,7 +87,7 @@ class ChainOpTest extends TestCase
         );
     }
 
-    public function testRendersThisRefTokenGroupAndAdditionalPropertiesProperly()
+    public function testRendersThisRefTokenGroupAndAdditionalPropertiesProperly(): void
     {
         $token = new ChainOp(
             chain: [
@@ -103,7 +105,7 @@ class ChainOpTest extends TestCase
         );
     }
 
-    public function testRendersStaticAccessTokensInsteadOfMemberTokensWhenItFindsTokenGroupThatExposesStaticContext()
+    public function testRendersStaticAccessTokensInsteadOfMemberTokensWhenItFindsTokenGroupThatExposesStaticContext(): void
     {
         $token = new ChainOp(
             chain: [

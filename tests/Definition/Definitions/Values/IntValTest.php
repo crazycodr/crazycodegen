@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Tests\Definition\Definitions\Values;
 
+use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Values\IntVal;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -10,8 +11,9 @@ use PHPUnit\Framework\TestCase;
 class IntValTest extends TestCase
 {
     use TokenFunctions;
+    use FlattenFunction;
 
-    public function testIntValReturnsIntegerPassedIn()
+    public function testIntValReturnsIntegerPassedIn(): void
     {
         $token = new IntVal(17);
 
@@ -23,7 +25,7 @@ class IntValTest extends TestCase
         );
     }
 
-    public function testIntValSupportsNegative()
+    public function testIntValSupportsNegative(): void
     {
         $token = new IntVal(-33);
 
