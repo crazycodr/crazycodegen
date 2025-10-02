@@ -16,11 +16,10 @@ trait HasNamespaceTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setNamespace(null|string|NamespaceDef $namespace): self
+    public function setNamespace(null|NamespaceDef $namespace): self
     {
         $this->namespace = $this->convertOrThrow($namespace, [
             new ConversionRule(inputType: 'null'),
-            new ConversionRule(inputType: 'string', outputType: NamespaceDef::class),
             new ConversionRule(inputType: NamespaceDef::class),
         ]);
         return $this;

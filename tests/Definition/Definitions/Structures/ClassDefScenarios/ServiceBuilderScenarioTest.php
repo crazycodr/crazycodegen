@@ -7,9 +7,9 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
+use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
@@ -55,7 +55,7 @@ class ServiceBuilderScenarioTest extends TestCase
             ->setReturnType($mockedHookBasketAdapterType)
             ->addInstruction(new ReturnOp(ThisContext::to($mockProperty)));
         $classDef = (new ClassDef('HookBasketAdapterBuilder'))
-            ->setNamespace('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Baskets\Adapters')
+            ->setNamespace(new NamespaceDef('Internal\TestFramework\MockingFramework\Builders\ServiceBuilders\InternalApi\Baskets\Adapters'))
             ->addImport($mockObjectType)
             ->addImport($baseMockBuilderType)
             ->addImport($hookBasketAdapterType)

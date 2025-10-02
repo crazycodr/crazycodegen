@@ -1,14 +1,18 @@
-# Type definitions
+# Type Definitions
 
-As you will see in the next section, the whole point of the framework is to be able to generate complex expressions, classes and even methods. To this end, generating classes do generate types in an implicit way but sometimes, you won't be defining all the possible types your application has using class structures. This is why we will start with a simpler concept called type definitions.
+*Type definitions* represent the building blocks for declaring types in method signatures, properties, parameters, and return types.
 
-# Types of type definition
+These types can be simple scalar types, complex union/intersection types, or contextual references like `self` and `static`.
 
-There are officially 2 important type definitions you can use in the framework.
+## Overview
 
-## BuiltInTypeSpec
+Each type definition is represented by a class implementing the `TypeDef` interface, and can be rendered into tokens for final code generation. Here's a breakdown of all supported types:
 
-The `BuiltInTypeSpec` represents all built in types from PHP such as: 
+## 1. Built-in Types
+
+The `BuiltInTypeSpec` class wraps native PHP types. You should use this when referencing scalar, compound, or special types built into the PHP language.
+
+### Supported Types
 
 - `int`
 - `float`
@@ -24,106 +28,90 @@ The `BuiltInTypeSpec` represents all built in types from PHP such as:
 - `mixed`
 - `iterable`
 
-When you need to specify a type that is handled by PHP's internals use `BuildInTypeSpec`:
+### Example
 
 ```php
-$int = new BuiltInTypeSpec('int');
-$propA = new PropertyDef(type: $int);
-$propB = new PropertyDef(type: new BuiltInTypeSpec('string'));
+$intType = BuiltInTypeSpec::intType();
+$stringType = new BuiltInTypeSpec(BuiltInTypesEnum::string);
 ```
 
-## ClassTypeDef
+## 2. Class Types
 
-The `ClassTypeDef` is the opposite of the built-in one where it is used to represent any non internal type which are automatically classes. These classes could be provided by:
+The `ClassTypeDef` is used for any class or interface name, including:
 
-- PHP itself: For example: `splFileInfo`
-- A vendor package: For example `TestCase`  from PHPUnit
-- Your application: `\App\MyClass`
+- Built-in PHP classes (e.g. `SplFileInfo`)
+- Third-party libraries (e.g. `PHPUnit\Framework\TestCase`)
+- Your application classes (e.g. `App\Services\Logger`)
 
-Therefore, any class type that you want to express while building new classes with the code generator should use `ClassTypeDef` unless it is a type that you are actively generating.
+### Example
 
 ```php
 $redisClient = new ClassTypeDef('Redis');
-$myRedisWrapper = new ClassDef(extends: $redisClient);
-$myRedisConsumer = new ClassDef(
-    properties: [
-        new PropertyDef(type: $myRedisWrapper),
-    ],
-);
+$customWrapper = new ClassDef(name: 'MyClass', extends: $redisClient);
 ```
 
-# Other types of type definition
+It automatically resolves fully-qualified names and determines whether short names can be used depending on import context.
 
-There are other types of type definition that you will need to leverage when using the framework and here they are.
+## 3. Contextual Types
 
-## MultiTypeDef
+These types represent special context-sensitive references:
 
-The `MultiTypeDef` is the type definition that allows you to create complex compound types either for intersection or union. For example:
+- `SelfTypeSpec` → represents the `self` keyword
+- `StaticTypeSpec` → represents the `static` keyword
+
+Both classes implement `ShouldBeAccessedStatically` and `ProvidesClassReference` which are used by internal components to properly render them as statically accessed component.
+
+For example:
 
 ```php
-$nullableInt = new MultiTypeDef([
-    new BuiltInTypeSpec('null'),
-    new BuiltInTypeSpec('int'),
+$ref = new SelfTypeSpec();
+$ref->to(new CallOp($methodToBeDefined))->getTokens();
+
+// Once serialized, this will yield:
+self::methodToBeDefined()
+```
+
+## 4. Multi-Type Definitions
+
+The `MultiTypeDef` class enables union and intersection types:
+
+### Union Example (`null|int`):
+
+```php
+new MultiTypeDef([
+    BuiltInTypeSpec::nullType(),
+    BuiltInTypeSpec::intType(),
 ]);
-
-// This would output
-null|int
 ```
 
-You can also disable union types and force an intersection type by doing so:
+### Intersection Example (`A&B`):
 
 ```php
-$nullableInt = new MultiTypeDef(
-    [
-        new BuiltInTypeSpec('null'),
-        new BuiltInTypeSpec('int'),
-    ],
-    unionTypes: false,
-);
-
-// This would output
-null&int
+new MultiTypeDef([
+    new ClassTypeDef('A'),
+    new ClassTypeDef('B'),
+], unionTypes: false);
 ```
 
-You can also nest multiple `MultiTypeDef` together but to do this properly, you need to leverage `nestedTypes`. Using `MultiTypeDef` in this way creates grouped sub-unions that form an intersection — useful for generating parenthesized combinations like (int|string)&(bool|float). Use nestedTypes: true when the inner types themselves are composite.
+### Nested Groups Example (`(int|string)&(bool|float)`)
+
+Be careful when using nested groups, this feature is available in PHP 8.2+. This library does not prevent you from generating code that is not valid for your target version.
 
 ```php
-$nullableInt = new MultiTypeDef(
-    [
-        new MultiTypeDef(['int', 'string'], nestedTypes: true),
-        new MultiTypeDef(['bool', 'float'], nestedTypes: true),
-    ],
-    unionTypes: false
-);
-
-// This would output
-(int|string)&(bool|float)
+new MultiTypeDef([
+    new MultiTypeDef(['int', 'string'], nestedTypes: true),
+    new MultiTypeDef(['bool', 'float'], nestedTypes: true),
+], unionTypes: false);
 ```
 
-> **Note**: The above example is in theory completely impossible as no one could have multiple built-in types like this, but it shows a good example of how to achieve it.
+## 5. Type Inference
 
-## Context type specifications
-
-Types use either the `Def` or `Spec` suffix: `Spec` types represent language-level references (like self or int), while `Def` types define actual class types that exist in your application or framework.
-
-That being said, this last batch of types expose contexts when referring to something in your code base. Just like built-in types which are references, context types are just references to something else. Here are the 2 contextual types:
-
-- `SelfTypeSpec`: Which represents the `self` type.
-- `StaticTypeSpec`: Which represents the `static` type.
-
-Both of these types represent a relative type to another class depending on their context. You should only use these types inside of components that are class scoped. If you use these in a global function definition, you will obviously generate invalid code.
-
-# Type inference trait
-
-The framework offers an easy-to-use type inference trait which can convert strings into types for you. Most components already use this so you don't have to manually instantiate `BuiltInTypeSpec` objects:
+The `TypeInferenceTrait` allows resolving a type from string input:
 
 ```php
-public function __construct(string $type)
-{
-    $this->type = $this->inferType($type);
-}
-
-$object = new SomeClass(type: 'int');
+$type = $this->inferType('int');     // → BuiltInTypeSpec
+$type = $this->inferType('self');    // → SelfTypeSpec
+$type = $this->inferType('MyClass'); // → ClassTypeDef
 ```
 
-The inference trait will convert all built-in types to `BuiltInTypeSpec` objects and convert `self` and `static` to their corresponding `SelfTypeSpec` or `StaticTypeSpec`. If nothing matches, it assumes the string is a class type and it returns a `ClassTypeDef`.
+You can use this approach in your own code to easily generate `TypeDef` objects. Note that `TypeInferenceTrait` does not support parsing union or intersection types, only simple classes or built in types.

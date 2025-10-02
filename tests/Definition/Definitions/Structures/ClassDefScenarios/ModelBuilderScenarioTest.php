@@ -8,6 +8,7 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
+use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\StaticTypeSpec;
@@ -62,7 +63,7 @@ class ModelBuilderScenarioTest extends TestCase
             ->setReturnType($taxExemptionCategoryModelType)
             ->addInstruction(new ReturnOp(ThisContext::to($modelProperty)));
         $classDef = (new ClassDef('TaxExemptionCategoryModelBuilder'))
-            ->setNamespace('Internal\TestFramework\MockingFramework\Builders\ModelBuilders\InternalApi\Baskets\Models')
+            ->setNamespace(new NamespaceDef('Internal\TestFramework\MockingFramework\Builders\ModelBuilders\InternalApi\Baskets\Models'))
             ->addImport($baseModelBuilderType)
             ->addImport($taxExemptionCategoryModelType)
             ->setDocBlock([

@@ -30,7 +30,7 @@ class ClassDefTest extends TestCase
      * @throws NoValidConversionRulesMatchedException
      * @throws InvalidIdentifierFormatException
      */
-    public function getHasNamespaceTraitTestObject(NamespaceDef|string|null $namespace): ClassDef
+    protected function getHasNamespaceTraitTestObject(?NamespaceDef $namespace): ClassDef
     {
         return new ClassDef(name: 'valid', namespace: $namespace);
     }

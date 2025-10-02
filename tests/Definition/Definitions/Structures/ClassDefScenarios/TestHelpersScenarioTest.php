@@ -9,9 +9,9 @@ use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
+use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
@@ -152,7 +152,7 @@ class TestHelpersScenarioTest extends TestCase
                 ],
             )));
         $classDef = (new ClassDef('FinalizeTrackingOnRequestEndSubscriberTestHelpers'))
-            ->setNamespace('Internal\Tests\Auditing\Subscribers\TestHelpers')
+            ->setNamespace(new NamespaceDef('Internal\Tests\Auditing\Subscribers\TestHelpers'))
             ->addImport($testCaseType)
             ->addImport($serviceBuilderType)
             ->addImport($configApiSpyBuilderType)

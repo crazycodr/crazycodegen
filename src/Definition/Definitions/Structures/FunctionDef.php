@@ -53,7 +53,7 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
      */
     public function __construct(
         string                        $name,
-        null|string|NamespaceDef      $namespace = null,
+        null|NamespaceDef             $namespace = null,
         null|string|array|DocBlockDef $docBlock = null,
         array                         $parameters = [],
         null|TypeDef                  $returnType = null,

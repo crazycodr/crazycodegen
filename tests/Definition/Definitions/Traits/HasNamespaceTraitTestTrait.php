@@ -12,7 +12,7 @@ trait HasNamespaceTraitTestTrait
     /**
      * @throws InvalidIdentifierFormatException
      */
-    abstract public function getHasNamespaceTraitTestObject(null|string|NamespaceDef $namespace): mixed;
+    abstract protected function getHasNamespaceTraitTestObject(null|NamespaceDef $namespace): mixed;
 
     /**
      * @return array<string, mixed[]>
@@ -21,7 +21,6 @@ trait HasNamespaceTraitTestTrait
     {
         return [
             'null-to-null' => [null, null],
-            'string-to-object' => ['CrazyCodeGen\Tests', new NamespaceDef('CrazyCodeGen\Tests')],
             'object-to-object' => [new NamespaceDef('CrazyCodeGen\Tests'), new NamespaceDef('CrazyCodeGen\Tests')],
         ];
     }
@@ -31,7 +30,7 @@ trait HasNamespaceTraitTestTrait
      * @throws NoValidConversionRulesMatchedException
      */
     #[DataProvider('providesNamespaceScenarios')]
-    public function testNamespaceIsConvertedAsExpected(null|string|NamespaceDef $ns, null|NamespaceDef $expectation): void
+    public function testNamespaceIsConvertedAsExpected(null|NamespaceDef $ns, null|NamespaceDef $expectation): void
     {
         $tested = $this->getHasNamespaceTraitTestObject($ns);
         $this->assertEquals($expectation, $tested->namespace);

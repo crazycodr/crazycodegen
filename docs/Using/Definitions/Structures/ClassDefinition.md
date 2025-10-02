@@ -28,12 +28,12 @@ class MyClass
 
 # Setting up a namespace
 
-Using the `namespace` parameter, one can create the class under a specific namespace. You can use a `NamespaceDef` object or just a string which will get converted into a `NamespaceDef`:
+Using the `namespace` parameter, one can create the class under a specific namespace. You must pass in a `NamespaceDef` object:
 
 ```php
 $myClass = new ClassDef(
     name: 'MyClass',
-    namespace: 'Foo\\Bar',
+    namespace: new NamespaceDef('Foo\Bar'),
 );
 
 // Would output

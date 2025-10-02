@@ -60,7 +60,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
      */
     public function __construct(
         string                        $name,
-        null|string|NamespaceDef      $namespace = null,
+        null|NamespaceDef             $namespace = null,
         array                         $imports = [],
         null|string|array|DocBlockDef $docBlock = null,
         bool                          $abstract = false,
