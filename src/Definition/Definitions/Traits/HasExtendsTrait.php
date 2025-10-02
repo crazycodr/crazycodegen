@@ -16,7 +16,7 @@ trait HasExtendsTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setExtends(null|ClassTypeDef $extends): self
+    public function setExtends(null|ClassTypeDef $extends): static
     {
         $this->extends = $this->convertOrThrow($extends, [
             new ConversionRule(inputType: 'null'),

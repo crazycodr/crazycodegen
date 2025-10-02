@@ -19,7 +19,7 @@ trait HasParametersTrait
      *
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setParameters(array $parameters): self
+    public function setParameters(array $parameters): static
     {
         if ($this->parameters === null) {
             $this->parameters = new ParameterListDef();
@@ -33,7 +33,7 @@ trait HasParametersTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addParameter(string|ParameterDef $parameter): self
+    public function addParameter(string|ParameterDef $parameter): static
     {
         if ($this->parameters === null) {
             $this->parameters = new ParameterListDef();

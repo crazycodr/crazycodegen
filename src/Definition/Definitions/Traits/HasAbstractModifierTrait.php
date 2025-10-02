@@ -6,7 +6,7 @@ trait HasAbstractModifierTrait
 {
     public bool $abstract = false;
 
-    public function setAbstract(bool $isAbstract): self
+    public function setAbstract(bool $isAbstract): static
     {
         $this->abstract = $isAbstract;
         return $this;

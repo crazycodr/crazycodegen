@@ -11,7 +11,7 @@ trait HasReturnTypeTrait
 
     public null|TypeDef $returnType = null;
 
-    public function setReturnType(null|TypeDef $type): self
+    public function setReturnType(null|TypeDef $type): static
     {
         $this->returnType = $type;
         return $this;

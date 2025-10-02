@@ -19,7 +19,7 @@ trait HasImplementationsTrait
      *
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setImplementations(array $implementations): self
+    public function setImplementations(array $implementations): static
     {
         $this->implementations = [];
         foreach ($implementations as $implementation) {
@@ -31,7 +31,7 @@ trait HasImplementationsTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addImplementation(ClassTypeDef $implementation): self
+    public function addImplementation(ClassTypeDef $implementation): static
     {
         $this->implementations[] = $this->convertOrThrow($implementation, [
             new ConversionRule(inputType: ClassTypeDef::class),

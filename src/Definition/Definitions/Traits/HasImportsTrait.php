@@ -20,7 +20,7 @@ trait HasImportsTrait
      *
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setImports(array $imports): self
+    public function setImports(array $imports): static
     {
         $this->imports = [];
         foreach ($imports as $import) {
@@ -32,7 +32,7 @@ trait HasImportsTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addImport(ClassTypeDef|ImportDef $import): self
+    public function addImport(ClassTypeDef|ImportDef $import): static
     {
         $this->imports[] = $this->convertOrThrow($import, [
             new ConversionRule(inputType: ClassTypeDef::class, outputType: ImportDef::class, propertyPaths: ['type']),

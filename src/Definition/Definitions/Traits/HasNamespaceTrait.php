@@ -16,7 +16,7 @@ trait HasNamespaceTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setNamespace(null|NamespaceDef $namespace): self
+    public function setNamespace(null|NamespaceDef $namespace): static
     {
         $this->namespace = $this->convertOrThrow($namespace, [
             new ConversionRule(inputType: 'null'),
