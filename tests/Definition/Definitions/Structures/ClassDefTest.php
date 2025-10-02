@@ -11,6 +11,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasImportsTraitTestTrait;
@@ -142,7 +143,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            extends: 'CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit',
+            extends: new ClassTypeDef('CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit'),
         );
 
         $this->assertEquals(
@@ -162,9 +163,9 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implementations: [
-                'CrazyCodeGen\Tests',
-                'CrazyCodeGen\Tests2',
-                'CrazyCodeGen\Tests3',
+                new ClassTypeDef('CrazyCodeGen\Tests'),
+                new ClassTypeDef('CrazyCodeGen\Tests2'),
+                new ClassTypeDef('CrazyCodeGen\Tests3'),
             ],
         );
 

@@ -49,9 +49,9 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     use HasMethodsTrait;
 
     /**
-     * @param string[]|ClassTypeDef[]|ImportDef[] $imports
+     * @param ClassTypeDef[]|ImportDef[] $imports
      * @param null|string|string[]|DocBlockDef $docBlock
-     * @param string[]|ClassTypeDef[] $implementations
+     * @param ClassTypeDef[] $implementations
      * @param string[]|ConstantDef[] $constants
      * @param string[]|PropertyDef[] $properties
      * @param MethodDef[] $methods
@@ -64,7 +64,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
         array                         $imports = [],
         null|string|array|DocBlockDef $docBlock = null,
         bool                          $abstract = false,
-        null|string|ClassTypeDef      $extends = null,
+        null|ClassTypeDef             $extends = null,
         array                         $implementations = [],
         array                         $constants = [],
         array                         $properties = [],

@@ -16,11 +16,10 @@ trait HasExtendsTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setExtends(null|string|ClassTypeDef $extends): self
+    public function setExtends(null|ClassTypeDef $extends): self
     {
         $this->extends = $this->convertOrThrow($extends, [
             new ConversionRule(inputType: 'null'),
-            new ConversionRule(inputType: 'string', outputType: ClassTypeDef::class),
             new ConversionRule(inputType: ClassTypeDef::class),
         ]);
         return $this;

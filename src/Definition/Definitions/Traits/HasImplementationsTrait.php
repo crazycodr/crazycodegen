@@ -15,7 +15,7 @@ trait HasImplementationsTrait
     public array $implementations = [];
 
     /**
-     * @param string[]|ClassTypeDef[] $implementations
+     * @param ClassTypeDef[] $implementations
      *
      * @throws NoValidConversionRulesMatchedException
      */
@@ -31,10 +31,9 @@ trait HasImplementationsTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addImplementation(string|ClassTypeDef $implementation): self
+    public function addImplementation(ClassTypeDef $implementation): self
     {
         $this->implementations[] = $this->convertOrThrow($implementation, [
-            new ConversionRule(inputType: 'string', outputType: ClassTypeDef::class),
             new ConversionRule(inputType: ClassTypeDef::class),
         ]);
         return $this;
