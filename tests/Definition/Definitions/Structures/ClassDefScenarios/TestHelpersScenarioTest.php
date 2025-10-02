@@ -103,7 +103,10 @@ class TestHelpersScenarioTest extends TestCase
             ->addInstruction(ParentContext::to(new CallOp('tearDown')));
         $scenarioBuildingCallable = new ParameterDef(
             name: 'scenarioBuildingCallable',
-            type: new MultiTypeDef(['null', 'callable']),
+            type: new MultiTypeDef([
+                new BuiltInTypeSpec(BuiltInTypesEnum::null),
+                new BuiltInTypeSpec(BuiltInTypesEnum::callable)
+            ]),
             defaultValue: null
         );
         $getConfigApiSpyBuilderMethod = (new MethodDef('getConfigApiClientSpyBuilder'))

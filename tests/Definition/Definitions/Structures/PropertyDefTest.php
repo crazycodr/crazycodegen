@@ -7,6 +7,8 @@ use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
@@ -79,7 +81,7 @@ class PropertyDefTest extends TestCase
     {
         $token = new PropertyDef(
             name: 'foo',
-            type: 'int'
+            type: new BuiltInTypeSpec(BuiltInTypesEnum::int)
         );
 
         $this->assertEquals(
@@ -97,7 +99,11 @@ class PropertyDefTest extends TestCase
     {
         $token = new PropertyDef(
             name: 'foo',
-            type: new MultiTypeDef(types: ['int', 'string', 'bool'])
+            type: new MultiTypeDef(types: [
+                new BuiltInTypeSpec(BuiltInTypesEnum::int),
+                new BuiltInTypeSpec(BuiltInTypesEnum::string),
+                new BuiltInTypeSpec(BuiltInTypesEnum::bool),
+            ])
         );
 
         $this->assertEquals(

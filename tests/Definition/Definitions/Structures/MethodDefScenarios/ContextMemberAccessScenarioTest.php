@@ -9,6 +9,8 @@ use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
@@ -33,7 +35,7 @@ class ContextMemberAccessScenarioTest extends TestCase
 
         $modelTypeProperty = new PropertyDef(
             'modelType',
-            type: 'string',
+            type: new BuiltInTypeSpec(BuiltInTypesEnum::string),
             defaultValue: $modelTypePropertyType
         );
 

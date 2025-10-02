@@ -50,7 +50,10 @@ class MultiTypeDefTest extends TestCase
 
     public function testStringTypesAreConvertedToSingleTypeTokenGroupsAndRendered(): void
     {
-        $token = new MultiTypeDef(['string', 'int']);
+        $token = new MultiTypeDef([
+            new BuiltInTypeSpec(BuiltInTypesEnum::string),
+            new BuiltInTypeSpec(BuiltInTypesEnum::int)
+        ]);
 
         $this->assertEquals(
             <<<'EOS'
@@ -62,7 +65,10 @@ class MultiTypeDefTest extends TestCase
 
     public function testParenthesesAreAddedAroundTokensWhenNestedIsTurnedOn(): void
     {
-        $token = new MultiTypeDef(['string', 'int'], nestedTypes: true);
+        $token = new MultiTypeDef([
+            new BuiltInTypeSpec(BuiltInTypesEnum::string),
+            new BuiltInTypeSpec(BuiltInTypesEnum::int),
+        ], nestedTypes: true);
 
         $this->assertEquals(
             <<<'EOS'
@@ -76,8 +82,14 @@ class MultiTypeDefTest extends TestCase
     {
         $token = new MultiTypeDef(
             [
-                new MultiTypeDef(['int', 'float'], nestedTypes: true),
-                new MultiTypeDef(['string', 'bool'], nestedTypes: true),
+                new MultiTypeDef([
+                    new BuiltInTypeSpec(BuiltInTypesEnum::int),
+                    new BuiltInTypeSpec(BuiltInTypesEnum::float)
+                ], nestedTypes: true),
+                new MultiTypeDef([
+                    new BuiltInTypeSpec(BuiltInTypesEnum::string),
+                    new BuiltInTypeSpec(BuiltInTypesEnum::bool)
+                ], nestedTypes: true),
             ],
             unionTypes: false,
             nestedTypes: true,

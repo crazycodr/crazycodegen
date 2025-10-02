@@ -7,6 +7,8 @@ use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Structures\VariableDef;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ChainOp;
@@ -75,7 +77,7 @@ class ChainOpTest extends TestCase
     {
         $token = new ChainOp(
             chain: [
-                new PropertyDef(name: 'foo', type: 'int'),
+                new PropertyDef(name: 'foo', type: new BuiltInTypeSpec(BuiltInTypesEnum::int)),
             ],
         );
 
@@ -92,8 +94,8 @@ class ChainOpTest extends TestCase
         $token = new ChainOp(
             chain: [
                 new ThisContext(),
-                new PropertyDef(name: 'foo', type: 'int'),
-                new PropertyDef(name: 'bar', type: 'int'),
+                new PropertyDef(name: 'foo', type: new BuiltInTypeSpec(BuiltInTypesEnum::int)),
+                new PropertyDef(name: 'bar', type: new BuiltInTypeSpec(BuiltInTypesEnum::int)),
             ],
         );
 
@@ -111,7 +113,7 @@ class ChainOpTest extends TestCase
             chain: [
                 new ParentContext(),
                 new CallOp(subject: 'setUp'),
-                new PropertyDef(name: 'bar', type: 'int'),
+                new PropertyDef(name: 'bar', type: new BuiltInTypeSpec(BuiltInTypesEnum::int)),
             ],
         );
 

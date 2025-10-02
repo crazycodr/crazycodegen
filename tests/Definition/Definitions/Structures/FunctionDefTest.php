@@ -43,8 +43,8 @@ class FunctionDefTest extends TestCase
             name: 'myFunction',
             parameters: [
                 new ParameterDef(name: 'foo'),
-                new ParameterDef(name: 'bar', type: 'int'),
-                new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
+                new ParameterDef(name: 'bar', type: new BuiltInTypeSpec(BuiltInTypesEnum::int)),
+                new ParameterDef(name: 'baz', type: new BuiltInTypeSpec(BuiltInTypesEnum::bool), defaultValue: true),
             ]
         );
 
