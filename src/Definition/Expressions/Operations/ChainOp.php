@@ -20,19 +20,27 @@ class ChainOp extends Tokenizes
     use FlattenFunction;
     use TokenFunctions;
 
-    public function __construct(
-        /** @var string[]|PropertyDef[]|Tokenizes[] $chain */
-        public array $chain = [],
-    ) {
-        foreach ($this->chain as $chainItemIndex => $chainItem) {
+    /**
+     * @var Tokenizes[]|MemberAccessContext[]
+     */
+    public array $chain = [];
+
+    /**
+     * @param string[]|PropertyDef[]|Tokenizes[]|MemberAccessContext[] $chain
+     */
+    public function __construct(array $chain = [])
+    {
+        $finalChain = [];
+        foreach ($chain as $chainItemIndex => $chainItem) {
             if (is_string($chainItem)) {
-                $this->chain[$chainItemIndex] = new Expression($chainItem);
+                $finalChain[$chainItemIndex] = new Expression($chainItem);
             } elseif ($chainItem instanceof PropertyDef) {
-                $this->chain[$chainItemIndex] = new Expression($chainItem->name);
-            } elseif (!$chainItem instanceof Tokenizes) {
-                unset($this->chain[$chainItemIndex]);
+                $finalChain[$chainItemIndex] = new Expression($chainItem->name);
+            } else {
+                $finalChain[$chainItemIndex] = $chainItem;
             }
         }
+        $this->chain = $finalChain;
     }
 
     /**

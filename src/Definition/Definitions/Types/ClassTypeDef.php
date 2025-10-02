@@ -27,7 +27,7 @@ class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, Provid
         public string $type,
     ) {
         if (str_contains($type, '\\')) {
-            $this->namespace = substr($type, 0, strrpos($type, '\\'));
+            $this->namespace = substr($type, 0, (int)strrpos($type, '\\'));
             $this->shortName = substr($type, strrpos($type, '\\') + 1);
         } else {
             $this->shortName = $type;

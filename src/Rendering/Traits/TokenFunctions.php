@@ -2,6 +2,7 @@
 
 namespace CrazyCodeGen\Rendering\Traits;
 
+use CrazyCodeGen\Definition\Base\ShouldNotBeNestedIntoInstruction;
 use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
@@ -55,7 +56,7 @@ trait TokenFunctions
 
     /**
      * @param RenderingContext $context
-     * @param array<Token|Tokenizes>|Token|Tokenizes $instructions
+     * @param array<Token|Tokenizes|ShouldNotBeNestedIntoInstruction>|Token|Tokenizes $instructions
      * @return array<Token>
      */
     private function renderInstructionsFromFlexibleTokenValue(
@@ -89,7 +90,7 @@ trait TokenFunctions
     }
 
     /**
-     * @param array<Token|Tokenizes>|Token|Tokenizes $values
+     * @param array<Token|Tokenizes|ShouldNotBeNestedIntoInstruction>|Token|Tokenizes $values
      * @return array<Token>
      */
     private function convertFlexibleTokenValueToTokens(

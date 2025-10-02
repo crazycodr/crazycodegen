@@ -26,17 +26,21 @@ class ParameterDef extends Tokenizes implements ProvidesVariableReference, Provi
 
     public const UNSET_DEFAULT_VALUE = '@!#UNSET@!#';
 
+    public null|TypeDef $type;
+
     /**
      * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
         public string        $name,
-        public null|string|TypeDef $type = null,
+        null|string|TypeDef $type = null,
         public mixed               $defaultValue = self::UNSET_DEFAULT_VALUE,
         public bool                $isVariadic = false,
     ) {
-        if (is_string($this->type)) {
-            $this->type = $this->inferType($this->type);
+        if (is_string($type)) {
+            $this->type = $this->inferType($type);
+        } else {
+            $this->type = $type;
         }
         if ($this->defaultValue === self::UNSET_DEFAULT_VALUE) {
             // Do nothing or isSupportedValue will change to StringVal

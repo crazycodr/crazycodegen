@@ -26,18 +26,22 @@ class ConstantDef extends Tokenizes implements ProvidesVariableReference
     use TypeInferenceTrait;
     use ValueInferenceTrait;
 
+    public null|TypeDef     $type;
+
     /**
      * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
         public string            $name,
-        public null|string|DocBlockDef $docBlock = null,
-        public null|string|TypeDef     $type = null,
+        public null|DocBlockDef $docBlock = null,
+        null|string|TypeDef     $type = null,
         public VisibilityEnum          $visibility = VisibilityEnum::PUBLIC,
         public mixed                   $defaultValue = null,
     ) {
-        if (is_string($this->type)) {
-            $this->type = $this->inferType($this->type);
+        if (is_string($type)) {
+            $this->type = $this->inferType($type);
+        } else {
+            $this->type = $type;
         }
         $this->defaultValue = $this->inferValue($this->defaultValue);
     }

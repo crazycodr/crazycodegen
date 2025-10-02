@@ -86,7 +86,7 @@ class ArrayVal extends BaseVal
         if ($addSeparator) {
             $tokens[] = new CommaToken();
         }
-        return $tokens;
+        return $this->flatten($tokens);
     }
 
     private function areAllKeysInNumericalSequentialOrder(): bool
@@ -127,6 +127,6 @@ class ArrayVal extends BaseVal
         } else {
             $tokens[] = new Token((string)$value);
         }
-        return $tokens;
+        return $this->flatten($tokens);
     }
 }

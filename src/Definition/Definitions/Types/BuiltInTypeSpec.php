@@ -22,7 +22,7 @@ class BuiltInTypeSpec extends TypeDef
 {
     public function __construct(
         public readonly BuiltInTypesEnum $type
-    ){
+    ) {
     }
 
     /**
