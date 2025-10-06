@@ -48,7 +48,7 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
      * @param string $name
      * @param NamespaceDef|null $namespace
      * @param null|DocBlockDef $docBlock
-     * @param string[]|ParameterDef[] $parameters
+     * @param ParameterDef[] $parameters
      * @param TypeDef|null $returnType
      * @param NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions
      * @throws InvalidIdentifierFormatException

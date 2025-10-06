@@ -57,7 +57,7 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
      * @param bool $abstract
      * @param VisibilityEnum $visibility
      * @param bool $static
-     * @param string[]|ParameterDef[] $parameters
+     * @param ParameterDef[] $parameters
      * @param TypeDef|null $returnType
      * @param NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions
      * @throws InvalidIdentifierFormatException

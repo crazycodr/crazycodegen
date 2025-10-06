@@ -32,18 +32,14 @@ class ConstantDef extends Tokenizes implements ProvidesVariableReference
      * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
-        public string            $name,
+        public string           $name,
         public null|DocBlockDef $docBlock = null,
-        null|string|TypeDef     $type = null,
-        public VisibilityEnum          $visibility = VisibilityEnum::PUBLIC,
-        public mixed                   $defaultValue = null,
+        null|TypeDef            $type = null,
+        public VisibilityEnum   $visibility = VisibilityEnum::PUBLIC,
+        public mixed            $value = null,
     ) {
-        if (is_string($type)) {
-            $this->type = $this->inferType($type);
-        } else {
-            $this->type = $type;
-        }
-        $this->defaultValue = $this->inferValue($this->defaultValue);
+        $this->type = $type;
+        $this->value = $this->inferValue($this->value);
     }
 
     /**
@@ -63,7 +59,7 @@ class ConstantDef extends Tokenizes implements ProvidesVariableReference
         $tokens[] = new SpacesToken();
         $tokens[] = $this->renderType($context);
         $tokens[] = (new VariableDef($this->name))->getTokens($context);
-        $tokens[] = $this->renderDefaultValue($context);
+        $tokens[] = $this->renderValue($context);
         $tokens[] = new SemicolonToken();
         return $this->flatten($tokens);
     }
@@ -84,11 +80,11 @@ class ConstantDef extends Tokenizes implements ProvidesVariableReference
     /**
      * @return Token[]
      */
-    public function renderDefaultValue(RenderingContext $context): array
+    public function renderValue(RenderingContext $context): array
     {
         $tokens = [];
         $tokens[] = new EqualToken();
-        $tokens[] = $this->defaultValue->getTokens($context);
+        $tokens[] = $this->value->getTokens($context);
         return $this->flatten($tokens);
     }
 

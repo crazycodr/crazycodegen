@@ -15,7 +15,7 @@ trait HasParametersTrait
     public null|ParameterListDef $parameters = null;
 
     /**
-     * @param string[]|ParameterDef[] $parameters
+     * @param ParameterDef[] $parameters
      *
      * @throws NoValidConversionRulesMatchedException
      */
@@ -33,13 +33,12 @@ trait HasParametersTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addParameter(string|ParameterDef $parameter): static
+    public function addParameter(ParameterDef $parameter): static
     {
         if ($this->parameters === null) {
             $this->parameters = new ParameterListDef();
         }
         $this->parameters->parameters[] = $this->convertOrThrow($parameter, [
-            new ConversionRule(inputType: 'string', outputType: ParameterDef::class),
             new ConversionRule(inputType: ParameterDef::class),
         ]);
         return $this;

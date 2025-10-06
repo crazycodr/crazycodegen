@@ -56,7 +56,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
      * @param bool $abstract
      * @param ClassTypeDef|null $extends
      * @param ClassTypeDef[] $implementations
-     * @param string[]|ConstantDef[] $constants
+     * @param ConstantDef[] $constants
      * @param string[]|PropertyDef[] $properties
      * @param MethodDef[] $methods
      * @throws InvalidIdentifierFormatException

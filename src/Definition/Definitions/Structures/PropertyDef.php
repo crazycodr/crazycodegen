@@ -20,7 +20,6 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\StaticToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
-use Nette\Utils\Type;
 
 class PropertyDef extends Tokenizes implements ProvidesVariableReference, ProvidesCallableReference
 {

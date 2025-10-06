@@ -186,8 +186,8 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             constants: [
-                new ConstantDef(name: 'const1', defaultValue: 1),
-                new ConstantDef(name: 'const2', defaultValue: 2),
+                new ConstantDef(name: 'const1', value: 1),
+                new ConstantDef(name: 'const2', value: 2),
             ],
         );
 
