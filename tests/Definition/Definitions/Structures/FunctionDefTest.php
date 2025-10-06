@@ -8,6 +8,8 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\FunctionDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use PHPUnit\Framework\TestCase;
@@ -41,8 +43,8 @@ class FunctionDefTest extends TestCase
             name: 'myFunction',
             parameters: [
                 new ParameterDef(name: 'foo'),
-                new ParameterDef(name: 'bar', type: 'int'),
-                new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
+                new ParameterDef(name: 'bar', type: BuiltInTypeSpec::intType()),
+                new ParameterDef(name: 'baz', type: BuiltInTypeSpec::boolType(), defaultValue: true),
             ]
         );
 
@@ -59,7 +61,7 @@ class FunctionDefTest extends TestCase
     {
         $token = new FunctionDef(
             name: 'myFunction',
-            returnType: 'string',
+            returnType: BuiltInTypeSpec::stringType(),
         );
 
 

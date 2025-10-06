@@ -11,11 +11,8 @@ trait HasReturnTypeTrait
 
     public null|TypeDef $returnType = null;
 
-    public function setReturnType(null|string|TypeDef $type): self
+    public function setReturnType(null|TypeDef $type): static
     {
-        if (is_string($type)) {
-            $type = $this->inferType($type);
-        }
         $this->returnType = $type;
         return $this;
     }

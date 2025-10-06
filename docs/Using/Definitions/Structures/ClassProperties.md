@@ -1,6 +1,6 @@
 # Class properties
 
-Classes will usually feature data in the form of properties. To define class properties, you must use the `PropertyDef` class and add them to the `properties` array of the `ClassDef` object you are defining.
+Classes usually feature data in the form of properties. To define class properties, you must use the `PropertyDef` class and add them to the `properties` array of the `ClassDef` object you are defining.
 
 # Naming your property
 
@@ -11,7 +11,7 @@ $myClass = new ClassDef(
     name: 'MyClass',
     properties: [
         new PropertyDef(name: 'myPropA'),
-        new PropertyDef(name: 'myPropB'),    
+        new PropertyDef(name: 'myPropB'),
     ],
 );
 
@@ -46,7 +46,9 @@ class MyClass
 
 # Modifiers
 
-For now, only the `static` modifier exists for class properties:
+You can set different modifiers on class properties.
+
+> For now, only the `static` modifier exists for class properties. We will add the others eventually.
 
 ```php
 $myClass = new ClassDef(
@@ -65,18 +67,18 @@ class MyClass
 }
 ```
 
-> Support for PHP 8.1+ features such as the readonly property is planned in a later release.
-
 # Types
 
-Class properties can and should be typed for best-practice reasons. You can pass a `string` to the `type` property and the type will be inferred automatically into a valid `TypeDef` object:
+Class properties can and should be typed for best-practice reasons. You can pass a `TypeDef` object such as `BuiltInTypeSpec::intType()` or a `ClassTypeDef` object that you generate: (See [TypeDefinitions.md](../TypeDefinitions.md) for more information)
+
+> Note that the example below does not feature `imports` but if you did, using `ClassTypeDef` in the return type, it would shorten the identifier in the output code.
 
 ```php
 $myClass = new ClassDef(
     name: 'MyClass',
     properties: [
-        new PropertyDef(name: 'myPropA', type: 'Foo\\Bar\\Baz'),
-        new PropertyDef(name: 'myPropB', type: 'int'),    
+        new PropertyDef(name: 'myPropA', type: new ClassTypeDef('Foo\Bar\Baz')),
+        new PropertyDef(name: 'myPropB', type: BuiltInTypeSpec::intType()),
     ],
 );
 
@@ -88,13 +90,9 @@ class MyClass
 }
 ```
 
-> See [Type definitions](../TypeDefinitions.md) for more information.
-
 # DocBlocks
 
-You can add a DocBlock to describe the property. This is especially important when using `array` as a type so that IDEs can guide the developer with what is acceptable.
-
-To add a docblock, you can pass a single `string`, a `string[]` or a `DocBlockDef` object. When you pass a `string` or `string[]`, the framework automatically wraps it in a `DocBlockDef` for you. Internally, this always produces the same result as writing a full `DocBlockDef` manually:
+You can add a `DocBlockDef` to describe the property. This is especially important when using types that are of the `array` type so that IDEs can guide the developer with what is acceptable.
 
 ```php
 $myClass = new ClassDef(
@@ -102,11 +100,11 @@ $myClass = new ClassDef(
     properties: [
         new PropertyDef(
             name: 'myPropA',
-            docBlock: [
+            docBlock: new DocBlockDef([
                 'Contains the "A" data',
                 '@var string[]',
-            ],
-            type: 'array'
+            ]),
+            type: BuiltInTypeSpec::arrayType()
         ),    
     ],
 );
@@ -124,9 +122,7 @@ class MyClass
 
 # Default values
 
-Sometimes, a property will feature a default value. To set one, just pass anything to `defaultValue` and the default value will be transformed into a valid expression as much as possible.
-
-The `defaultValue` is not `null` by default, it is `@!#UNSET@!#` so that the framework can detect that you want to set a `null` default. Therefore, the only impossible default value to set on a property using this framework is `@!#UNSET@!#`.
+Sometimes, a property will feature a default value. To set one, just pass anything to `defaultValue` and the default value will be transformed into a valid expression. The `defaultValue` is not `null` by default, it is `@!#UNSET@!#` so that the framework can detect that you want to set a `null` default. Therefore, the only impossible default value to set on a property using this framework is `@!#UNSET@!#`.
 
 Also note that the value is typed as `mixed` but it actually only accepts valid inferable values from `ValueInferenceTrait::inferValue`. (See [Value definitions](../ValueDefinitions.md)).
 

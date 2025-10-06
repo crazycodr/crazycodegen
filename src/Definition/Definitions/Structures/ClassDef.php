@@ -49,26 +49,30 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     use HasMethodsTrait;
 
     /**
-     * @param string[]|ClassTypeDef[]|ImportDef[] $imports
-     * @param null|string|string[]|DocBlockDef $docBlock
-     * @param string[]|ClassTypeDef[] $implementations
-     * @param string[]|ConstantDef[] $constants
+     * @param string $name
+     * @param NamespaceDef|null $namespace
+     * @param ClassTypeDef[]|ImportDef[] $imports
+     * @param null|DocBlockDef $docBlock
+     * @param bool $abstract
+     * @param ClassTypeDef|null $extends
+     * @param ClassTypeDef[] $implementations
+     * @param ConstantDef[] $constants
      * @param string[]|PropertyDef[] $properties
      * @param MethodDef[] $methods
-     * @throws NoValidConversionRulesMatchedException
      * @throws InvalidIdentifierFormatException
+     * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
-        string                        $name,
-        null|string|NamespaceDef      $namespace = null,
-        array                         $imports = [],
-        null|string|array|DocBlockDef $docBlock = null,
-        bool                          $abstract = false,
-        null|string|ClassTypeDef      $extends = null,
-        array                         $implementations = [],
-        array                         $constants = [],
-        array                         $properties = [],
-        array                         $methods = [],
+        string            $name,
+        null|NamespaceDef $namespace = null,
+        array             $imports = [],
+        null|DocBlockDef  $docBlock = null,
+        bool              $abstract = false,
+        null|ClassTypeDef $extends = null,
+        array             $implementations = [],
+        array             $constants = [],
+        array             $properties = [],
+        array             $methods = [],
     ) {
         $this->setNamespace($namespace);
         $this->setImports($imports);

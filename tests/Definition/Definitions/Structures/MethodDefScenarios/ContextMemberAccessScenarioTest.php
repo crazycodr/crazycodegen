@@ -8,7 +8,9 @@ use CrazyCodeGen\Definition\Definitions\Contexts\ParentContext;
 use CrazyCodeGen\Definition\Definitions\Contexts\ThisContext;
 use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
+use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Expressions\Operations\CallOp;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
@@ -33,7 +35,7 @@ class ContextMemberAccessScenarioTest extends TestCase
 
         $modelTypeProperty = new PropertyDef(
             'modelType',
-            type: 'string',
+            type: BuiltInTypeSpec::stringType(),
             defaultValue: $modelTypePropertyType
         );
 
@@ -52,7 +54,7 @@ class ContextMemberAccessScenarioTest extends TestCase
             ->addInstruction(new ReturnOp(ThisContext::to($modelProperty)));
 
         $classDef = (new ClassDef('ContextMemberAccessScenario'))
-            ->setNamespace('Internal\Project\Models')
+            ->setNamespace(new NamespaceDef('Internal\Project\Models'))
             ->addImport($modelTypePropertyType)
             ->addProperty($modelTypeProperty)
             ->addProperty($modelProperty)
@@ -93,7 +95,7 @@ class ContextMemberAccessScenarioTest extends TestCase
             ->addInstruction(ParentContext::to(new CallOp('__construct')));
 
         $classDef = (new ClassDef('ContextMemberAccessScenario'))
-            ->setNamespace('Internal\Project\Models')
+            ->setNamespace(new NamespaceDef('Internal\Project\Models'))
             ->addMethod($constructor);
 
         $code = $this->renderTokensToString($classDef->getTokens(new RenderingContext()));

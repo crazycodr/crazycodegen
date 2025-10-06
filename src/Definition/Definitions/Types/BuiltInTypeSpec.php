@@ -25,6 +25,71 @@ class BuiltInTypeSpec extends TypeDef
     ) {
     }
 
+    public static function intType(): self
+    {
+        return new self(BuiltInTypesEnum::int);
+    }
+
+    public static function floatType(): self
+    {
+        return new self(BuiltInTypesEnum::float);
+    }
+
+    public static function boolType(): self
+    {
+        return new self(BuiltInTypesEnum::bool);
+    }
+
+    public static function stringType(): self
+    {
+        return new self(BuiltInTypesEnum::string);
+    }
+
+    public static function arrayType(): self
+    {
+        return new self(BuiltInTypesEnum::array);
+    }
+
+    public static function objectType(): self
+    {
+        return new self(BuiltInTypesEnum::object);
+    }
+
+    public static function callableType(): self
+    {
+        return new self(BuiltInTypesEnum::callable);
+    }
+
+    public static function voidType(): self
+    {
+        return new self(BuiltInTypesEnum::void);
+    }
+
+    public static function trueType(): self
+    {
+        return new self(BuiltInTypesEnum::true);
+    }
+
+    public static function falseType(): self
+    {
+        return new self(BuiltInTypesEnum::false);
+    }
+
+    public static function nullType(): self
+    {
+        return new self(BuiltInTypesEnum::null);
+    }
+
+    public static function mixedType(): self
+    {
+        return new self(BuiltInTypesEnum::mixed);
+    }
+
+    public static function iterableType(): self
+    {
+        return new self(BuiltInTypesEnum::iterable);
+    }
+
     /**
      * @return Token[]
      */

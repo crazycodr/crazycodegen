@@ -19,7 +19,7 @@ trait HasPropertiesTrait
      *
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setProperties(array $properties): self
+    public function setProperties(array $properties): static
     {
         $this->properties = [];
         foreach ($properties as $property) {
@@ -31,7 +31,7 @@ trait HasPropertiesTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addProperty(string|PropertyDef $property): self
+    public function addProperty(string|PropertyDef $property): static
     {
         $this->properties[] = $this->convertOrThrow($property, [
             new ConversionRule(inputType: 'string', outputType: PropertyDef::class),

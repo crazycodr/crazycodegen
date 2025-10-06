@@ -20,7 +20,6 @@ use CrazyCodeGen\Rendering\Tokens\KeywordTokens\StaticToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
-use Nette\Utils\Type;
 
 class PropertyDef extends Tokenizes implements ProvidesVariableReference, ProvidesCallableReference
 {
@@ -31,24 +30,17 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference, Provid
 
     public const UNSET_DEFAULT_VALUE = '@!#UNSET@!#';
 
-    public null|TypeDef $type;
-
     /**
      * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
         public string            $name,
         public null|DocBlockDef $docBlock = null,
-        null|string|TypeDef     $type = null,
+        public null|TypeDef     $type = null,
         public VisibilityEnum          $visibility = VisibilityEnum::PUBLIC,
         public bool                    $static = false,
         public mixed                   $defaultValue = self::UNSET_DEFAULT_VALUE,
     ) {
-        if (is_string($type)) {
-            $this->type = $this->inferType($type);
-        } else {
-            $this->type = $type;
-        }
         if ($this->defaultValue === self::UNSET_DEFAULT_VALUE) {
             // Do nothing or isSupportedValue will change to StringVal
         } elseif ($this->isInferableValue($this->defaultValue)) {

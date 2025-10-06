@@ -19,7 +19,7 @@ trait HasMethodsTrait
      *
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setMethods(array $methods): self
+    public function setMethods(array $methods): static
     {
         $this->methods = [];
         foreach ($methods as $method) {
@@ -31,7 +31,7 @@ trait HasMethodsTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addMethod(string|MethodDef $method): self
+    public function addMethod(string|MethodDef $method): static
     {
         $this->methods[] = $this->convertOrThrow($method, [
             new ConversionRule(inputType: 'string', outputType: MethodDef::class),

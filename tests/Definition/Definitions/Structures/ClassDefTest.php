@@ -11,6 +11,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasImportsTraitTestTrait;
@@ -30,7 +31,7 @@ class ClassDefTest extends TestCase
      * @throws NoValidConversionRulesMatchedException
      * @throws InvalidIdentifierFormatException
      */
-    public function getHasNamespaceTraitTestObject(NamespaceDef|string|null $namespace): ClassDef
+    protected function getHasNamespaceTraitTestObject(?NamespaceDef $namespace): ClassDef
     {
         return new ClassDef(name: 'valid', namespace: $namespace);
     }
@@ -142,7 +143,7 @@ class ClassDefTest extends TestCase
     {
         $token = new ClassDef(
             name: 'myClass',
-            extends: 'CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit',
+            extends: new ClassTypeDef('CrazyCodeGen\Tests\LongNamespace\OfAClass\ThatDoesNotExist\AndExplodesCharLimit'),
         );
 
         $this->assertEquals(
@@ -162,9 +163,9 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             implementations: [
-                'CrazyCodeGen\Tests',
-                'CrazyCodeGen\Tests2',
-                'CrazyCodeGen\Tests3',
+                new ClassTypeDef('CrazyCodeGen\Tests'),
+                new ClassTypeDef('CrazyCodeGen\Tests2'),
+                new ClassTypeDef('CrazyCodeGen\Tests3'),
             ],
         );
 
@@ -185,8 +186,8 @@ class ClassDefTest extends TestCase
         $token = new ClassDef(
             name: 'myClass',
             constants: [
-                new ConstantDef(name: 'const1', defaultValue: 1),
-                new ConstantDef(name: 'const2', defaultValue: 2),
+                new ConstantDef(name: 'const1', value: 1),
+                new ConstantDef(name: 'const2', value: 2),
             ],
         );
 

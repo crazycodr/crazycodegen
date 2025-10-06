@@ -8,7 +8,7 @@ trait HasVisibilityModifierTrait
 {
     public VisibilityEnum $visibility = VisibilityEnum::PUBLIC;
 
-    public function setVisibility(VisibilityEnum $visibility): self
+    public function setVisibility(VisibilityEnum $visibility): static
     {
         $this->visibility = $visibility;
         return $this;

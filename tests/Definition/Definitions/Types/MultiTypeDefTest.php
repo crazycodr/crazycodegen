@@ -18,8 +18,8 @@ class MultiTypeDefTest extends TestCase
     public function testTypesAreJoinedWithPipeWhenUnionIsTrueByDefault(): void
     {
         $token = new MultiTypeDef([
-            new BuiltInTypeSpec(BuiltInTypesEnum::string),
-            new BuiltInTypeSpec(BuiltInTypesEnum::int),
+            BuiltInTypeSpec::stringType(),
+            BuiltInTypeSpec::intType(),
         ]);
 
         $this->assertEquals(
@@ -34,8 +34,8 @@ class MultiTypeDefTest extends TestCase
     {
         $token = new MultiTypeDef(
             [
-                new BuiltInTypeSpec(BuiltInTypesEnum::string),
-                new BuiltInTypeSpec(BuiltInTypesEnum::int),
+                BuiltInTypeSpec::stringType(),
+                BuiltInTypeSpec::intType(),
             ],
             unionTypes: false
         );
@@ -50,7 +50,10 @@ class MultiTypeDefTest extends TestCase
 
     public function testStringTypesAreConvertedToSingleTypeTokenGroupsAndRendered(): void
     {
-        $token = new MultiTypeDef(['string', 'int']);
+        $token = new MultiTypeDef([
+            BuiltInTypeSpec::stringType(),
+            BuiltInTypeSpec::intType()
+        ]);
 
         $this->assertEquals(
             <<<'EOS'
@@ -62,7 +65,10 @@ class MultiTypeDefTest extends TestCase
 
     public function testParenthesesAreAddedAroundTokensWhenNestedIsTurnedOn(): void
     {
-        $token = new MultiTypeDef(['string', 'int'], nestedTypes: true);
+        $token = new MultiTypeDef([
+            BuiltInTypeSpec::stringType(),
+            BuiltInTypeSpec::intType(),
+        ], nestedTypes: true);
 
         $this->assertEquals(
             <<<'EOS'
@@ -76,8 +82,14 @@ class MultiTypeDefTest extends TestCase
     {
         $token = new MultiTypeDef(
             [
-                new MultiTypeDef(['int', 'float'], nestedTypes: true),
-                new MultiTypeDef(['string', 'bool'], nestedTypes: true),
+                new MultiTypeDef([
+                    BuiltInTypeSpec::intType(),
+                    BuiltInTypeSpec::floatType()
+                ], nestedTypes: true),
+                new MultiTypeDef([
+                    BuiltInTypeSpec::stringType(),
+                    BuiltInTypeSpec::boolType()
+                ], nestedTypes: true),
             ],
             unionTypes: false,
             nestedTypes: true,

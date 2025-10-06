@@ -21,7 +21,7 @@ trait HasInstructionsTrait
      * @param NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setInstructions(array $instructions): self
+    public function setInstructions(array $instructions): static
     {
         $this->instructions = [];
         foreach ($instructions as $instruction) {
@@ -33,7 +33,7 @@ trait HasInstructionsTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addInstruction(NewLinesToken|Tokenizes|ShouldNotBeNestedIntoInstruction|Instruction $instruction): self
+    public function addInstruction(NewLinesToken|Tokenizes|ShouldNotBeNestedIntoInstruction|Instruction $instruction): static
     {
         $this->instructions[] = $this->convertOrThrow($instruction, [
             new ConversionRule(inputType: NewLinesToken::class),

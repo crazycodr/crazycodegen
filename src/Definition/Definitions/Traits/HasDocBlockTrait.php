@@ -14,15 +14,14 @@ trait HasDocBlockTrait
     public null|DocBlockDef $docBlock = null;
 
     /**
-     * @param string|string[]|DocBlockDef $docBlock
+     * @param null|DocBlockDef $docBlock
+     * @return static
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setDocBlock(null|string|array|DocBlockDef $docBlock): self
+    public function setDocBlock(null|DocBlockDef $docBlock): static
     {
         $this->docBlock = $this->convertOrThrow($docBlock, rules: [
             new ConversionRule(inputType: 'null'),
-            new ConversionRule(inputType: 'string', outputType: DocBlockDef::class),
-            new ConversionRule(inputType: 'array', outputType: DocBlockDef::class, filter: fn ($value) => is_string($value)),
             new ConversionRule(inputType: DocBlockDef::class),
         ]);
         return $this;

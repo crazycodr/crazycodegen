@@ -36,7 +36,7 @@ class ParameterDefTest extends TestCase
     {
         $token = new ParameterDef(
             'foo',
-            new BuiltInTypeSpec(BuiltInTypesEnum::int),
+            BuiltInTypeSpec::intType(),
         );
 
         $this->assertEquals(

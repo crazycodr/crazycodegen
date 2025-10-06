@@ -9,6 +9,8 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
 use CrazyCodeGen\Rendering\RenderingContext;
@@ -103,8 +105,8 @@ class MethodDefTest extends TestCase
             name: 'myFunction',
             parameters: [
                 new ParameterDef(name: 'foo'),
-                new ParameterDef(name: 'bar', type: 'int'),
-                new ParameterDef(name: 'baz', type: 'bool', defaultValue: true),
+                new ParameterDef(name: 'bar', type: BuiltInTypeSpec::intType()),
+                new ParameterDef(name: 'baz', type: BuiltInTypeSpec::boolType(), defaultValue: true),
             ],
         );
 
@@ -120,7 +122,7 @@ class MethodDefTest extends TestCase
     {
         $token = new MethodDef(
             name: 'myFunction',
-            returnType: 'string',
+            returnType: BuiltInTypeSpec::stringType(),
         );
 
         $this->assertEquals(

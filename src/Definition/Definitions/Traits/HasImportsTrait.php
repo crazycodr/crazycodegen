@@ -16,11 +16,11 @@ trait HasImportsTrait
     public array $imports = [];
 
     /**
-     * @param string[]|ClassTypeDef[]|ImportDef[] $imports
+     * @param ClassTypeDef[]|ImportDef[] $imports
      *
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setImports(array $imports): self
+    public function setImports(array $imports): static
     {
         $this->imports = [];
         foreach ($imports as $import) {
@@ -32,10 +32,9 @@ trait HasImportsTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addImport(string|ClassTypeDef|ImportDef $import): self
+    public function addImport(ClassTypeDef|ImportDef $import): static
     {
         $this->imports[] = $this->convertOrThrow($import, [
-            new ConversionRule(inputType: 'string', outputType: ImportDef::class),
             new ConversionRule(inputType: ClassTypeDef::class, outputType: ImportDef::class, propertyPaths: ['type']),
             new ConversionRule(inputType: ImportDef::class),
         ]);

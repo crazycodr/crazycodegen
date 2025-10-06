@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 trait HasImportsTraitTestTrait
 {
     /**
-     * @param string[]|ClassTypeDef[]|ImportDef[] $imports
+     * @param array<ClassTypeDef|ImportDef> $imports
      *
      * @throws InvalidIdentifierFormatException
      */
@@ -24,10 +24,6 @@ trait HasImportsTraitTestTrait
     {
         return [
             'empty-empty' => [[], []],
-            'string-to-object' => [
-                ['CrazyCodeGen\Tests\Test1'],
-                [new ImportDef('CrazyCodeGen\Tests\Test1')]
-            ],
             'class-to-object' => [
                 [new ClassTypeDef('CrazyCodeGen\Tests\Test1')],
                 [new ImportDef('CrazyCodeGen\Tests\Test1')]
@@ -38,12 +34,10 @@ trait HasImportsTraitTestTrait
             ],
             'mixed-to-object' => [
                 [
-                    'CrazyCodeGen\Tests\Test1',
                     new ClassTypeDef('CrazyCodeGen\Tests\Test2'),
                     new ImportDef('CrazyCodeGen\Tests\Test3')
                 ],
                 [
-                    new ImportDef('CrazyCodeGen\Tests\Test1'),
                     new ImportDef('CrazyCodeGen\Tests\Test2'),
                     new ImportDef('CrazyCodeGen\Tests\Test3')
                 ],
@@ -52,8 +46,8 @@ trait HasImportsTraitTestTrait
     }
 
     /**
-     * @param array<string> $imports
-     * @param mixed[] $expectation
+     * @param array<ClassTypeDef|ImportDef> $imports
+     * @param ImportDef[] $expectation
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */

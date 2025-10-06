@@ -45,18 +45,21 @@ class FunctionDef extends Tokenizes implements ProvidesCallableReference
     use HasInstructionsTrait;
 
     /**
-     * @param null|string|string[]|DocBlockDef $docBlock
-     * @param string[]|ParameterDef[] $parameters
+     * @param string $name
+     * @param NamespaceDef|null $namespace
+     * @param null|DocBlockDef $docBlock
+     * @param ParameterDef[] $parameters
+     * @param TypeDef|null $returnType
      * @param NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions
      * @throws InvalidIdentifierFormatException
      * @throws NoValidConversionRulesMatchedException
      */
     public function __construct(
         string                        $name,
-        null|string|NamespaceDef      $namespace = null,
-        null|string|array|DocBlockDef $docBlock = null,
+        null|NamespaceDef             $namespace = null,
+        null|DocBlockDef $docBlock = null,
         array                         $parameters = [],
-        null|string|TypeDef           $returnType = null,
+        null|TypeDef                  $returnType = null,
         array                         $instructions = [],
     ) {
         $this->setNamespace($namespace);

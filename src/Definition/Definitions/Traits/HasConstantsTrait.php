@@ -15,11 +15,11 @@ trait HasConstantsTrait
     public array $constants = [];
 
     /**
-     * @param string[]|ConstantDef[] $constants
+     * @param ConstantDef[] $constants
      *
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setConstants(array $constants): self
+    public function setConstants(array $constants): static
     {
         $this->constants = [];
         foreach ($constants as $constant) {
@@ -31,10 +31,9 @@ trait HasConstantsTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addConstant(string|ConstantDef $constant): self
+    public function addConstant(ConstantDef $constant): static
     {
         $this->constants[] = $this->convertOrThrow($constant, [
-            new ConversionRule(inputType: 'string', outputType: ConstantDef::class),
             new ConversionRule(inputType: ConstantDef::class),
         ]);
         return $this;
