@@ -9,6 +9,7 @@ class RenderingContext
         public array    $importedClasses = [],
         public null|int $chopDownArraysAfterCharacters = null,
         public null|int $chopDownArrayIndentSize = null,
+        public null|int $chopDownArrayHasTrailingCommaOnLastElement = null,
     ) {
     }
 }

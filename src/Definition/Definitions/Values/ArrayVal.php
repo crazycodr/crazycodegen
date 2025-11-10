@@ -45,15 +45,11 @@ class ArrayVal extends BaseVal
      */
     public function getTokens(RenderingContext $context): array
     {
-        $tokens = $this->prepareTokens(context: $context, forceMultiline: false, indentWith: null);
+        $tokens = $this->prepareTokens(context: $context, forceMultiline: false);
         if ($context->chopDownArraysAfterCharacters && $context->chopDownArrayIndentSize) {
             $definitionLength = strlen($this->renderTokensToString($tokens));
             if ($definitionLength >= $context->chopDownArraysAfterCharacters) {
-                $tokens = $this->prepareTokens(
-                    context: $context,
-                    forceMultiline: true,
-                    indentWith: new SpacesToken($context->chopDownArrayIndentSize),
-                );
+                $tokens = $this->prepareTokens(context: $context, forceMultiline: true);
             }
         }
         return $tokens;
@@ -64,11 +60,8 @@ class ArrayVal extends BaseVal
      * @param bool $forceMultiline
      * @return mixed[]
      */
-    private function prepareTokens(
-        RenderingContext $context,
-        bool             $forceMultiline,
-        null|Token       $indentWith,
-    ): array {
+    private function prepareTokens(RenderingContext $context, bool $forceMultiline): array
+    {
         $tokens = [];
         $tokens[] = new SquareStartToken();
         $keysAllInSequentialOrder = $this->areAllKeysInNumericalSequentialOrder();
@@ -77,19 +70,19 @@ class ArrayVal extends BaseVal
             $entriesLeft--;
             if ($forceMultiline) {
                 $tokens[] = new NewLinesToken();
-                $tokens[] = clone $indentWith;
+                $tokens[] = new SpacesToken($context->chopDownArrayIndentSize);
             }
             $tokens[] = $this->renderEntry(
                 $context,
                 key: $keysAllInSequentialOrder ? null : $key,
                 value: $value,
-                addSeparator: $entriesLeft !== 0,
+                addSeparator: $entriesLeft !== 0 || $context->chopDownArrayHasTrailingCommaOnLastElement,
             );
         }
         if ($forceMultiline) {
             $tokens[] = new NewLinesToken();
             if ($entriesLeft > 0) {
-                $tokens[] = clone $indentWith;
+                $tokens[] = new SpacesToken($context->chopDownArrayIndentSize);
             }
         }
         $tokens[] = new SquareEndToken();
