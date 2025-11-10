@@ -89,12 +89,15 @@ class ArrayValTest extends TestCase
         $this->assertEquals(
             <<<'EOS'
             [
-            'thisIsAPrettyLongKey'=>1,
-            'thisAlsoContributesToWrapping'=>2,
-            'shortButWraps'=>3
+                'thisIsAPrettyLongKey'=>1,
+                'thisAlsoContributesToWrapping'=>2,
+                'shortButWraps'=>3
             ]
             EOS,
-            $this->renderTokensToString($token->getTokens(new RenderingContext(maximumSingleLineArrayLength: 20)))
+            $this->renderTokensToString($token->getTokens(new RenderingContext(
+                chopDownArraysAfterCharacters: 20,
+                chopDownArrayIndentSize: 4,
+            )))
         );
     }
 

@@ -12,6 +12,7 @@ use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ArrayAssignToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SquareEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SquareStartToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -44,11 +45,15 @@ class ArrayVal extends BaseVal
      */
     public function getTokens(RenderingContext $context): array
     {
-        $tokens = $this->prepareTokens(context: $context, forceMultiline: false);
-        if ($context->maximumSingleLineArrayLength !== null) {
+        $tokens = $this->prepareTokens(context: $context, forceMultiline: false, indentWith: null);
+        if ($context->chopDownArraysAfterCharacters && $context->chopDownArrayIndentSize) {
             $definitionLength = strlen($this->renderTokensToString($tokens));
-            if ($definitionLength >= $context->maximumSingleLineArrayLength) {
-                $tokens = $this->prepareTokens(context: $context, forceMultiline: true);
+            if ($definitionLength >= $context->chopDownArraysAfterCharacters) {
+                $tokens = $this->prepareTokens(
+                    context: $context,
+                    forceMultiline: true,
+                    indentWith: new SpacesToken($context->chopDownArrayIndentSize),
+                );
             }
         }
         return $tokens;
@@ -59,8 +64,11 @@ class ArrayVal extends BaseVal
      * @param bool $forceMultiline
      * @return mixed[]
      */
-    private function prepareTokens(RenderingContext $context, bool $forceMultiline): array
-    {
+    private function prepareTokens(
+        RenderingContext $context,
+        bool             $forceMultiline,
+        null|Token       $indentWith,
+    ): array {
         $tokens = [];
         $tokens[] = new SquareStartToken();
         $keysAllInSequentialOrder = $this->areAllKeysInNumericalSequentialOrder();
@@ -69,6 +77,7 @@ class ArrayVal extends BaseVal
             $entriesLeft--;
             if ($forceMultiline) {
                 $tokens[] = new NewLinesToken();
+                $tokens[] = clone $indentWith;
             }
             $tokens[] = $this->renderEntry(
                 $context,
@@ -79,6 +88,9 @@ class ArrayVal extends BaseVal
         }
         if ($forceMultiline) {
             $tokens[] = new NewLinesToken();
+            if ($entriesLeft > 0) {
+                $tokens[] = clone $indentWith;
+            }
         }
         $tokens[] = new SquareEndToken();
         return $this->flatten($tokens);
