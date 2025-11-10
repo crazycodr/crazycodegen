@@ -7,6 +7,7 @@ class RenderingContext
     public function __construct(
         /** @var array<string> $importedClasses */
         public array $importedClasses = [],
+        public null|int $maximumSingleLineArrayLength = null,
     ) {
     }
 }

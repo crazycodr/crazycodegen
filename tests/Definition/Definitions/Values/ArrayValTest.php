@@ -88,6 +88,29 @@ class ArrayValTest extends TestCase
 
         $this->assertEquals(
             <<<'EOS'
+            [
+            'thisIsAPrettyLongKey'=>1,
+            'thisAlsoContributesToWrapping'=>2,
+            'shortButWraps'=>3
+            ]
+            EOS,
+            $this->renderTokensToString($token->getTokens(new RenderingContext(maximumSingleLineArrayLength: 20)))
+        );
+    }
+
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     */
+    public function testWrappingIsOnlyDoneWhenRenderingContextIsSetToWrapEvenIfTooLong(): void
+    {
+        $token = new ArrayVal([
+            'thisIsAPrettyLongKey' => 1,
+            'thisAlsoContributesToWrapping' => 2,
+            'shortButWraps' => 3
+        ]);
+
+        $this->assertEquals(
+            <<<'EOS'
             ['thisIsAPrettyLongKey'=>1,'thisAlsoContributesToWrapping'=>2,'shortButWraps'=>3]
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderingContext()))

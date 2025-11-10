@@ -11,6 +11,7 @@ use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ArrayAssignToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\NewLinesToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SquareEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SquareStartToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -43,18 +44,41 @@ class ArrayVal extends BaseVal
      */
     public function getTokens(RenderingContext $context): array
     {
+        $tokens = $this->prepareTokens(context: $context, forceMultiline: false);
+        if ($context->maximumSingleLineArrayLength !== null) {
+            $definitionLength = strlen($this->renderTokensToString($tokens));
+            if ($definitionLength >= $context->maximumSingleLineArrayLength) {
+                $tokens = $this->prepareTokens(context: $context, forceMultiline: true);
+            }
+        }
+        return $tokens;
+    }
+
+    /**
+     * @param RenderingContext $context
+     * @param bool $forceMultiline
+     * @return mixed[]
+     */
+    private function prepareTokens(RenderingContext $context, bool $forceMultiline): array
+    {
         $tokens = [];
         $tokens[] = new SquareStartToken();
         $keysAllInSequentialOrder = $this->areAllKeysInNumericalSequentialOrder();
         $entriesLeft = count($this->keyValues);
         foreach ($this->keyValues as $key => $value) {
             $entriesLeft--;
+            if ($forceMultiline) {
+                $tokens[] = new NewLinesToken();
+            }
             $tokens[] = $this->renderEntry(
                 $context,
                 key: $keysAllInSequentialOrder ? null : $key,
                 value: $value,
                 addSeparator: $entriesLeft !== 0,
             );
+        }
+        if ($forceMultiline) {
+            $tokens[] = new NewLinesToken();
         }
         $tokens[] = new SquareEndToken();
         return $this->flatten($tokens);
