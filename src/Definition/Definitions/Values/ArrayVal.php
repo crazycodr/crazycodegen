@@ -76,7 +76,7 @@ class ArrayVal extends BaseVal
                 $context,
                 key: $keysAllInSequentialOrder ? null : $key,
                 value: $value,
-                addSeparator: $entriesLeft !== 0 || $context->chopDownArrayHasTrailingCommaOnLastElement,
+                addSeparator: $entriesLeft !== 0 || ($context->chopDownArrayHasTrailingCommaOnLastElement && $forceMultiline),
             );
         }
         if ($forceMultiline) {
