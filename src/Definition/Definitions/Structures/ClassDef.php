@@ -114,7 +114,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
         $previousImportedClasses = $context->importedClasses;
         foreach ($this->imports as $import) {
             $tokens[] = $import->getTokens($context);
-            if (!$import->alias) {
+            if ($import instanceof ImportDef && !$import->alias) {
                 $context->importedClasses[] = $import->type->type;
             }
         }

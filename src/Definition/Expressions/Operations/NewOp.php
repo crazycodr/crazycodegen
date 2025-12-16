@@ -10,6 +10,7 @@ use CrazyCodeGen\Definition\Definitions\Structures\ClassDef;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
 use CrazyCodeGen\Rendering\RenderingContext;
+use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\CommaToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParEndToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\ParStartToken;
@@ -62,8 +63,12 @@ class NewOp extends Tokenizes
         $tokens[] = new ParStartToken();
         $argumentsLeft = count($this->arguments);
         $argumentTokens = [];
-        foreach ($this->arguments as $argument) {
+        foreach ($this->arguments as $argumentLabel => $argument) {
             $argumentsLeft--;
+            if (is_string($argumentLabel)) {
+                $argumentTokens[] = new Token($argumentLabel);
+                $argumentTokens[] = new ColonToken();
+            }
             if ($argument instanceof Token) {
                 $argumentTokens[] = $argument;
             } else {

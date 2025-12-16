@@ -6,17 +6,18 @@ use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Models\ConversionRule;
 use CrazyCodeGen\Common\Traits\ValidationTrait;
 use CrazyCodeGen\Definition\Definitions\Structures\ImportDef;
+use CrazyCodeGen\Definition\Definitions\Structures\ImportFunctionDef;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 
 trait HasImportsTrait
 {
     use ValidationTrait;
 
-    /** @var ImportDef[] $imports */
+    /** @var array<ImportDef|ImportFunctionDef> $imports */
     public array $imports = [];
 
     /**
-     * @param ClassTypeDef[]|ImportDef[] $imports
+     * @param array<ClassTypeDef|ImportDef|ImportFunctionDef> $imports
      *
      * @throws NoValidConversionRulesMatchedException
      */
@@ -32,11 +33,12 @@ trait HasImportsTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addImport(ClassTypeDef|ImportDef $import): static
+    public function addImport(ClassTypeDef|ImportFunctionDef|ImportDef $import): static
     {
         $this->imports[] = $this->convertOrThrow($import, [
             new ConversionRule(inputType: ClassTypeDef::class, outputType: ImportDef::class, propertyPaths: ['type']),
             new ConversionRule(inputType: ImportDef::class),
+            new ConversionRule(inputType: ImportFunctionDef::class),
         ]);
         return $this;
     }
