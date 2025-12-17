@@ -20,6 +20,7 @@ use CrazyCodeGen\Definition\Definitions\Traits\HasMethodsTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasNamespaceTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasNameTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasPropertiesTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasTraitsTrait;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Values\ClassRefVal;
 use CrazyCodeGen\Rendering\RenderingContext;
@@ -44,6 +45,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
     use HasNameTrait;
     use HasExtendsTrait;
     use HasImplementationsTrait;
+    use HasTraitsTrait;
     use HasConstantsTrait;
     use HasPropertiesTrait;
     use HasMethodsTrait;
@@ -56,6 +58,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
      * @param bool $abstract
      * @param ClassTypeDef|null $extends
      * @param ClassTypeDef[] $implementations
+     * @param array<string|ClassTypeDef|UseTraitDef> $traits
      * @param ConstantDef[] $constants
      * @param string[]|PropertyDef[] $properties
      * @param MethodDef[] $methods
@@ -70,6 +73,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
         bool              $abstract = false,
         null|ClassTypeDef $extends = null,
         array             $implementations = [],
+        array             $traits = [],
         array             $constants = [],
         array             $properties = [],
         array             $methods = [],
@@ -81,6 +85,7 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
         $this->setName($name);
         $this->setExtends($extends);
         $this->setImplementations($implementations);
+        $this->setTraits($traits);
         $this->setConstants($constants);
         $this->setProperties($properties);
         $this->setMethods($methods);
@@ -129,6 +134,9 @@ class ClassDef extends Tokenizes implements ProvidesClassType, ProvidesClassRefe
 
         $tokens[] = new BraceStartToken();
 
+        foreach ($this->traits as $trait) {
+            $tokens[] = $trait->getTokens($context);
+        }
         foreach ($this->constants as $constant) {
             $tokens[] = $constant->getTokens($context);
         }

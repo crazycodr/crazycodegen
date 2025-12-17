@@ -11,12 +11,14 @@ use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\NamespaceDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
+use CrazyCodeGen\Definition\Definitions\Structures\UseTraitDef;
 use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
 use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasImportsTraitTestTrait;
 use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasNamespaceTraitTestTrait;
 use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasNameTraitTestTrait;
+use CrazyCodeGen\Tests\Definition\Definitions\Traits\HasTraitsTestTrait;
 use PHPUnit\Framework\TestCase;
 
 class ClassDefTest extends TestCase
@@ -26,6 +28,7 @@ class ClassDefTest extends TestCase
     use HasNamespaceTraitTestTrait;
     use HasImportsTraitTestTrait;
     use HasNameTraitTestTrait;
+    use HasTraitsTestTrait;
 
     /**
      * @throws NoValidConversionRulesMatchedException
@@ -34,6 +37,15 @@ class ClassDefTest extends TestCase
     protected function getHasNamespaceTraitTestObject(?NamespaceDef $namespace): ClassDef
     {
         return new ClassDef(name: 'valid', namespace: $namespace);
+    }
+
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     * @throws InvalidIdentifierFormatException
+     */
+    protected function getHasTraitsTraitTestObject(string|ClassTypeDef|UseTraitDef $trait): ClassDef
+    {
+        return new ClassDef(name: 'valid', traits: [$trait]);
     }
 
     /**
@@ -172,6 +184,28 @@ class ClassDefTest extends TestCase
         $this->assertEquals(
             <<<'EOS'
             class myClass implements CrazyCodeGen\Tests,CrazyCodeGen\Tests2,CrazyCodeGen\Tests3{}
+            EOS,
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
+        );
+    }
+
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     * @throws InvalidIdentifierFormatException
+     */
+    public function testTraitsAreRenderedAsExpected(): void
+    {
+        $token = new ClassDef(
+            name: 'myClass',
+            traits: [
+                new UseTraitDef('CrazyCodeGen\Tests2\TraitA'),
+                new UseTraitDef('CrazyCodeGen\Tests2\TraitB'),
+            ],
+        );
+
+        $this->assertEquals(
+            <<<'EOS'
+            class myClass{use CrazyCodeGen\Tests2\TraitA;use CrazyCodeGen\Tests2\TraitB;}
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );

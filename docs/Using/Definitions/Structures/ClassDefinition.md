@@ -156,6 +156,7 @@ abstract class MyClass
 
 Constants, properties and methods are a complex subject that each require their own page:
 
-- [Class constants](TBD)
+- [Class traits](ClassTraits.md)
+- [Class constants](ClassConstants.md)
 - [Class properties](ClassProperties.md)
 - [Class methods](ClassMethods.md)
