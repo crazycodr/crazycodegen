@@ -7,6 +7,7 @@ use CrazyCodeGen\Common\Models\ConversionRule;
 use CrazyCodeGen\Common\Traits\ValidationTrait;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterListDef;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 
 trait HasParametersTrait
 {
@@ -15,17 +16,17 @@ trait HasParametersTrait
     public null|ParameterListDef $parameters = null;
 
     /**
-     * @param ParameterDef[] $parameters
+     * @param array<PropertyDef|ParameterDef> $parameters
      *
      * @throws NoValidConversionRulesMatchedException
      */
-    public function setParameters(array $parameters): static
+    public function setParameters(array $parameters, bool $allowProperties = false): static
     {
         if ($this->parameters === null) {
             $this->parameters = new ParameterListDef();
         }
         foreach ($parameters as $instruction) {
-            $this->addParameter($instruction);
+            $this->addParameter($instruction, allowProperties: $allowProperties);
         }
         return $this;
     }
@@ -33,14 +34,17 @@ trait HasParametersTrait
     /**
      * @throws NoValidConversionRulesMatchedException
      */
-    public function addParameter(ParameterDef $parameter): static
+    public function addParameter(PropertyDef|ParameterDef $parameter, bool $allowProperties = false): static
     {
         if ($this->parameters === null) {
             $this->parameters = new ParameterListDef();
         }
-        $this->parameters->parameters[] = $this->convertOrThrow($parameter, [
-            new ConversionRule(inputType: ParameterDef::class),
-        ]);
+        $rules = [];
+        if ($allowProperties) {
+            $rules[] = new ConversionRule(inputType: PropertyDef::class);
+        }
+        $rules[] = new ConversionRule(inputType: ParameterDef::class);
+        $this->parameters->parameters[] = $this->convertOrThrow($parameter, $rules);
         return $this;
     }
 }

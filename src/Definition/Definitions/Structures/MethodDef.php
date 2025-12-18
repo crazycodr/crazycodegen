@@ -12,6 +12,7 @@ use CrazyCodeGen\Definition\Base\Tokenizes;
 use CrazyCodeGen\Definition\Definitions\Traits\HasAbstractModifierTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasDocBlockTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasInstructionsTrait;
+use CrazyCodeGen\Definition\Definitions\Traits\HasPropertiesTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasStaticModifierTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasVisibilityModifierTrait;
 use CrazyCodeGen\Definition\Definitions\Traits\HasNameTrait;
@@ -47,6 +48,7 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
     use HasVisibilityModifierTrait;
     use HasStaticModifierTrait;
     use HasNameTrait;
+    use HasPropertiesTrait;
     use HasParametersTrait;
     use HasReturnTypeTrait;
     use HasInstructionsTrait;
@@ -57,7 +59,7 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
      * @param bool $abstract
      * @param VisibilityEnum $visibility
      * @param bool $static
-     * @param ParameterDef[] $parameters
+     * @param array<PropertyDef|ParameterDef> $parameters
      * @param TypeDef|null $returnType
      * @param NewLinesToken[]|Tokenizes[]|ShouldNotBeNestedIntoInstruction[]|Instruction[] $instructions
      * @throws InvalidIdentifierFormatException
@@ -78,7 +80,7 @@ class MethodDef extends Tokenizes implements ProvidesCallableReference
         $this->setVisibility($visibility);
         $this->setStatic($static);
         $this->setName($name);
-        $this->setParameters($parameters);
+        $this->setParameters($parameters, allowProperties: $this->name === '__construct');
         $this->setReturnType($returnType);
         $this->setInstructions($instructions);
     }

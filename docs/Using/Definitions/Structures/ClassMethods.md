@@ -257,6 +257,32 @@ class MyClass
 }
 ```
 
+# Constructor promoted properties
+
+Constructor promoted properties are an 8.0 addition that allows developers to save on assignment calls in class constructors.
+
+Class constructors must be declared manually in this framework. When you create a `MethodDef` that is named `__construct`, you can pass in `PropertyDef` objects along with `ParameterDef` objects to the `parameters` argument and these will be rendered as promoted properties. Passing `PropertyDef` objects to `parameters` in a `MethodDef` that is not named `__construct` will result in an error. You must not declare them in the `ClassDef` and in the `MethodDef` or you'll end up with runtime errors.
+
+```php
+$myClass = new ClassDef(
+    name: 'MyClass',
+    parameters: [
+        new PropertyDef(name: 'myPropA', defaultValue: null),
+        new ParameterDef(name: 'myParamB'),
+    ],
+);
+
+// Would output
+class MyClass
+{
+    public function __construct(
+        public $myPropA = null,
+        $myParamB,
+    ) {
+    }
+}
+```
+
 # Instructions
 
 Instructions are themselves a very feature-rich topic. The whole subject is addressed under another section. Instructions are passed as an array of different objects into the `instructions` parameter. See the documentation to understand how `instructions` are processed and converted.

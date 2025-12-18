@@ -9,7 +9,7 @@ use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\MethodDef;
 use CrazyCodeGen\Definition\Definitions\Structures\ParameterDef;
-use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
+use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Expression;
 use CrazyCodeGen\Definition\Expressions\Instruction;
@@ -92,6 +92,44 @@ class MethodDefTest extends TestCase
             public function myFunction(){}
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderingContext()))
+        );
+    }
+
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     * @throws InvalidIdentifierFormatException
+     */
+    public function testConstructorAcceptsPropertyDefAndRendersThemAsExpected(): void
+    {
+        $token = new MethodDef(
+            name: '__construct',
+            parameters: [
+                new ParameterDef(name: 'foo'),
+                new PropertyDef(name: 'bar', type: BuiltInTypeSpec::intType()),
+            ],
+        );
+
+        $this->assertEquals(
+            <<<'EOS'
+            public function __construct($foo,public int $bar){}
+            EOS,
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
+        );
+    }
+
+    /**
+     * @throws NoValidConversionRulesMatchedException
+     * @throws InvalidIdentifierFormatException
+     */
+    public function testNonConstructorMethodRefusesToAcceptPropertyDefs(): void
+    {
+        $this->expectException(NoValidConversionRulesMatchedException::class);
+        new MethodDef(
+            name: 'notAConstructor',
+            parameters: [
+                new ParameterDef(name: 'foo'),
+                new PropertyDef(name: 'bar', type: BuiltInTypeSpec::intType()),
+            ],
         );
     }
 
