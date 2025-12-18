@@ -46,16 +46,14 @@ class MyClass
 
 # Modifiers
 
-You can set different modifiers on class properties.
-
-> For now, only the `static` modifier exists for class properties. We will add the others eventually.
+You can set different modifiers on class properties such as `static` and `readonly`. The framework **does not prevent invalid mix of modifiers with other properties**. For example, you cannot mix `static` and `readonly` nor can you `readonly` with a `defaultValue` unless it is a constructor promoted property.
 
 ```php
 $myClass = new ClassDef(
     name: 'MyClass',
     properties: [
         new PropertyDef(name: 'myPropA', static: true),
-        new PropertyDef(name: 'myPropB'),    
+        new PropertyDef(name: 'myPropB', readOnly: true),    
     ],
 );
 
@@ -63,7 +61,7 @@ $myClass = new ClassDef(
 class MyClass
 {
     public static $myPropA;
-    public $myPropB;
+    public readonly $myPropB;
 }
 ```
 

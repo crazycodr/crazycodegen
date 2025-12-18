@@ -7,7 +7,6 @@ use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Definitions\Structures\DocBlockDef;
 use CrazyCodeGen\Definition\Definitions\Structures\PropertyDef;
-use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypesEnum;
 use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
 use CrazyCodeGen\Rendering\RenderingContext;
@@ -72,6 +71,21 @@ class PropertyDefTest extends TestCase
         $this->assertEquals(
             <<<'EOS'
             public static $foo;
+            EOS,
+            $this->renderTokensToString($token->getTokens(new RenderingContext()))
+        );
+    }
+
+    public function testRendersReadOnlyModifierWithSpaces(): void
+    {
+        $token = new PropertyDef(
+            name: 'foo',
+            readOnly: true
+        );
+
+        $this->assertEquals(
+            <<<'EOS'
+            public readonly $foo;
             EOS,
             $this->renderTokensToString($token->getTokens(new RenderingContext()))
         );

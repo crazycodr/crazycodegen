@@ -16,6 +16,7 @@ use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\EqualToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SemiColonToken;
 use CrazyCodeGen\Rendering\Tokens\CharacterTokens\SpacesToken;
+use CrazyCodeGen\Rendering\Tokens\KeywordTokens\ReadOnlyToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\StaticToken;
 use CrazyCodeGen\Rendering\Tokens\KeywordTokens\VisibilityToken;
 use CrazyCodeGen\Rendering\Tokens\Token;
@@ -39,6 +40,7 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference, Provid
         public null|TypeDef     $type = null,
         public VisibilityEnum          $visibility = VisibilityEnum::PUBLIC,
         public bool                    $static = false,
+        public bool                    $readOnly = false,
         public mixed                   $defaultValue = self::UNSET_DEFAULT_VALUE,
     ) {
         if ($this->defaultValue === self::UNSET_DEFAULT_VALUE) {
@@ -81,6 +83,10 @@ class PropertyDef extends Tokenizes implements ProvidesVariableReference, Provid
         $tokens = [];
         if ($this->static) {
             $tokens[] = new StaticToken();
+            $tokens[] = new SpacesToken();
+        }
+        if ($this->readOnly) {
+            $tokens[] = new ReadOnlyToken();
             $tokens[] = new SpacesToken();
         }
         return $this->flatten($tokens);
