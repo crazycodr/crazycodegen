@@ -16,9 +16,26 @@ use CrazyCodeGen\Definition\Definitions\Types\ClassTypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\MultiTypeDef;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Contexts\ThisContextConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\ClassDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\ClassTypeDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\DocBlockDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\ImportDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\KeywordBasedTypeDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\MethodDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\NamespaceDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Values\ArrayValConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Values\StringValConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Expressions\InstructionConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Expressions\Operations\AssignOpConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Expressions\Operations\ChainOpConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Expressions\Operations\NewOpConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Expressions\Operations\ReturnOpConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\NodeConversionBridge;
 use CrazyCodeGen\Tests\Common\Formatters\PhpCsFixerFormatter;
 use CrazyCodeGen\Rendering\RenderingContext;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
+use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
 
 class ServiceBuilderScenarioTest extends TestCase
@@ -70,8 +87,26 @@ class ServiceBuilderScenarioTest extends TestCase
             ->addMethod($getMockedClassesMethod)
             ->addMethod($getServiceMethod);
 
-        $code = $this->renderTokensToString($classDef->getTokens(new RenderingContext()));
-        $newCode = (new PhpCsFixerFormatter())->format($code);
+        $formatter = new NodeConversionBridge([
+            new NamespaceDefConverter(),
+            new ImportDefConverter(),
+            new ClassTypeDefConverter(),
+            new KeywordBasedTypeDefConverter(),
+            new ClassDefConverter(),
+            new MethodDefConverter(),
+            new DocBlockDefConverter(),
+            new InstructionConverter(),
+            new ReturnOpConverter(),
+            new NewOpConverter(),
+            new AssignOpConverter(),
+            new ChainOpConverter(),
+            new StringValConverter(),
+            new ThisContextConverter(),
+            new ArrayValConverter(),
+        ]);
+        $printer = new Standard();
+        $nodes = $formatter->convert($classDef);
+        $code = $printer->prettyPrintFile($nodes);
 
         $this->assertEquals(
             <<<'EOS'
@@ -113,7 +148,7 @@ class ServiceBuilderScenarioTest extends TestCase
             }
             
             EOS,
-            $newCode,
+            $code,
         );
     }
 }

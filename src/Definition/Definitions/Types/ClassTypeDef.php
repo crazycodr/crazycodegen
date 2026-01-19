@@ -20,8 +20,8 @@ class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, Provid
 {
     use FlattenFunction;
 
-    private null|string $namespace = null;
-    private string $shortName;
+    public readonly null|string $namespace;
+    public readonly string $shortName;
 
     public function __construct(
         public string $type,
@@ -30,6 +30,7 @@ class ClassTypeDef extends TypeDef implements ShouldBeAccessedStatically, Provid
             $this->namespace = substr($type, 0, (int)strrpos($type, '\\'));
             $this->shortName = substr($type, strrpos($type, '\\') + 1);
         } else {
+            $this->namespace = null;
             $this->shortName = $type;
         }
     }

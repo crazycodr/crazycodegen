@@ -17,9 +17,24 @@ use CrazyCodeGen\Definition\Definitions\Values\ArrayVal;
 use CrazyCodeGen\Definition\Expressions\Operations\NewOp;
 use CrazyCodeGen\Definition\Expressions\Operations\ReturnOp;
 use CrazyCodeGen\Definition\Expressions\Operators\Assignment\AssignOp;
-use CrazyCodeGen\Tests\Common\Formatters\PhpCsFixerFormatter;
-use CrazyCodeGen\Rendering\RenderingContext;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Contexts\ThisContextConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\ClassDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\ClassTypeDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\DocBlockDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\ImportDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\KeywordBasedTypeDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\MethodDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Definitions\Structures\NamespaceDefConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Values\ArrayValConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Definition\Values\StringValConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Expressions\InstructionConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Expressions\Operations\AssignOpConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Expressions\Operations\ChainOpConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Expressions\Operations\NewOpConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\Converters\Expressions\Operations\ReturnOpConverter;
+use CrazyCodeGen\Formatting\NikicPhpParser\NodeConversionBridge;
 use CrazyCodeGen\Rendering\Traits\TokenFunctions;
+use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
 
 class ModelBuilderScenarioTest extends TestCase
@@ -52,11 +67,11 @@ class ModelBuilderScenarioTest extends TestCase
         $hstExemptionMethod = (new MethodDef('hstExemption'))
             ->setReturnType(new StaticTypeSpec())
             ->addInstruction(new AssignOp(
-                subject: ThisContext::to($modelProperty)->to('identifier'),
+                subject: ThisContext::to($modelProperty)->to(new PropertyDef('identifier')),
                 value: 'hst',
             ))
             ->addInstruction(new AssignOp(
-                subject: ThisContext::to($modelProperty)->to('name'),
+                subject: ThisContext::to($modelProperty)->to(new PropertyDef('name')),
                 value: 'HST',
             ))
             ->addInstruction(new ReturnOp(new ThisContext()));
@@ -75,10 +90,29 @@ class ModelBuilderScenarioTest extends TestCase
             ->setExtends($baseModelBuilderType)
             ->addMethod($createModelMethod)
             ->addMethod($hstExemptionMethod)
-            ->addMethod($getMethod);
+            ->addMethod($getMethod)
+        ;
 
-        $code = $this->renderTokensToString($classDef->getTokens(new RenderingContext()));
-        $newCode = (new PhpCsFixerFormatter())->format($code);
+        $formatter = new NodeConversionBridge([
+            new NamespaceDefConverter(),
+            new ImportDefConverter(),
+            new ClassTypeDefConverter(),
+            new KeywordBasedTypeDefConverter(),
+            new ClassDefConverter(),
+            new MethodDefConverter(),
+            new DocBlockDefConverter(),
+            new InstructionConverter(),
+            new ReturnOpConverter(),
+            new NewOpConverter(),
+            new AssignOpConverter(),
+            new ChainOpConverter(),
+            new StringValConverter(),
+            new ThisContextConverter(),
+            new ArrayValConverter(),
+        ]);
+        $printer = new Standard();
+        $nodes = $formatter->convert($classDef);
+        $code = $printer->prettyPrintFile($nodes);
 
         $this->assertEquals(
             <<<'EOS'
@@ -88,7 +122,6 @@ class ModelBuilderScenarioTest extends TestCase
             
             use Internal\TestFramework\MockingFramework\Builders\BaseModelBuilder;
             use internal\Baskets\Models\TaxExemptionCategoryModel;
-            
             /**
              * This file was generated using the Symfony command "mock-helpers:generate".
              *
@@ -99,29 +132,26 @@ class ModelBuilderScenarioTest extends TestCase
              * Confluence at:
              * https://example.com/wiki/spaces/COPUNIT/pages/4051238915/Mocking+framework.
              */
-            
+
             class TaxExemptionCategoryModelBuilder extends BaseModelBuilder
             {
                 protected function createModel(): TaxExemptionCategoryModel
                 {
                     return new TaxExemptionCategoryModel(['identifier' => 'stub', 'name' => 'stub']);
                 }
-            
                 public function hstExemption(): static
                 {
                     $this->model->identifier = 'hst';
                     $this->model->name = 'HST';
                     return $this;
                 }
-            
                 public function get(): TaxExemptionCategoryModel
                 {
                     return $this->model;
                 }
             }
-            
             EOS,
-            $newCode,
+            $code,
         );
     }
 }

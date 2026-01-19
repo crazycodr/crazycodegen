@@ -34,8 +34,8 @@ class ChainOp extends Tokenizes
         foreach ($chain as $chainItemIndex => $chainItem) {
             if (is_string($chainItem)) {
                 $finalChain[$chainItemIndex] = new Expression($chainItem);
-            } elseif ($chainItem instanceof PropertyDef) {
-                $finalChain[$chainItemIndex] = new Expression($chainItem->name);
+//            } elseif ($chainItem instanceof PropertyDef) {
+//                $finalChain[$chainItemIndex] = new Expression($chainItem->name);
             } else {
                 $finalChain[$chainItemIndex] = $chainItem;
             }

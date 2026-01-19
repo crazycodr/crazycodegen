@@ -7,6 +7,7 @@ use CrazyCodeGen\Common\Exceptions\NoValidConversionRulesMatchedException;
 use CrazyCodeGen\Common\Traits\FlattenFunction;
 use CrazyCodeGen\Definition\Base\ProvidesVariableReference;
 use CrazyCodeGen\Definition\Base\Tokenizes;
+use CrazyCodeGen\Definition\Definitions\Types\BuiltInTypeSpec;
 use CrazyCodeGen\Definition\Definitions\Types\TypeDef;
 use CrazyCodeGen\Definition\Definitions\Types\TypeInferenceTrait;
 use CrazyCodeGen\Definition\Definitions\Values\ValueInferenceTrait;
@@ -26,7 +27,7 @@ class ConstantDef extends Tokenizes implements ProvidesVariableReference
     use TypeInferenceTrait;
     use ValueInferenceTrait;
 
-    public null|TypeDef     $type;
+    public null|BuiltInTypeSpec     $type;
 
     /**
      * @throws NoValidConversionRulesMatchedException
@@ -34,7 +35,7 @@ class ConstantDef extends Tokenizes implements ProvidesVariableReference
     public function __construct(
         public string           $name,
         public null|DocBlockDef $docBlock = null,
-        null|TypeDef            $type = null,
+        null|BuiltInTypeSpec    $type = null,
         public VisibilityEnum   $visibility = VisibilityEnum::PUBLIC,
         public mixed            $value = null,
     ) {
